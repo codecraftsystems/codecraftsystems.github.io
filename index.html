@@ -1420,7 +1420,9 @@ input, select, textarea {
 <footer>
   <div class="footer-inner">
     <div class="footer-logo">Code<span>Craft</span></div>
-    <p class="footer-copy">© 2025 CodeCraft Studio · Sonu Sahani · All rights reserved.</p>
+   <p class="footer-copy">
+    © <span id="year"></span> CodeCraft Studio · Sonu Sahani · All rights reserved.
+  </p>
     <ul class="footer-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#services">Services</a></li>
@@ -1432,6 +1434,8 @@ input, select, textarea {
 
 
 <script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+  
 document.getElementById('contactForm').addEventListener('submit', function() {
   const btn = document.getElementById('submitBtn');
   btn.textContent = '⏳ Sending...';
