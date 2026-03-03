@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>404 - Page Not Found | CodeCraft Studio</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
+<meta name="theme-color" content="#ff4d00">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0a0a0a;
+    --dark: #111111;
+    --card: #161616;
+    --border: #2a2a2a;
+    --accent: #ff4d00;
+    --accent2: #ffb800;
+    --white: #f5f0eb;
+    --muted: #888;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    padding: 24px;
+    cursor: none;
+    position: relative;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  /* Background grid */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.25;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+    pointer-events: none;
+  }
+
+  /* Glow */
+  .bg-glow {
+    position: fixed;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(255,77,0,0.1) 0%, transparent 65%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 40px; height: 40px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.3s ease;
+    opacity: 0.5;
+  }
+
+  /* Main wrapper */
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Nav bar top */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 500;
+    background: rgba(10,10,10,0.85);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .logo span { color: var(--accent); }
+  .topbar-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* Code terminal block */
+  .terminal {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 32px;
+    animation: fadeUp 0.7s 0.1s ease both;
+    opacity: 0;
+  }
+  .terminal-topbar {
+    background: var(--dark);
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; }
+  .dot.y { background: #febc2e; }
+  .dot.g { background: #28c840; }
+  .terminal-filename {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+  .terminal-body {
+    padding: 20px 24px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.9;
+    color: #ccc;
+    text-align: left;
+  }
+  .c-comment { color: #546e7a; font-style: italic; }
+  .c-key { color: #c792ea; }
+  .c-str { color: #c3e88d; }
+  .c-fn { color: #82aaff; }
+  .c-num { color: var(--accent2); }
+  .c-accent { color: var(--accent); font-weight: 600; }
+
+  /* Big 404 */
+  .four-o-four {
+    font-family: var(--font-display);
+    font-size: clamp(7rem, 22vw, 14rem);
+    line-height: 0.9;
+    letter-spacing: 4px;
+    color: var(--accent);
+    position: relative;
+    animation: fadeUp 0.6s 0.2s ease both;
+    opacity: 0;
+    user-select: none;
+  }
+  .four-o-four::after {
+    content: '404';
+    position: absolute;
+    inset: 0;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,77,0,0.15);
+    transform: translate(6px, 6px);
+    z-index: -1;
+  }
+
+  /* Status tag */
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,77,0,0.1);
+    border: 1px solid rgba(255,77,0,0.3);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    margin-bottom: 16px;
+    animation: fadeUp 0.6s 0.3s ease both;
+    opacity: 0;
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.4); }
+  }
+
+  /* Title & desc */
+  .title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 14px;
+    animation: fadeUp 0.6s 0.35s ease both;
+    opacity: 0;
+  }
+  .desc {
+    color: var(--muted);
+    font-size: 0.98rem;
+    line-height: 1.7;
+    max-width: 440px;
+    margin: 0 auto 32px;
+    animation: fadeUp 0.6s 0.4s ease both;
+    opacity: 0;
+  }
+
+  /* Buttons */
+  .btns {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s 0.45s ease both;
+    opacity: 0;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--white);
+    padding: 13px 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary:hover { background: #e04400; transform: translateY(-2px); }
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 13px 30px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--white); }
+
+  /* Quick links */
+  .quick-links {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    animation: fadeUp 0.6s 0.5s ease both;
+    opacity: 0;
+    margin-bottom: 40px;
+  }
+  .ql-item {
+    background: var(--card);
+    padding: 20px 16px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .ql-item:hover { background: #1a1a1a; color: var(--white); }
+  .ql-icon { font-size: 1.3rem; }
+  .ql-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Footer strip */
+  .footer-strip {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: #444;
+    letter-spacing: 0.5px;
+    animation: fadeUp 0.6s 0.55s ease both;
+    opacity: 0;
+  }
+  .footer-strip a { color: var(--accent); text-decoration: none; }
+  .footer-strip a:hover { text-decoration: underline; }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    body { cursor: auto; padding: 16px; }
+    .cursor, .cursor-ring { display: none; }
+    .topbar { padding: 14px 20px; }
+    .topbar-tag { display: none; }
+    .quick-links { grid-template-columns: repeat(2, 1fr); }
+    .btns { flex-direction: column; align-items: center; }
+    .btn-primary, .btn-outline { width: 100%; text-align: center; justify-content: center; }
+    .terminal-body { font-size: 0.75rem; padding: 16px; }
+    .four-o-four { letter-spacing: 2px; }
+  }
+
+  @media (max-width: 380px) {
+    .quick-links { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Background -->
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- Top nav -->
+<nav class="topbar">
+  <a href="https://codecraftsystems.github.io/" class="logo">Code<span>Craft</span></a>
+  <span class="topbar-tag">HTTP 404 · NOT FOUND</span>
+</nav>
+
+<!-- Main content -->
+<div class="wrapper">
+
+  <!-- Terminal block -->
+  <div class="terminal">
+    <div class="terminal-topbar">
+      <div class="dot r"></div>
+      <div class="dot y"></div>
+      <div class="dot g"></div>
+      <span class="terminal-filename">error.log · CodeCraft Studio</span>
+    </div>
+    <div class="terminal-body">
+      <span class="c-comment">// Route not found — Laravel Router</span><br>
+      <span class="c-key">$response</span> = [<br>
+      &nbsp;&nbsp;<span class="c-str">'status'</span> =&gt; <span class="c-accent">404</span>,<br>
+      &nbsp;&nbsp;<span class="c-str">'error'</span> &nbsp;=&gt; <span class="c-str">'Page not found'</span>,<br>
+      &nbsp;&nbsp;<span class="c-str">'route'</span> &nbsp;=&gt; <span class="c-fn">request</span>()-&gt;<span class="c-fn">path</span>(),<br>
+      &nbsp;&nbsp;<span class="c-str">'hint'</span> &nbsp; =&gt; <span class="c-str">'Try navigating home 👇'</span><br>
+      ];<br>
+      <span class="c-comment">// Suggested fix: return redirect('/home');</span>
+    </div>
+  </div>
+
+  <!-- 404 number -->
+  <div class="four-o-four">404</div>
+
+  <!-- Status tag -->
+  <div class="status-tag" style="margin-top:20px;">
+    <span class="status-dot"></span>
+    PAGE NOT FOUND
+  </div>
+
+  <h1 class="title">LOST IN THE CODE?</h1>
+  <p class="desc">The page you're looking for doesn't exist, was moved, or the URL might be mistyped. Let's get you back on track.</p>
+
+  <div class="btns">
+    <a href="https://codecraftsystems.github.io/" class="btn-primary">← Back to Home</a>
+    <a href="https://codecraftsystems.github.io/#contact" class="btn-outline">Contact Us</a>
+  </div>
+
+  <!-- Quick nav links -->
+  <div class="quick-links">
+    <a href="https://codecraftsystems.github.io/#services" class="ql-item">
+      <span class="ql-icon">⚙️</span>
+      <span class="ql-label">Services</span>
+    </a>
+    <a href="https://codecraftsystems.github.io/#about" class="ql-item">
+      <span class="ql-icon">👤</span>
+      <span class="ql-label">About</span>
+    </a>
+    <a href="https://codecraftsystems.github.io/#certifications" class="ql-item">
+      <span class="ql-icon">🎓</span>
+      <span class="ql-label">Certs</span>
+    </a>
+    <a href="https://codecraftsystems.github.io/#contact" class="ql-item">
+      <span class="ql-icon">✉️</span>
+      <span class="ql-label">Hire Us</span>
+    </a>
+  </div>
+
+  <p class="footer-strip">
+    © 2025 <a href="https://codecraftsystems.github.io/">CodeCraft Studio</a> · Built by Sonu Sahani
+  </p>
+
+</div>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+    rx += (mx - rx - 20) * 0.12;
+    ry += (my - ry - 20) * 0.12;
+    ring.style.transform = `translate(${rx}px, ${ry}px)`;
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+</script>
+
+</body>
+</html>
