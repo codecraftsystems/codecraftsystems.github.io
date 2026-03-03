@@ -831,6 +831,29 @@
 .cert-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
 .cert-id { font-size: 0.68rem; color: #555; font-family: var(--font-mono); }
 .cert-id span { color: #666; }
+.cert-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  text-decoration: none;
+  border: 1px solid rgba(255,77,0,0.3);
+  padding: 6px 14px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.cert-link:hover {
+  background: rgba(255,77,0,0.1);
+  border-color: var(--accent);
+}
+
+ 
+/* iPhone form zoom fix */
+input, select, textarea {
+  font-size: 16px !important;
+}
 
 
 </style>
@@ -862,6 +885,7 @@
     <li><a href="#why">Why Us</a></li>
      <li><a href="#certifications">Certs</a></li>
     <li><a href="#contact" class="nav-cta">Hire Us</a></li>
+ 
   </ul>
   <div class="hamburger" onclick="openMobile()">
     <span></span><span></span><span></span>
@@ -1166,6 +1190,7 @@
           <span class="tag">OCI IAM</span><span class="tag">VCN</span><span class="tag">Compute</span><span class="tag">Object Storage</span><span class="tag">Load Balancer</span>
         </div>
         <div class="cert-id">ID: <span>AC93F2805A4B6DCE...6C</span></div>
+        <a href="https://catalog-education.oracle.com/ords/certview/sharebadge?id=AC93F2805A4B6DCE76A832BA23611815EF616DEC0B111C44ED8788F2D4FFFD6C" target="_blank" class="cert-link">View Certificate →</a>
       </div>
 
       <div class="cert-card reveal">
@@ -1179,6 +1204,7 @@
           <span class="tag">Nuxt.js</span><span class="tag">Vue.js</span><span class="tag">SSR</span><span class="tag">SEO</span><span class="tag">Front-End</span>
         </div>
         <div class="cert-id">ID: <span>L79GLCI3HDGC</span></div>
+        <a href="https://www.coursera.org/account/accomplishments/verify/L79GLCI3HDGC" target="_blank" class="cert-link">View Certificate →</a>
       </div>
 
       <div class="cert-card reveal">
@@ -1192,6 +1218,7 @@
           <span class="tag">PHP</span><span class="tag">MVC</span><span class="tag">REST API</span><span class="tag">Eloquent ORM</span><span class="tag">Auth</span>
         </div>
         <div class="cert-id">ID: <span>OF50RCLR249W</span></div>
+        <a href="https://www.coursera.org/account/accomplishments/verify/OF50RCLR249W" target="_blank" class="cert-link">View Certificate →</a>
       </div>
 
       <div class="cert-card reveal">
@@ -1205,6 +1232,7 @@
           <span class="tag">Vue.js</span><span class="tag">JavaScript</span><span class="tag">Components</span><span class="tag">State Management</span>
         </div>
         <div class="cert-id">ID: <span>9H2QBI7JI890</span></div>
+          <a href="https://www.coursera.org/account/accomplishments/verify/9H2QBI7JI890" target="_blank" class="cert-link">View Certificate →</a>
       </div>
 
     </div>
@@ -1330,6 +1358,7 @@ document.getElementById('contactForm').addEventListener('submit', function() {
 </script>
 
 <script>
+ 
   // Cursor
   const cursor = document.getElementById('cursor');
   const ring = document.getElementById('cursorRing');
