@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.02, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- ═══ SEO ═══ -->
+<title>Deploy Laravel on Oracle Cloud Free Tier — Full Guide 2025 | CodeCraft Studio</title>
+<meta name="description" content="Step-by-step guide to deploying a Laravel application on Oracle Cloud Infrastructure (OCI) free tier with SSL, Nginx, MySQL, and auto-backup. Production-ready setup.">
+<meta name="author" content="Sonu Sahani - CodeCraft Studio">
+<meta name="robots" content="index, follow">
+<meta name="keywords" content="Oracle Cloud Laravel, OCI free tier Laravel, deploy Laravel Oracle, Nginx Laravel Ubuntu, Laravel SSL Certbot, Oracle Cloud MySQL, OCI VCN setup">
+<link rel="canonical" href="https://codecraftsystems.github.io/blog/oracle-cloud-laravel-deploy.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://codecraftsystems.github.io/blog/oracle-cloud-laravel-deploy.html">
+<meta property="og:site_name" content="CodeCraft Studio">
+<meta property="og:title" content="Deploy Laravel on Oracle Cloud Free Tier — Full Guide 2025">
+<meta property="og:description" content="Complete step-by-step: OCI instance setup, Nginx, MySQL, SSL with Certbot, and Laravel deployment on the Oracle Cloud free tier.">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/49108546?v=4">
+<meta property="article:published_time" content="2025-01-20">
+<meta property="article:author" content="Sonu Sahani">
+<meta property="article:section" content="DevOps">
+<meta property="article:tag" content="Oracle Cloud, OCI, Laravel, Nginx, SSL, MySQL, DevOps">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Deploy Laravel on Oracle Cloud Free Tier — Full Guide">
+<meta name="twitter:description" content="OCI setup, Nginx, MySQL, SSL Certbot — complete Laravel deployment guide.">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/u/49108546?v=4">
+
+<!-- Article Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Deploy Laravel on Oracle Cloud Free Tier — Full Guide 2025",
+  "description": "Step-by-step guide to deploying a Laravel application on Oracle Cloud Infrastructure with SSL, Nginx, and MySQL.",
+  "image": "https://avatars.githubusercontent.com/u/49108546?v=4",
+  "datePublished": "2025-01-20",
+  "dateModified": "2025-01-20",
+  "author": { "@type": "Person", "name": "Sonu Sahani", "url": "https://codecraftsystems.github.io" },
+  "publisher": { "@type": "Organization", "name": "CodeCraft Studio", "url": "https://codecraftsystems.github.io" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://codecraftsystems.github.io/blog/oracle-cloud-laravel-deploy.html" },
+  "keywords": "Oracle Cloud, OCI, Laravel, Nginx, SSL, MySQL, Ubuntu, Free Tier"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",   "item": "https://codecraftsystems.github.io/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog",   "item": "https://codecraftsystems.github.io/blog" },
+    { "@type": "ListItem", "position": 3, "name": "Deploy Laravel on Oracle Cloud", "item": "https://codecraftsystems.github.io/blog/oracle-cloud-laravel-deploy.html" }
+  ]
+}
+</script>
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
+<meta name="theme-color" content="#ff4d00">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  :root {
+    --black: #0a0a0a;
+    --dark:  #111111;
+    --card:  #161616;
+    --border:#2a2a2a;
+    --accent:#ff4d00;
+    --accent2:#ffb800;
+    --oci:   #c74634;   /* Oracle red */
+    --oci2:  #f80000;
+    --cloud: #4a9eff;   /* cloud blue */
+    --white: #f5f0eb;
+    --muted: #888;
+    --font-display:'Bebas Neue',sans-serif;
+    --font-body:'DM Sans',sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
+    --nav-h: 65px;
+  }
+
+  html { scroll-behavior:smooth; }
+  body { background:var(--black); color:var(--white); font-family:var(--font-body); font-size:16px; line-height:1.6; overflow-x:hidden; cursor:none; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:100; opacity:0.4; }
+
+  /* Cursor */
+  .cursor { width:12px;height:12px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transition:transform 0.15s ease;mix-blend-mode:difference; }
+  .cursor-ring { width:40px;height:40px;border:1px solid var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:all 0.3s ease;opacity:0.5; }
+
+  /* NAV */
+  nav { position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);padding:0 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:all 0.3s; }
+  nav.scrolled { background:rgba(10,10,10,0.95);border-color:var(--border);backdrop-filter:blur(20px); }
+  .logo { font-family:var(--font-display);font-size:1.8rem;letter-spacing:2px;color:var(--white);text-decoration:none; }
+  .logo span { color:var(--accent); }
+  .nav-links { display:flex;gap:36px;list-style:none;align-items:center; }
+  .nav-links a { color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;transition:color 0.2s; }
+  .nav-links a:hover { color:var(--white); }
+  .nav-cta { background:var(--accent)!important;color:var(--white)!important;padding:10px 24px;border-radius:2px;font-weight:600!important; }
+  .nav-cta:hover { background:#e04400!important; }
+  .hamburger { display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px; }
+  .hamburger span { display:block;width:28px;height:2px;background:var(--white);transition:all 0.3s; }
+  .mobile-menu { display:none;position:fixed;inset:0;background:rgba(10,10,10,0.98);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:36px; }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-family:var(--font-display);font-size:2.5rem;color:var(--white);text-decoration:none;letter-spacing:2px;transition:color 0.2s; }
+  .mobile-menu a:hover { color:var(--accent); }
+  .close-btn { position:absolute;top:24px;right:40px;font-size:2rem;background:none;border:none;color:var(--white);cursor:pointer; }
+
+  /* Progress — cloud blue for DevOps */
+  .progress-bar { position:fixed;top:var(--nav-h);left:0;height:2px;background:linear-gradient(90deg,var(--cloud),var(--accent));z-index:900;width:0%;transition:width 0.1s linear; }
+
+  /* ── HERO ── */
+  .article-hero { padding-top:var(--nav-h); background:var(--dark); border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+  .hero-grid-bg { position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:0.18;mask-image:radial-gradient(ellipse 100% 100% at 50% 0%,black,transparent); }
+
+  /* Dual glow — OCI red + cloud blue */
+  .hero-glow-left  { position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(199,70,52,0.08) 0%,transparent 65%);top:50%;left:10%;transform:translateY(-50%);pointer-events:none; }
+  .hero-glow-right { position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(74,158,255,0.07) 0%,transparent 65%);top:50%;right:0%;transform:translateY(-50%);pointer-events:none; }
+
+  /* Architecture diagram bg */
+  .hero-arch { position:absolute;right:0;top:0;bottom:0;width:44%;display:flex;align-items:center;justify-content:center;opacity:0.055;pointer-events:none;overflow:hidden; }
+  .hero-arch svg { width:100%;height:100%; }
+
+  .article-hero-inner { max-width:960px;margin:0 auto;padding:52px 40px 48px;position:relative;z-index:1;animation:fadeUp 0.6s ease both; }
+
+  .breadcrumb { display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.73rem;color:var(--muted);margin-bottom:24px;flex-wrap:wrap; }
+  .breadcrumb a { color:var(--muted);text-decoration:none;transition:color 0.2s; }
+  .breadcrumb a:hover { color:var(--accent); }
+  .breadcrumb .sep { color:#444; }
+
+  /* DevOps orange-red category pill */
+  .article-cat { display:inline-flex;align-items:center;gap:6px;background:rgba(74,158,255,0.08);border:1px solid rgba(74,158,255,0.25);padding:5px 14px;border-radius:100px;font-family:var(--font-mono);font-size:0.72rem;color:var(--cloud);letter-spacing:1px;margin-bottom:20px; }
+  .cat-dot { width:5px;height:5px;border-radius:50%;background:var(--cloud);animation:pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.4)} }
+
+  .article-title { font-family:var(--font-display);font-size:clamp(2.2rem,5vw,4rem);line-height:1.0;letter-spacing:1px;color:var(--white);margin-bottom:20px; }
+  .article-title .oci-red   { color:var(--oci); }
+  .article-title .cloud-blue{ color:var(--cloud); }
+  .article-title .accent-or { color:var(--accent); }
+
+  .article-desc { font-size:1.05rem;color:var(--muted);line-height:1.75;max-width:640px;margin-bottom:32px; }
+
+  .article-meta { display:flex;align-items:center;gap:0;flex-wrap:wrap;padding:20px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border); }
+  .meta-author { display:flex;align-items:center;gap:12px;padding-right:24px;margin-right:24px;border-right:1px solid var(--border); }
+  .author-avatar-sm { width:42px;height:42px;border-radius:50%;border:2px solid var(--cloud);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:1.2rem; }
+  .author-info-name { font-weight:600;font-size:0.88rem;color:var(--white); }
+  .author-info-role { font-family:var(--font-mono);font-size:0.68rem;color:var(--muted); }
+  .meta-items { display:flex;gap:20px;flex-wrap:wrap; }
+  .meta-item { display:flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:0.73rem;color:var(--muted); }
+
+  .article-tags { display:flex;gap:7px;flex-wrap:wrap;margin-top:20px; }
+  .atag { background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:4px 12px;border-radius:100px;font-size:0.73rem;font-family:var(--font-mono);color:var(--muted); }
+  .atag.cloud-tag { background:rgba(74,158,255,0.07);border-color:rgba(74,158,255,0.2);color:var(--cloud); }
+  .atag.oci-tag   { background:rgba(199,70,52,0.07);border-color:rgba(199,70,52,0.2);color:var(--oci); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── LAYOUT ── */
+  .page-layout { max-width:1200px;margin:0 auto;padding:56px 40px 80px;display:grid;grid-template-columns:1fr 300px;gap:56px;align-items:start; }
+
+  /* ── PROSE ── */
+  .article-body { animation:fadeUp 0.6s 0.15s ease both; }
+  .prose { color:#c8c0b8;font-size:1.02rem;line-height:1.85; }
+  .prose h2 { font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);letter-spacing:0.5px;color:var(--white);margin:52px 0 20px;line-height:1;padding-top:52px;border-top:1px solid var(--border);scroll-margin-top:90px; }
+  .prose h2:first-child { border-top:none;padding-top:0;margin-top:0; }
+  .prose h3 { font-size:1.12rem;font-weight:700;color:var(--white);margin:32px 0 14px;scroll-margin-top:90px; }
+  .prose p { margin-bottom:20px; }
+  .prose strong { color:var(--white);font-weight:600; }
+  .prose a { color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(255,77,0,0.3);transition:border-color 0.2s; }
+  .prose a:hover { border-color:var(--accent); }
+  .prose ul,.prose ol { margin:0 0 20px 20px;display:flex;flex-direction:column;gap:8px; }
+  .prose li::marker { color:var(--cloud); }
+  .prose code { background:rgba(74,158,255,0.08);border:1px solid rgba(74,158,255,0.15);padding:2px 7px;border-radius:3px;font-family:var(--font-mono);font-size:0.82rem;color:#a8d4ff; }
+
+  /* Code blocks */
+  .code-block { background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:28px 0; }
+  .code-header { background:var(--dark);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border); }
+  .code-header-left { display:flex;align-items:center;gap:8px; }
+  .cdot { width:9px;height:9px;border-radius:50%; }
+  .cdot.r{background:#ff5f57} .cdot.y{background:#febc2e} .cdot.g{background:#28c840}
+  .code-lang { font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);margin-left:6px; }
+  .copy-btn { background:none;border:1px solid var(--border);color:var(--muted);font-family:var(--font-mono);font-size:0.68rem;padding:3px 10px;border-radius:3px;cursor:pointer;transition:all 0.2s; }
+  .copy-btn:hover { border-color:var(--cloud);color:var(--cloud); }
+  .code-pre { padding:22px 24px;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.8;color:#ccc; }
+  /* syntax colors */
+  .cm{color:#546e7a;font-style:italic}  .ck{color:#c792ea}  .cs{color:#c3e88d}
+  .cf{color:#82aaff}  .ca{color:var(--accent);font-weight:600}  .cn{color:var(--accent2)}
+  .ct{color:#f07178}  .cb{color:var(--cloud)}  /* cloud blue keyword */
+  .co{color:#e86f3a}  /* oci / command highlight */
+
+  /* Callouts */
+  .callout { border-left:3px solid var(--accent);background:rgba(255,77,0,0.05);padding:18px 20px;border-radius:0 6px 6px 0;margin:28px 0; }
+  .callout.info    { border-color:var(--cloud);background:rgba(74,158,255,0.05); }
+  .callout.warn    { border-color:var(--accent2);background:rgba(255,184,0,0.05); }
+  .callout.success { border-color:#28c840;background:rgba(40,200,64,0.04); }
+  .callout.danger  { border-color:#ff5f57;background:rgba(255,95,87,0.05); }
+  .callout-title { font-weight:700;font-size:0.85rem;color:var(--white);margin-bottom:8px;display:flex;align-items:center;gap:8px; }
+  .callout p { margin:0;font-size:0.92rem; }
+
+  /* Architecture diagram */
+  .arch-diagram { background:var(--card);border:1px solid var(--border);border-radius:10px;padding:32px 24px;margin:28px 0;display:flex;flex-direction:column;gap:0; }
+  .arch-row { display:flex;align-items:center;justify-content:center;gap:0; }
+  .arch-box { background:var(--dark);border:1px solid var(--border);border-radius:6px;padding:12px 18px;text-align:center;min-width:130px; }
+  .arch-box.blue  { border-color:rgba(74,158,255,0.35);background:rgba(74,158,255,0.06); }
+  .arch-box.red   { border-color:rgba(199,70,52,0.35);background:rgba(199,70,52,0.06); }
+  .arch-box.green { border-color:rgba(40,200,64,0.3);background:rgba(40,200,64,0.05); }
+  .arch-box.orange{ border-color:rgba(255,77,0,0.35);background:rgba(255,77,0,0.06); }
+  .arch-label { font-family:var(--font-display);font-size:0.9rem;letter-spacing:0.5px;color:var(--white); }
+  .arch-sub   { font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);margin-top:3px; }
+  .arch-arrow { font-size:1.2rem;color:#444;padding:0 10px;flex-shrink:0; }
+  .arch-arrow-down { font-size:1.2rem;color:#444;text-align:center;padding:8px 0; }
+  .arch-sep { width:1px;background:var(--border);height:40px;margin:0 auto; }
+
+  /* Free tier badge */
+  .free-badge { display:inline-flex;align-items:center;gap:6px;background:rgba(40,200,64,0.1);border:1px solid rgba(40,200,64,0.3);padding:4px 12px;border-radius:100px;font-family:var(--font-mono);font-size:0.72rem;color:#28c840;margin-left:10px; }
+
+  /* Numbered step cards */
+  .step-cards { display:flex;flex-direction:column;gap:0;margin:28px 0; }
+  .step-card { display:flex;gap:0;border:1px solid var(--border);border-bottom:none;overflow:hidden;transition:all 0.2s; }
+  .step-card:first-child { border-radius:8px 8px 0 0; }
+  .step-card:last-child  { border-bottom:1px solid var(--border);border-radius:0 0 8px 8px; }
+  .step-card:hover { background:rgba(255,255,255,0.01); }
+  .step-num-col { background:var(--dark);border-right:1px solid var(--border);padding:20px 18px;display:flex;align-items:flex-start;justify-content:center;min-width:60px; }
+  .step-num-val { font-family:var(--font-display);font-size:1.8rem;color:rgba(74,158,255,0.25);line-height:1; }
+  .step-content { padding:20px 22px;flex:1; }
+  .step-title { font-weight:700;color:var(--white);font-size:0.95rem;margin-bottom:6px;display:flex;align-items:center;gap:10px; }
+  .step-desc { color:var(--muted);font-size:0.88rem;line-height:1.6; }
+
+  /* Compare table */
+  .compare-table { width:100%;border-collapse:collapse;margin:28px 0;font-size:0.88rem;border:1px solid var(--border);border-radius:8px;overflow:hidden; }
+  .compare-table th { background:var(--dark);padding:13px 16px;text-align:left;font-family:var(--font-mono);font-size:0.73rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border); }
+  .compare-table th:first-child { color:var(--white); }
+  .compare-table td { padding:12px 16px;border-bottom:1px solid var(--border);color:#b0a8a0;vertical-align:middle; }
+  .compare-table tr:last-child td { border-bottom:none; }
+  .compare-table tr:hover td { background:rgba(255,255,255,0.02); }
+  .compare-table .feature { color:var(--white);font-weight:500; }
+  .badge-good{color:#28c840;font-family:var(--font-mono);font-size:0.78rem}
+  .badge-ok  {color:var(--accent2);font-family:var(--font-mono);font-size:0.78rem}
+  .badge-bad {color:#ff5f57;font-family:var(--font-mono);font-size:0.78rem}
+  .badge-cloud{color:var(--cloud);font-family:var(--font-mono);font-size:0.78rem}
+
+  /* Verdict */
+  .verdict-box { background:var(--card);border:1px solid rgba(74,158,255,0.2);border-top:3px solid var(--cloud);border-radius:8px;padding:28px;margin:36px 0; }
+  .verdict-title { font-family:var(--font-display);font-size:1.4rem;letter-spacing:1px;color:var(--white);margin-bottom:14px;display:flex;align-items:center;gap:10px; }
+  .verdict-box p { color:var(--muted);font-size:0.92rem;line-height:1.7;margin-bottom:14px; }
+  .verdict-box p:last-child { margin-bottom:0; }
+
+  /* Share */
+  .share-row { display:flex;align-items:center;gap:14px;padding:28px 0;border-top:1px solid var(--border);flex-wrap:wrap;margin-top:48px; }
+  .share-label { font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);letter-spacing:1px; }
+  .share-btn { border:1px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:2px;font-family:var(--font-mono);font-size:0.75rem;text-decoration:none;cursor:pointer;background:none;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px; }
+  .share-btn:hover { border-color:var(--accent);color:var(--accent); }
+
+  /* Author */
+  .author-bio-card { background:var(--card);border:1px solid var(--border);border-radius:10px;padding:28px;display:flex;gap:20px;align-items:flex-start;margin-top:12px; }
+  .author-bio-avatar { width:64px;height:64px;border-radius:50%;border:2px solid var(--cloud);background:var(--dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.8rem; }
+  .author-bio-name { font-weight:700;color:var(--white);font-size:1rem;margin-bottom:4px; }
+  .author-bio-role { font-family:var(--font-mono);font-size:0.72rem;color:var(--cloud);margin-bottom:10px; }
+  .author-bio-text { color:var(--muted);font-size:0.88rem;line-height:1.6;margin-bottom:14px; }
+  .author-bio-links { display:flex;gap:10px; }
+  .author-bio-link { border:1px solid var(--border);color:var(--muted);padding:5px 14px;border-radius:2px;font-family:var(--font-mono);font-size:0.72rem;text-decoration:none;transition:all 0.2s; }
+  .author-bio-link:hover { border-color:var(--cloud);color:var(--cloud); }
+
+  /* Related */
+  .related-section { margin-top:60px; }
+  .related-title { font-family:var(--font-display);font-size:1.8rem;letter-spacing:1px;color:var(--white);margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px; }
+  .related-title::before { content:'';width:3px;height:24px;background:var(--cloud);border-radius:2px; }
+  .related-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:16px; }
+  .related-card { background:var(--card);border:1px solid var(--border);border-radius:8px;padding:22px;text-decoration:none;color:inherit;transition:all 0.3s;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden; }
+  .related-card::after { content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cloud),var(--accent));transform:scaleX(0);transform-origin:left;transition:transform 0.3s; }
+  .related-card:hover::after { transform:scaleX(1); }
+  .related-card:hover { border-color:rgba(74,158,255,0.25);transform:translateY(-3px); }
+  .related-cat { font-family:var(--font-mono);font-size:0.68rem;color:var(--cloud);text-transform:uppercase;letter-spacing:1px; }
+  .related-post-title { font-size:0.9rem;font-weight:700;color:var(--white);line-height:1.4; }
+  .related-meta { font-family:var(--font-mono);font-size:0.68rem;color:var(--muted); }
+
+  /* Sidebar */
+  .article-sidebar { display:flex;flex-direction:column;gap:24px;position:sticky;top:90px; }
+  .sidebar-widget { background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden; }
+  .widget-head { padding:13px 18px;background:var(--dark);border-bottom:1px solid var(--border);font-family:var(--font-display);font-size:0.95rem;letter-spacing:1px;color:var(--white);display:flex;align-items:center;gap:10px; }
+  .widget-head::before { content:'';width:3px;height:14px;background:var(--cloud);border-radius:2px; }
+  .widget-body { padding:18px; }
+
+  .toc-list { display:flex;flex-direction:column;gap:2px; }
+  .toc-item { display:flex;align-items:flex-start;gap:10px;padding:7px 10px;border-radius:4px;text-decoration:none;color:var(--muted);font-size:0.82rem;line-height:1.4;transition:all 0.2s;cursor:pointer;border:none;background:none;font-family:var(--font-body);text-align:left;width:100%; }
+  .toc-item:hover,.toc-item.active { background:rgba(74,158,255,0.07);color:var(--white); }
+  .toc-item.active { color:var(--cloud); }
+  .toc-num { font-family:var(--font-mono);font-size:0.68rem;color:var(--cloud);opacity:0.7;min-width:18px;margin-top:1px; }
+
+  .cta-widget { background:linear-gradient(135deg,rgba(74,158,255,0.07),rgba(255,77,0,0.04))!important;border:1px solid rgba(74,158,255,0.15)!important; }
+  .cta-widget .widget-body { text-align:center; }
+  .cta-title { font-family:var(--font-display);font-size:1.3rem;letter-spacing:1px;color:var(--white);margin-bottom:10px; }
+  .cta-desc { color:var(--muted);font-size:0.82rem;line-height:1.6;margin-bottom:18px; }
+  .cta-btn { display:block;background:var(--accent);color:var(--white);padding:11px 20px;text-decoration:none;font-weight:600;font-size:0.85rem;border-radius:2px;transition:all 0.2s;text-align:center; }
+  .cta-btn:hover { background:#e04400;transform:translateY(-2px); }
+
+  .tags-cloud { display:flex;flex-wrap:wrap;gap:6px; }
+  .tag-pill { background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:4px 10px;border-radius:100px;font-size:0.72rem;font-family:var(--font-mono);color:var(--muted);text-decoration:none;transition:all 0.2s; }
+  .tag-pill:hover { background:rgba(74,158,255,0.08);border-color:rgba(74,158,255,0.3);color:var(--cloud); }
+
+  /* OCI cert badge in sidebar */
+  .cert-badge { display:flex;align-items:center;gap:12px;padding:14px;border:1px solid rgba(199,70,52,0.25);border-radius:8px;background:rgba(199,70,52,0.05);text-decoration:none;transition:all 0.2s; }
+  .cert-badge:hover { border-color:rgba(199,70,52,0.5); }
+  .cert-badge-icon { font-size:1.8rem;flex-shrink:0; }
+  .cert-badge-name { font-size:0.78rem;font-weight:600;color:var(--white);line-height:1.3; }
+  .cert-badge-issuer { font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);margin-top:3px; }
+
+  /* Footer */
+  footer { background:var(--dark);border-top:1px solid var(--border);padding:40px; }
+  .footer-inner { max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap; }
+  .footer-logo { font-family:var(--font-display);font-size:1.5rem;letter-spacing:2px;color:var(--white); }
+  .footer-logo span { color:var(--accent); }
+  .footer-copy { color:var(--muted);font-size:0.82rem; }
+  .footer-links { display:flex;gap:24px;list-style:none; }
+  .footer-links a { color:var(--muted);text-decoration:none;font-size:0.82rem;transition:color 0.2s; }
+  .footer-links a:hover { color:var(--white); }
+
+  /* Responsive */
+  @media(max-width:1100px){ .page-layout{grid-template-columns:1fr;gap:40px} .article-sidebar{position:static;display:grid;grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:900px){ nav{padding:0 24px} .nav-links{display:none} .hamburger{display:flex} }
+  @media(max-width:700px){ .page-layout{padding:36px 20px 60px} .article-hero-inner{padding:36px 20px} .article-sidebar{grid-template-columns:1fr} .related-grid{grid-template-columns:1fr} .meta-author{padding-right:0;margin-right:0;border-right:none;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;width:100%} .article-meta{flex-direction:column;align-items:flex-start} body{cursor:auto} .cursor,.cursor-ring{display:none} .hero-arch{display:none} .arch-diagram{overflow-x:auto} }
+  @media(max-width:500px){ footer{padding:32px 20px} .footer-inner{flex-direction:column;text-align:center} .author-bio-card{flex-direction:column} .code-pre{font-size:0.74rem} }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-btn" onclick="closeMobile()">✕</button>
+  <a href="https://codecraftsystems.github.io/" onclick="closeMobile()">Home</a>
+  <a href="https://codecraftsystems.github.io/#services" onclick="closeMobile()">Services</a>
+  <a href="https://codecraftsystems.github.io/#about" onclick="closeMobile()">About</a>
+  <a href="https://codecraftsystems.github.io/blog" onclick="closeMobile()">Blog</a>
+  <a href="https://codecraftsystems.github.io/#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<nav id="navbar">
+  <a href="https://codecraftsystems.github.io/" class="logo">Code<span>Craft</span></a>
+  <ul class="nav-links">
+    <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+    <li><a href="https://codecraftsystems.github.io/#services">Services</a></li>
+    <li><a href="https://codecraftsystems.github.io/#about">About</a></li>
+    <li><a href="https://codecraftsystems.github.io/blog">Blog</a></li>
+    <li><a href="https://codecraftsystems.github.io/#contact" class="nav-cta">Hire Us</a></li>
+  </ul>
+  <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ── HERO ── -->
+<header class="article-hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow-left"></div>
+  <div class="hero-glow-right"></div>
+
+  <!-- Architecture diagram decorative bg -->
+  <div class="hero-arch">
+    <svg viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Server racks illustration -->
+      <rect x="60"  y="40"  width="120" height="70" rx="4" stroke="#4a9eff" stroke-width="1.5"/>
+      <rect x="70"  y="52"  width="100" height="8"  rx="2" fill="#4a9eff" opacity=".4"/>
+      <rect x="70"  y="66"  width="100" height="8"  rx="2" fill="#4a9eff" opacity=".3"/>
+      <rect x="70"  y="80"  width="100" height="8"  rx="2" fill="#4a9eff" opacity=".2"/>
+      <rect x="220" y="40"  width="120" height="70" rx="4" stroke="#c74634" stroke-width="1.5"/>
+      <rect x="230" y="52"  width="100" height="8"  rx="2" fill="#c74634" opacity=".4"/>
+      <rect x="230" y="66"  width="100" height="8"  rx="2" fill="#c74634" opacity=".3"/>
+      <rect x="230" y="80"  width="100" height="8"  rx="2" fill="#c74634" opacity=".2"/>
+      <!-- Lines connecting -->
+      <line x1="180" y1="75" x2="220" y2="75" stroke="#666" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="120" y1="110" x2="120" y2="180" stroke="#4a9eff" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="280" y1="110" x2="280" y2="180" stroke="#c74634" stroke-width="1" stroke-dasharray="4,3"/>
+      <!-- Nginx box -->
+      <rect x="80"  y="180" width="90"  height="50" rx="4" stroke="#28c840" stroke-width="1.5"/>
+      <text x="125" y="209" font-family="monospace" font-size="11" fill="#28c840" text-anchor="middle">NGINX</text>
+      <!-- MySQL box -->
+      <rect x="230" y="180" width="90"  height="50" rx="4" stroke="#ff4d00" stroke-width="1.5"/>
+      <text x="275" y="209" font-family="monospace" font-size="11" fill="#ff4d00" text-anchor="middle">MySQL</text>
+      <!-- Laravel box -->
+      <rect x="150" y="280" width="100" height="55" rx="4" stroke="#ffb800" stroke-width="1.5"/>
+      <text x="200" y="312" font-family="monospace" font-size="11" fill="#ffb800" text-anchor="middle">LARAVEL</text>
+      <line x1="125" y1="230" x2="185" y2="280" stroke="#666" stroke-width="1" stroke-dasharray="4,3"/>
+      <line x1="275" y1="230" x2="215" y2="280" stroke="#666" stroke-width="1" stroke-dasharray="4,3"/>
+      <!-- SSL -->
+      <rect x="155" y="380" width="90"  height="45" rx="4" stroke="#4a9eff" stroke-width="1.5"/>
+      <text x="200" y="407" font-family="monospace" font-size="11" fill="#4a9eff" text-anchor="middle">SSL/HTTPS</text>
+      <line x1="200" y1="335" x2="200" y2="380" stroke="#666" stroke-width="1" stroke-dasharray="4,3"/>
+    </svg>
+  </div>
+
+  <div class="article-hero-inner">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="https://codecraftsystems.github.io/">Home</a>
+      <span class="sep">›</span>
+      <a href="https://codecraftsystems.github.io/blog">Blog</a>
+      <span class="sep">›</span>
+      <span>Deploy Laravel on Oracle Cloud</span>
+    </nav>
+
+    <div class="article-cat"><span class="cat-dot"></span> DevOps / Cloud</div>
+
+    <h1 class="article-title">
+      DEPLOY LARAVEL ON<br>
+      <span class="oci-red">ORACLE</span> <span class="cloud-blue">CLOUD</span><br>
+      <span class="accent-or">FREE TIER</span> — FULL GUIDE
+    </h1>
+    <p class="article-desc">Step-by-step guide to deploying a production Laravel application on Oracle Cloud Infrastructure (OCI) free tier — Nginx, MySQL, SSL with Certbot, firewall rules, and auto-backup. Zero hosting cost.</p>
+
+    <div class="article-meta">
+      <div class="meta-author">
+        <div class="author-avatar-sm">👨‍💻</div>
+        <div>
+          <div class="author-info-name">Sonu Sahani</div>
+          <div class="author-info-role">OCI Certified Architect · CodeCraft Studio</div>
+        </div>
+      </div>
+      <div class="meta-items">
+        <span class="meta-item">📅 Jan 20, 2025</span>
+        <span class="meta-item">⏱ 12 min read</span>
+        <span class="meta-item">👁 1.2k views</span>
+        <span class="meta-item">💬 DevOps</span>
+      </div>
+    </div>
+
+    <div class="article-tags">
+      <span class="atag oci-tag">Oracle OCI</span>
+      <span class="atag cloud-tag">Nginx</span>
+      <span class="atag cloud-tag">SSL</span>
+      <span class="atag">Laravel</span>
+      <span class="atag">MySQL 8</span>
+      <span class="atag">Ubuntu 22</span>
+      <span class="atag">Free Tier</span>
+      <span class="atag">Certbot</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── MAIN ── -->
+<div class="page-layout">
+
+  <article class="article-body">
+    <div class="prose">
+
+      <!-- 1 -->
+      <h2 id="why-oci">Why Oracle Cloud Free Tier?</h2>
+      <p>Oracle Cloud's free tier is <strong>genuinely the best free cloud offering in 2025</strong>. Unlike AWS or GCP free tiers that expire after 12 months, OCI's Always Free resources never expire. For a Laravel SaaS with moderate traffic, you can run a full production stack at <strong>zero cost — forever</strong>.</p>
+
+      <table class="compare-table">
+        <thead><tr><th>Cloud</th><th>Free Compute</th><th>Free RAM</th><th>Expires?</th><th>Storage</th></tr></thead>
+        <tbody>
+          <tr><td class="feature">Oracle OCI</td><td><span class="badge-cloud">4 OCPU (ARM)</span></td><td><span class="badge-cloud">24 GB</span></td><td><span class="badge-good">✓ Never</span></td><td><span class="badge-cloud">200 GB</span></td></tr>
+          <tr><td class="feature">AWS Free Tier</td><td><span class="badge-ok">1 vCPU (t2.micro)</span></td><td><span class="badge-ok">1 GB</span></td><td><span class="badge-bad">✗ 12 months</span></td><td><span class="badge-ok">30 GB</span></td></tr>
+          <tr><td class="feature">GCP Free Tier</td><td><span class="badge-ok">1 vCPU (e2-micro)</span></td><td><span class="badge-ok">1 GB</span></td><td><span class="badge-good">✓ Never</span></td><td><span class="badge-ok">30 GB</span></td></tr>
+          <tr><td class="feature">Azure Free</td><td><span class="badge-ok">1 vCPU (B1S)</span></td><td><span class="badge-ok">1 GB</span></td><td><span class="badge-bad">✗ 12 months</span></td><td><span class="badge-ok">32 GB</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout info">
+        <div class="callout-title">☁️ What We'll Build</div>
+        <p>Ubuntu 22.04 VM → PHP 8.3 + Nginx → Laravel app → MySQL 8 → Let's Encrypt SSL → OCI firewall rules → auto-deploy with Git. Full production stack, <strong>$0/month forever</strong>.</p>
+      </div>
+
+      <!-- Architecture diagram -->
+      <div class="arch-diagram">
+        <div class="arch-row">
+          <div class="arch-box blue"><div class="arch-label">Internet</div><div class="arch-sub">User Request</div></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box blue"><div class="arch-label">OCI VCN</div><div class="arch-sub">Security List :80/:443</div></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box green"><div class="arch-label">Nginx</div><div class="arch-sub">Reverse Proxy + SSL</div></div>
+        </div>
+        <div class="arch-arrow-down">↓</div>
+        <div class="arch-row">
+          <div class="arch-box orange"><div class="arch-label">Laravel</div><div class="arch-sub">PHP 8.3 + FPM</div></div>
+          <div class="arch-arrow">↔</div>
+          <div class="arch-box red"><div class="arch-label">MySQL 8</div><div class="arch-sub">localhost:3306</div></div>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <h2 id="create-instance">Step 1 — Create OCI Instance</h2>
+      <p>Sign up at <strong>cloud.oracle.com</strong> (free, no credit card required for Always Free resources). Then create your compute instance:</p>
+
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num-col"><div class="step-num-val">01</div></div>
+          <div class="step-content">
+            <div class="step-title">Compute → Instances → Create Instance</div>
+            <div class="step-desc">Go to OCI Console → Compute → Instances. Click <strong>Create instance</strong>.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-col"><div class="step-num-val">02</div></div>
+          <div class="step-content">
+            <div class="step-title">Choose Image: Ubuntu 22.04 Minimal</div>
+            <div class="step-desc">Under "Image and shape" click <strong>Change image</strong>. Select <strong>Canonical Ubuntu → 22.04</strong> (Minimal). Lighter, faster, less attack surface.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-col"><div class="step-num-val">03</div></div>
+          <div class="step-content">
+            <div class="step-title">Shape: VM.Standard.A1.Flex (ARM) <span class="free-badge">FREE</span></div>
+            <div class="step-desc">Click <strong>Change shape</strong> → Ampere → <strong>VM.Standard.A1.Flex</strong>. Set 2 OCPU, 12 GB RAM (max Always Free allocation per instance).</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-col"><div class="step-num-val">04</div></div>
+          <div class="step-content">
+            <div class="step-title">Generate SSH Key Pair</div>
+            <div class="step-desc">Click <strong>Save private key</strong>. Download the <code>.key</code> file. You'll need it for SSH access. Keep it safe — you cannot re-download it.</div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num-col"><div class="step-num-val">05</div></div>
+          <div class="step-content">
+            <div class="step-title">Boot Volume: 50 GB <span class="free-badge">FREE</span></div>
+            <div class="step-desc">Under Storage, set boot volume to <strong>50 GB</strong> (Always Free includes 200 GB total across instances). Click <strong>Create</strong> and wait ~2 minutes.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <h2 id="server-setup">Step 2 — Server Setup</h2>
+      <p>SSH into your instance using the private key. The public IP is shown on the instance details page.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">terminal — SSH connect</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="cm"># Set key permissions (required on Linux/Mac)</span>
+chmod 400 ~/Downloads/your-key.key
+
+<span class="cm"># SSH into instance (ubuntu is default user for Ubuntu images)</span>
+ssh -i ~/Downloads/your-key.key ubuntu@<span class="cb">YOUR_PUBLIC_IP</span>
+
+<span class="cm"># First — update everything</span>
+sudo apt update && sudo apt upgrade -y</pre>
+      </div>
+
+      <h3>Install PHP 8.3 + Extensions</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">bash — PHP 8.3 install</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="cm"># Add Ondrej PHP PPA (most up-to-date PHP packages)</span>
+sudo add-apt-repository ppa:ondrej/php -y
+sudo apt update
+
+<span class="cm"># Install PHP 8.3 + all Laravel required extensions</span>
+sudo apt install -y \
+  php8.3 \
+  php8.3-fpm \
+  php8.3-cli \
+  php8.3-mbstring \
+  php8.3-xml \
+  php8.3-curl \
+  php8.3-mysql \
+  php8.3-zip \
+  php8.3-bcmath \
+  php8.3-tokenizer \
+  php8.3-gd \
+  php8.3-redis \
+  unzip git
+
+<span class="cm"># Verify</span>
+php -v
+<span class="cm"># PHP 8.3.x (cli) ...</span>
+
+<span class="cm"># Install Composer globally</span>
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+composer --version</pre>
+      </div>
+
+      <!-- 4 -->
+      <h2 id="nginx">Step 3 — Nginx Setup</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">bash — Nginx install</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre">sudo apt install nginx -y
+sudo systemctl enable nginx
+sudo systemctl start nginx</pre>
+      </div>
+
+      <p>Create the Nginx server block for your Laravel app:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">/etc/nginx/sites-available/laravel</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre">server {
+    listen 80;
+    listen [::]:80;
+    server_name <span class="cb">yourdomain.com</span> www.<span class="cb">yourdomain.com</span>;
+
+    root /var/www/laravel/<span class="cs">public</span>;
+    index index.php index.html;
+
+    <span class="cm"># Laravel SPA / API — all requests to index.php</span>
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass   unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    <span class="cm"># Block access to .env and hidden files</span>
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    <span class="cm"># Static asset caching</span>
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|woff2)$ {
+        expires    30d;
+        add_header Cache-Control "public, no-transform";
+    }
+
+    client_max_body_size 50M;
+    error_log  /var/log/nginx/laravel-error.log;
+    access_log /var/log/nginx/laravel-access.log;
+}
+
+<span class="cm"># Enable site</span>
+<span class="cm"># sudo ln -s /etc/nginx/sites-available/laravel /etc/nginx/sites-enabled/</span>
+<span class="cm"># sudo nginx -t && sudo systemctl reload nginx</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">bash — enable & test</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="cm"># Enable site, remove default, reload</span>
+sudo ln -s /etc/nginx/sites-available/laravel /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t            <span class="cm"># must show: syntax is ok</span>
+sudo systemctl reload nginx</pre>
+      </div>
+
+      <!-- 5 -->
+      <h2 id="mysql">Step 4 — MySQL 8 Setup</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">bash — MySQL install & secure</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre">sudo apt install mysql-server -y
+sudo systemctl enable mysql
+
+<span class="cm"># Run security wizard — set root password, remove test DB</span>
+sudo mysql_secure_installation
+
+<span class="cm"># Create Laravel database and user</span>
+sudo mysql -u root -p
+
+<span class="cm">-- Inside MySQL shell:</span>
+CREATE DATABASE laravel_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER <span class="cs">'laravel_user'</span>@<span class="cs">'localhost'</span> IDENTIFIED BY <span class="cs">'StrongPassword123!'</span>;
+GRANT ALL PRIVILEGES ON laravel_db.* TO <span class="cs">'laravel_user'</span>@<span class="cs">'localhost'</span>;
+FLUSH PRIVILEGES;
+EXIT;</pre>
+      </div>
+
+      <div class="callout danger">
+        <div class="callout-title">🔒 Security Rule</div>
+        <p>Never open MySQL port 3306 to the internet in OCI Security List. MySQL should only be accessible on <code>localhost</code>. Use SSH tunnels for remote DB management tools like TablePlus or DBeaver.</p>
+      </div>
+
+      <!-- 6 -->
+      <h2 id="laravel-deploy">Step 5 — Deploy Laravel App</h2>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">bash — clone & configure</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="cm"># Create web directory and clone your project</span>
+sudo mkdir -p /var/www/laravel
+sudo chown ubuntu:ubuntu /var/www/laravel
+cd /var/www/laravel
+
+git clone https://github.com/youruser/your-laravel-app.git .
+
+<span class="cm"># Install dependencies (no dev packages on production)</span>
+composer install --optimize-autoloader --no-dev
+
+<span class="cm"># Copy and configure environment</span>
+cp .env.example .env
+nano .env
+
+<span class="cm"># ── Inside .env, set these: ─────────────────</span>
+<span class="co">APP_ENV=production</span>
+<span class="co">APP_DEBUG=false</span>
+<span class="co">APP_URL=https://yourdomain.com</span>
+<span class="co">DB_DATABASE=laravel_db</span>
+<span class="co">DB_USERNAME=laravel_user</span>
+<span class="co">DB_PASSWORD=StrongPassword123!</span>
+<span class="cm"># ────────────────────────────────────────────</span>
+
+<span class="cm"># Generate app key, run migrations, cache config</span>
+php artisan key:generate
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+<span class="cm"># Set correct permissions</span>
+sudo chown -R www-data:www-data /var/www/laravel
+sudo chmod -R 755 /var/www/laravel
+sudo chmod -R 775 /var/www/laravel/storage
+sudo chmod -R 775 /var/www/laravel/bootstrap/cache</pre>
+      </div>
+
+      <!-- 7 -->
+      <h2 id="ssl">Step 6 — SSL with Let's Encrypt</h2>
+      <p>Free SSL certificate via Certbot. Auto-renews every 90 days — set it and forget it.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">bash — Certbot SSL setup</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="cm"># Install Certbot + Nginx plugin</span>
+sudo apt install certbot python3-certbot-nginx -y
+
+<span class="cm"># Request certificate (auto-configures Nginx for HTTPS)</span>
+sudo certbot --nginx -d <span class="cb">yourdomain.com</span> -d www.<span class="cb">yourdomain.com</span>
+
+<span class="cm"># Certbot will ask for email, agree to TOS</span>
+<span class="cm"># It auto-modifies your Nginx config to add:</span>
+<span class="cm">#   listen 443 ssl;</span>
+<span class="cm">#   ssl_certificate / ssl_certificate_key paths</span>
+<span class="cm">#   HTTPS redirect from port 80</span>
+
+<span class="cm"># Test auto-renewal</span>
+sudo certbot renew --dry-run
+
+<span class="cm"># Auto-renew cron (already added by Certbot, verify):</span>
+sudo systemctl status certbot.timer</pre>
+      </div>
+
+      <div class="callout success">
+        <div class="callout-title">✅ Verify HTTPS</div>
+        <p>Visit <code>https://yourdomain.com</code> — you should see the green padlock. Test SSL quality at <strong>ssllabs.com/ssltest</strong> — aim for A or A+ rating.</p>
+      </div>
+
+      <!-- 8 -->
+      <h2 id="firewall">Step 7 — OCI Firewall & Security Rules</h2>
+      <p>OCI has two layers of firewall: the <strong>OCI Security List</strong> (cloud level) and <strong>Ubuntu UFW</strong> (OS level). Both must allow traffic.</p>
+
+      <h3>OCI Security List (VCN)</h3>
+      <p>Go to OCI Console → Networking → Virtual Cloud Networks → your VCN → Security Lists → Default Security List. Add these Ingress Rules:</p>
+
+      <table class="compare-table">
+        <thead><tr><th>Port</th><th>Protocol</th><th>Source</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td class="feature">22</td><td>TCP</td><td>Your IP only</td><td><span class="badge-good">SSH Access</span></td></tr>
+          <tr><td class="feature">80</td><td>TCP</td><td>0.0.0.0/0</td><td><span class="badge-cloud">HTTP (Certbot)</span></td></tr>
+          <tr><td class="feature">443</td><td>TCP</td><td>0.0.0.0/0</td><td><span class="badge-cloud">HTTPS</span></td></tr>
+          <tr><td class="feature">3306</td><td>TCP</td><td>❌ Never open</td><td><span class="badge-bad">MySQL — localhost only</span></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Ubuntu UFW Firewall</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">bash — UFW setup</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="cm"># Configure UFW — whitelist only what's needed</span>
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp       <span class="cm"># SSH</span>
+sudo ufw allow 80/tcp       <span class="cm"># HTTP</span>
+sudo ufw allow 443/tcp      <span class="cm"># HTTPS</span>
+
+<span class="cm"># Enable — type 'y' when prompted</span>
+sudo ufw enable
+sudo ufw status verbose</pre>
+      </div>
+
+      <!-- 9 -->
+      <h2 id="auto-deploy">Step 8 — Auto Deploy with Git Hook</h2>
+      <p>Manual deploy every time is tedious. Set up a Git post-receive hook so <code>git push</code> automatically deploys to production:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">bash — deploy script</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="cm"># Create deploy script</span>
+nano /var/www/laravel/deploy.sh</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">deploy.sh — zero-downtime deploy</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre">#!/bin/bash
+set -e
+
+<span class="co">APP_DIR</span>="/var/www/laravel"
+echo <span class="cs">"🚀 Starting deployment..."</span>
+
+cd <span class="co">$APP_DIR</span>
+
+<span class="cm"># Pull latest code</span>
+git pull origin main
+
+<span class="cm"># Install/update dependencies</span>
+composer install --optimize-autoloader --no-dev --quiet
+
+<span class="cm"># Run migrations (safe with --force in CI)</span>
+php artisan migrate --force
+
+<span class="cm"># Clear & rebuild all caches</span>
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+<span class="cm"># Reset permissions</span>
+sudo chown -R www-data:www-data <span class="co">$APP_DIR</span>/storage
+sudo chown -R www-data:www-data <span class="co">$APP_DIR</span>/bootstrap/cache
+
+<span class="cm"># Restart PHP-FPM gracefully</span>
+sudo systemctl reload php8.3-fpm
+
+echo <span class="cs">"✅ Deployment complete!"</span></pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">bash — make executable & test</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre">chmod +x /var/www/laravel/deploy.sh
+
+<span class="cm"># Test deploy manually first</span>
+bash /var/www/laravel/deploy.sh
+
+<span class="cm"># Add sudo rule so deploy.sh can reload php-fpm without password</span>
+echo <span class="cs">"ubuntu ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload php8.3-fpm"</span> | sudo tee /etc/sudoers.d/laravel-deploy</pre>
+      </div>
+
+      <!-- Verdict -->
+      <div class="verdict-box">
+        <div class="verdict-title">🏁 You're Live — Final Checklist</div>
+        <p><strong>What you've built:</strong> A production Laravel stack on OCI Always Free — Ubuntu 22.04 + PHP 8.3 + Nginx + MySQL 8 + Let's Encrypt SSL + UFW firewall + automated deploy script. Total monthly cost: <strong>$0.00</strong>.</p>
+        <p><strong>Next steps to harden:</strong> Set up MySQL automated backups to OCI Object Storage, configure Laravel queue workers with Supervisor, add Redis for caching and session management, and set up Fail2ban to block SSH brute force attempts.</p>
+        <p><strong>OCI Certified tip:</strong> The free ARM instances (VM.Standard.A1.Flex) are ideal for Laravel. PHP 8.3 + PHP-FPM performs extremely well on ARM — I've seen 3–4x better requests/second vs t2.micro on AWS at similar CPU.</p>
+      </div>
+
+    </div><!-- /prose -->
+
+    <!-- Share -->
+    <div class="share-row">
+      <span class="share-label">SHARE:</span>
+      <a href="https://twitter.com/intent/tweet?text=Deploy Laravel on Oracle Cloud Free Tier — Full Guide&url=https://codecraftsystems.github.io/blog/oracle-cloud-laravel-deploy.html" target="_blank" class="share-btn">𝕏 Twitter</a>
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://codecraftsystems.github.io/blog/oracle-cloud-laravel-deploy.html" target="_blank" class="share-btn">💼 LinkedIn</a>
+      <button class="share-btn" onclick="copyLink()">🔗 Copy Link</button>
+    </div>
+
+    <!-- Author -->
+    <div class="author-bio-card">
+      <div class="author-bio-avatar">👨‍💻</div>
+      <div>
+        <div class="author-bio-name">Sonu Sahani</div>
+        <div class="author-bio-role">OCI Certified Architect Associate · CodeCraft Studio</div>
+        <p class="author-bio-text">6+ years building & deploying production Laravel apps on OCI, VPS, and cPanel environments for UK, USA & global clients. Oracle Cloud Infrastructure 2025 Certified Architect Associate — this guide is from real production deployments.</p>
+        <div class="author-bio-links">
+          <a href="https://catalog-education.oracle.com/ords/certview/sharebadge?id=AC93F2805A4B6DCE76A832BA23611815EF616DEC0B111C44ED8788F2D4FFFD6C" target="_blank" class="author-bio-link">OCI Certificate</a>
+          <a href="https://www.linkedin.com/in/sonu-vuejs-laravel-api" target="_blank" class="author-bio-link">LinkedIn</a>
+          <a href="https://codecraftsystems.github.io/#contact" class="author-bio-link">Hire Me</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related -->
+    <div class="related-section">
+      <div class="related-title">Related Articles</div>
+      <div class="related-grid">
+        <a href="laravel-api-best-practices.html" class="related-card">
+          <div class="related-cat">Laravel</div>
+          <div class="related-post-title">Laravel REST API Best Practices for Production SaaS</div>
+          <div class="related-meta">Jan 15, 2025 · 8 min read</div>
+        </a>
+        <a href="laravel-websockets-realtime.html" class="related-card">
+          <div class="related-cat">Laravel</div>
+          <div class="related-post-title">Real-Time Chat with Laravel Reverb & Vue.js in 2025</div>
+          <div class="related-meta">Jan 10, 2025 · 9 min read</div>
+        </a>
+        <a href="nuxt-ssr-seo-guide.html" class="related-card">
+          <div class="related-cat">Nuxt.js</div>
+          <div class="related-post-title">Nuxt.js SSR for SEO: Complete Setup Guide 2025</div>
+          <div class="related-meta">Jan 28, 2025 · 10 min read</div>
+        </a>
+        <a href="stripe-subscription-laravel.html" class="related-card">
+          <div class="related-cat">SaaS</div>
+          <div class="related-post-title">Stripe Subscriptions with Laravel Cashier</div>
+          <div class="related-meta">Dec 22, 2024 · 11 min read</div>
+        </a>
+      </div>
+    </div>
+
+  </article>
+
+  <!-- SIDEBAR -->
+  <aside class="article-sidebar">
+
+    <div class="sidebar-widget">
+      <div class="widget-head">Contents</div>
+      <div class="widget-body">
+        <div class="toc-list">
+          <button class="toc-item active" onclick="scrollTo('why-oci')"><span class="toc-num">01</span>Why Oracle Cloud?</button>
+          <button class="toc-item" onclick="scrollTo('create-instance')"><span class="toc-num">02</span>Create OCI Instance</button>
+          <button class="toc-item" onclick="scrollTo('server-setup')"><span class="toc-num">03</span>PHP 8.3 + Composer</button>
+          <button class="toc-item" onclick="scrollTo('nginx')"><span class="toc-num">04</span>Nginx Setup</button>
+          <button class="toc-item" onclick="scrollTo('mysql')"><span class="toc-num">05</span>MySQL 8 Setup</button>
+          <button class="toc-item" onclick="scrollTo('laravel-deploy')"><span class="toc-num">06</span>Deploy Laravel App</button>
+          <button class="toc-item" onclick="scrollTo('ssl')"><span class="toc-num">07</span>SSL — Let's Encrypt</button>
+          <button class="toc-item" onclick="scrollTo('firewall')"><span class="toc-num">08</span>OCI Firewall & UFW</button>
+          <button class="toc-item" onclick="scrollTo('auto-deploy')"><span class="toc-num">09</span>Auto Deploy Script</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OCI Cert badge -->
+    <div class="sidebar-widget">
+      <div class="widget-head">Author Cert</div>
+      <div class="widget-body">
+        <a href="https://catalog-education.oracle.com/ords/certview/sharebadge?id=AC93F2805A4B6DCE76A832BA23611815EF616DEC0B111C44ED8788F2D4FFFD6C" target="_blank" class="cert-badge">
+          <div class="cert-badge-icon">☁️</div>
+          <div>
+            <div class="cert-badge-name">OCI 2025 Architect Associate</div>
+            <div class="cert-badge-issuer">Oracle · Verified · Aug 2025</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="sidebar-widget cta-widget">
+      <div class="widget-head">Hire Us</div>
+      <div class="widget-body">
+        <div class="cta-title">NEED CLOUD DEPLOYMENT?</div>
+        <p class="cta-desc">OCI certified. We deploy Laravel on Oracle Cloud, VPS & cPanel for UK, USA & global clients. Full stack — dev to production.</p>
+        <a href="https://codecraftsystems.github.io/#contact" class="cta-btn">Get a Free Quote →</a>
+      </div>
+    </div>
+
+    <div class="sidebar-widget">
+      <div class="widget-head">Tags</div>
+      <div class="widget-body">
+        <div class="tags-cloud">
+          <a href="#" class="tag-pill">Oracle OCI</a>
+          <a href="#" class="tag-pill">Free Tier</a>
+          <a href="#" class="tag-pill">Ubuntu 22</a>
+          <a href="#" class="tag-pill">PHP 8.3</a>
+          <a href="#" class="tag-pill">Nginx</a>
+          <a href="#" class="tag-pill">MySQL 8</a>
+          <a href="#" class="tag-pill">Certbot</a>
+          <a href="#" class="tag-pill">SSL</a>
+          <a href="#" class="tag-pill">UFW</a>
+          <a href="#" class="tag-pill">Laravel</a>
+          <a href="#" class="tag-pill">VCN</a>
+          <a href="#" class="tag-pill">DevOps</a>
+        </div>
+      </div>
+    </div>
+
+    <a href="https://codecraftsystems.github.io/blog"
+      style="display:flex;align-items:center;gap:8px;border:1px solid var(--border);color:var(--muted);padding:12px 18px;border-radius:6px;font-family:var(--font-mono);font-size:0.78rem;text-decoration:none;transition:all 0.2s;"
+      onmouseover="this.style.borderColor='#4a9eff';this.style.color='#4a9eff'"
+      onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+      ← Back to Blog
+    </a>
+
+  </aside>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Code<span>Craft</span></div>
+    <p class="footer-copy">© <span id="year"></span> CodeCraft Studio · Sonu Sahani · All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+      <li><a href="https://codecraftsystems.github.io/#services">Services</a></li>
+      <li><a href="https://codecraftsystems.github.io/blog">Blog</a></li>
+      <li><a href="https://codecraftsystems.github.io/#contact">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  (function tick(){
+    cursor.style.transform=`translate(${mx-6}px,${my-6}px)`;
+    rx+=(mx-rx-20)*0.12; ry+=(my-ry-20)*0.12;
+    ring.style.transform=`translate(${rx}px,${ry}px)`;
+    requestAnimationFrame(tick);
+  })();
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    updateProgress();
+    updateTOC();
+  });
+
+  function openMobile()  { document.getElementById('mobileMenu').classList.add('open'); }
+  function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+  function updateProgress() {
+    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+
+  const sections = ['why-oci','create-instance','server-setup','nginx','mysql','laravel-deploy','ssl','firewall','auto-deploy'];
+  function scrollTo(id) { document.getElementById(id)?.scrollIntoView({ behavior:'smooth' }); }
+  function updateTOC() {
+    let current = sections[0];
+    sections.forEach(id => { const el=document.getElementById(id); if(el && window.scrollY >= el.offsetTop-120) current=id; });
+    document.querySelectorAll('.toc-item').forEach((item,i) => item.classList.toggle('active', sections[i]===current));
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      const btn = document.querySelector('[onclick="copyLink()"]');
+      const orig = btn.textContent; btn.textContent='✓ Copied!';
+      setTimeout(() => btn.textContent=orig, 2000);
+    });
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('.code-pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      const orig=btn.textContent; btn.textContent='✓ Copied';
+      setTimeout(() => btn.textContent=orig, 2000);
+    });
+  }
+</script>
+</body>
+</html>

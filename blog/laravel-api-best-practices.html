@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.02, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- ═══ SEO ═══ -->
+<title>Laravel REST API Best Practices for Production-Grade SaaS Apps | CodeCraft Studio</title>
+<meta name="description" content="Learn how to build secure, scalable REST APIs using Laravel Sanctum, proper rate limiting, API versioning, and resource transformers. Real production patterns from 6+ years of experience.">
+<meta name="author" content="Sonu Sahani - CodeCraft Studio">
+<meta name="robots" content="index, follow">
+<meta name="keywords" content="Laravel REST API, Laravel Sanctum, API versioning, Laravel rate limiting, resource transformers, Laravel SaaS, production Laravel API">
+<link rel="canonical" href="https://codecraftsystems.github.io/blog/laravel-api-best-practices.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://codecraftsystems.github.io/blog/laravel-api-best-practices.html">
+<meta property="og:site_name" content="CodeCraft Studio">
+<meta property="og:title" content="Laravel REST API Best Practices for Production-Grade SaaS Apps">
+<meta property="og:description" content="Build secure, scalable REST APIs using Laravel Sanctum, rate limiting, API versioning, and resource transformers.">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/49108546?v=4">
+<meta property="article:published_time" content="2025-01-15">
+<meta property="article:author" content="Sonu Sahani">
+<meta property="article:section" content="Laravel">
+<meta property="article:tag" content="Laravel, REST API, Sanctum, SaaS, PHP">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Laravel REST API Best Practices for Production SaaS">
+<meta name="twitter:description" content="Sanctum auth, rate limiting, versioning & resource transformers — real production patterns.">
+<meta name="twitter:image" content="https://avatars.githubusercontent.com/u/49108546?v=4">
+
+<!-- Article Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Laravel REST API Best Practices for Production-Grade SaaS Apps",
+  "description": "Learn how to build secure, scalable REST APIs using Laravel Sanctum, proper rate limiting, API versioning, and resource transformers.",
+  "image": "https://avatars.githubusercontent.com/u/49108546?v=4",
+  "datePublished": "2025-01-15",
+  "dateModified": "2025-01-15",
+  "author": { "@type": "Person", "name": "Sonu Sahani", "url": "https://codecraftsystems.github.io" },
+  "publisher": { "@type": "Organization", "name": "CodeCraft Studio", "url": "https://codecraftsystems.github.io" },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://codecraftsystems.github.io/blog/laravel-api-best-practices.html" },
+  "keywords": "Laravel, REST API, Sanctum, Rate Limiting, API Versioning, SaaS"
+}
+</script>
+
+<!-- BreadcrumbList Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home",  "item": "https://codecraftsystems.github.io/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog",  "item": "https://codecraftsystems.github.io/blog" },
+    { "@type": "ListItem", "position": 3, "name": "Laravel REST API Best Practices", "item": "https://codecraftsystems.github.io/blog/laravel-api-best-practices.html" }
+  ]
+}
+</script>
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
+<meta name="theme-color" content="#ff4d00">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0a0a0a;
+    --dark: #111111;
+    --card: #161616;
+    --border: #2a2a2a;
+    --accent: #ff4d00;
+    --accent2: #ffb800;
+    --white: #f5f0eb;
+    --muted: #888;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --nav-h: 65px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black); color: var(--white);
+    font-family: var(--font-body); font-size: 16px;
+    line-height: 1.6; overflow-x: hidden; cursor: none;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 100; opacity: 0.4;
+  }
+
+  /* Cursor */
+  .cursor { width:12px; height:12px; background:var(--accent); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9999; transition:transform 0.15s ease; mix-blend-mode:difference; }
+  .cursor-ring { width:40px; height:40px; border:1px solid var(--accent); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9998; transition:all 0.3s ease; opacity:0.5; }
+
+  /* NAV */
+  nav { position:fixed; top:0; left:0; right:0; z-index:1000; height:var(--nav-h); padding:0 40px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid transparent; transition:all 0.3s; }
+  nav.scrolled { background:rgba(10,10,10,0.95); border-color:var(--border); backdrop-filter:blur(20px); }
+  .logo { font-family:var(--font-display); font-size:1.8rem; letter-spacing:2px; color:var(--white); text-decoration:none; }
+  .logo span { color:var(--accent); }
+  .nav-links { display:flex; gap:36px; list-style:none; align-items:center; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--white); }
+  .nav-cta { background:var(--accent) !important; color:var(--white) !important; padding:10px 24px; border-radius:2px; font-weight:600 !important; }
+  .nav-cta:hover { background:#e04400 !important; }
+  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+  .hamburger span { display:block; width:28px; height:2px; background:var(--white); transition:all 0.3s; }
+  .mobile-menu { display:none; position:fixed; inset:0; background:rgba(10,10,10,0.98); z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:36px; }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-family:var(--font-display); font-size:2.5rem; color:var(--white); text-decoration:none; letter-spacing:2px; transition:color 0.2s; }
+  .mobile-menu a:hover { color:var(--accent); }
+  .close-btn { position:absolute; top:24px; right:40px; font-size:2rem; background:none; border:none; color:var(--white); cursor:pointer; }
+
+  /* Progress bar */
+  .progress-bar { position:fixed; top:var(--nav-h); left:0; height:2px; background:var(--accent); z-index:900; width:0%; transition:width 0.1s linear; }
+
+  /* ── HERO ── */
+  .article-hero {
+    padding-top: var(--nav-h);
+    background: var(--dark);
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .hero-grid-bg {
+    position:absolute; inset:0;
+    background-image: linear-gradient(var(--border) 1px,transparent 1px), linear-gradient(90deg,var(--border) 1px,transparent 1px);
+    background-size:60px 60px; opacity:0.18;
+    mask-image:radial-gradient(ellipse 100% 100% at 50% 0%,black,transparent);
+  }
+  .hero-glow { position:absolute; width:700px; height:400px; background:radial-gradient(ellipse,rgba(255,77,0,0.09) 0%,transparent 70%); top:0; left:50%; transform:translateX(-50%); pointer-events:none; }
+
+  /* Animated code in hero bg */
+  .hero-code-bg {
+    position:absolute; right:0; top:0; bottom:0; width:45%;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0.07; pointer-events:none; overflow:hidden;
+    font-family:var(--font-mono); font-size:0.72rem; line-height:1.9;
+    color:var(--white); padding:40px; text-align:left;
+  }
+
+  .article-hero-inner {
+    max-width: 960px; margin: 0 auto;
+    padding: 52px 40px 48px;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .breadcrumb { display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:0.73rem; color:var(--muted); margin-bottom:24px; flex-wrap:wrap; }
+  .breadcrumb a { color:var(--muted); text-decoration:none; transition:color 0.2s; }
+  .breadcrumb a:hover { color:var(--accent); }
+  .breadcrumb .sep { color:#444; }
+
+  .article-cat { display:inline-flex; align-items:center; gap:6px; background:rgba(255,77,0,0.1); border:1px solid rgba(255,77,0,0.3); padding:5px 14px; border-radius:100px; font-family:var(--font-mono); font-size:0.72rem; color:var(--accent); letter-spacing:1px; margin-bottom:20px; }
+  .cat-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); animation:pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.4)} }
+
+  .article-title { font-family:var(--font-display); font-size:clamp(2.2rem,5vw,4rem); line-height:1.0; letter-spacing:1px; color:var(--white); margin-bottom:20px; }
+  .article-title em { font-style:normal; color:var(--accent); }
+
+  .article-desc { font-size:1.05rem; color:var(--muted); line-height:1.75; max-width:640px; margin-bottom:32px; }
+
+  .article-meta { display:flex; align-items:center; gap:0; flex-wrap:wrap; padding:20px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .meta-author { display:flex; align-items:center; gap:12px; padding-right:24px; margin-right:24px; border-right:1px solid var(--border); }
+  .author-avatar-sm { width:42px; height:42px; border-radius:50%; border:2px solid var(--accent); background:var(--card); display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
+  .author-info-name { font-weight:600; font-size:0.88rem; color:var(--white); }
+  .author-info-role { font-family:var(--font-mono); font-size:0.68rem; color:var(--muted); }
+  .meta-items { display:flex; gap:20px; flex-wrap:wrap; }
+  .meta-item { display:flex; align-items:center; gap:7px; font-family:var(--font-mono); font-size:0.73rem; color:var(--muted); }
+
+  .article-tags { display:flex; gap:7px; flex-wrap:wrap; margin-top:20px; }
+  .atag { background:rgba(255,255,255,0.04); border:1px solid var(--border); padding:4px 12px; border-radius:100px; font-size:0.73rem; font-family:var(--font-mono); color:var(--muted); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── PAGE LAYOUT ── */
+  .page-layout { max-width:1200px; margin:0 auto; padding:56px 40px 80px; display:grid; grid-template-columns:1fr 300px; gap:56px; align-items:start; }
+
+  /* ── PROSE ── */
+  .article-body { animation:fadeUp 0.6s 0.15s ease both; }
+  .prose { color:#c8c0b8; font-size:1.02rem; line-height:1.85; }
+
+  .prose h2 { font-family:var(--font-display); font-size:clamp(1.6rem,3vw,2.2rem); letter-spacing:0.5px; color:var(--white); margin:52px 0 20px; line-height:1; padding-top:52px; border-top:1px solid var(--border); scroll-margin-top:90px; }
+  .prose h2:first-child { border-top:none; padding-top:0; margin-top:0; }
+  .prose h3 { font-size:1.12rem; font-weight:700; color:var(--white); margin:32px 0 14px; scroll-margin-top:90px; }
+  .prose p { margin-bottom:20px; }
+  .prose strong { color:var(--white); font-weight:600; }
+  .prose a { color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(255,77,0,0.3); transition:border-color 0.2s; }
+  .prose a:hover { border-color:var(--accent); }
+  .prose ul, .prose ol { margin:0 0 20px 20px; display:flex; flex-direction:column; gap:8px; }
+  .prose li::marker { color:var(--accent); }
+  .prose code { background:rgba(255,77,0,0.08); border:1px solid rgba(255,77,0,0.15); padding:2px 7px; border-radius:3px; font-family:var(--font-mono); font-size:0.82rem; color:#f8c8a0; }
+
+  /* Code blocks */
+  .code-block { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin:28px 0; }
+  .code-header { background:var(--dark); padding:10px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+  .code-header-left { display:flex; align-items:center; gap:8px; }
+  .cdot { width:9px; height:9px; border-radius:50%; }
+  .cdot.r{background:#ff5f57} .cdot.y{background:#febc2e} .cdot.g{background:#28c840}
+  .code-lang { font-family:var(--font-mono); font-size:0.7rem; color:var(--muted); margin-left:6px; }
+  .copy-btn { background:none; border:1px solid var(--border); color:var(--muted); font-family:var(--font-mono); font-size:0.68rem; padding:3px 10px; border-radius:3px; cursor:pointer; transition:all 0.2s; }
+  .copy-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .code-pre { padding:22px 24px; overflow-x:auto; font-family:var(--font-mono); font-size:0.82rem; line-height:1.8; color:#ccc; }
+  .cm{color:#546e7a;font-style:italic} .ck{color:#c792ea} .cs{color:#c3e88d} .cf{color:#82aaff} .ca{color:var(--accent);font-weight:600} .cn{color:var(--accent2)} .ct{color:#f07178} .cg{color:#c3e88d}
+
+  /* Callouts */
+  .callout { border-left:3px solid var(--accent); background:rgba(255,77,0,0.05); padding:18px 20px; border-radius:0 6px 6px 0; margin:28px 0; }
+  .callout.info  { border-color:#82aaff; background:rgba(130,170,255,0.05); }
+  .callout.warn  { border-color:var(--accent2); background:rgba(255,184,0,0.05); }
+  .callout.success { border-color:#28c840; background:rgba(40,200,64,0.05); }
+  .callout-title { font-weight:700; font-size:0.85rem; color:var(--white); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+  .callout p { margin:0; font-size:0.92rem; }
+
+  /* Table */
+  .compare-table { width:100%; border-collapse:collapse; margin:28px 0; font-size:0.88rem; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .compare-table th { background:var(--dark); padding:13px 16px; text-align:left; font-family:var(--font-mono); font-size:0.73rem; letter-spacing:1px; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); }
+  .compare-table th:first-child { color:var(--white); }
+  .compare-table td { padding:12px 16px; border-bottom:1px solid var(--border); color:#b0a8a0; vertical-align:middle; }
+  .compare-table tr:last-child td { border-bottom:none; }
+  .compare-table tr:hover td { background:rgba(255,255,255,0.02); }
+  .compare-table .feature { color:var(--white); font-weight:500; }
+  .badge-good{color:#28c840;font-family:var(--font-mono);font-size:0.78rem}
+  .badge-ok  {color:var(--accent2);font-family:var(--font-mono);font-size:0.78rem}
+  .badge-bad {color:#ff5f57;font-family:var(--font-mono);font-size:0.78rem}
+
+  /* Verdict */
+  .verdict-box { background:var(--card); border:1px solid var(--border); border-top:3px solid var(--accent); border-radius:8px; padding:28px; margin:36px 0; }
+  .verdict-title { font-family:var(--font-display); font-size:1.4rem; letter-spacing:1px; color:var(--white); margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+  .verdict-box p { color:var(--muted); font-size:0.92rem; line-height:1.7; margin-bottom:14px; }
+  .verdict-box p:last-child { margin-bottom:0; }
+
+  /* Share */
+  .share-row { display:flex; align-items:center; gap:14px; padding:28px 0; border-top:1px solid var(--border); flex-wrap:wrap; margin-top:48px; }
+  .share-label { font-family:var(--font-mono); font-size:0.75rem; color:var(--muted); letter-spacing:1px; }
+  .share-btn { border:1px solid var(--border); color:var(--muted); padding:7px 16px; border-radius:2px; font-family:var(--font-mono); font-size:0.75rem; text-decoration:none; cursor:pointer; background:none; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* Author bio */
+  .author-bio-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:28px; display:flex; gap:20px; align-items:flex-start; margin-top:12px; }
+  .author-bio-avatar { width:64px; height:64px; border-radius:50%; border:2px solid var(--accent); background:var(--dark); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .author-bio-name { font-weight:700; color:var(--white); font-size:1rem; margin-bottom:4px; }
+  .author-bio-role { font-family:var(--font-mono); font-size:0.72rem; color:var(--accent); margin-bottom:10px; }
+  .author-bio-text { color:var(--muted); font-size:0.88rem; line-height:1.6; margin-bottom:14px; }
+  .author-bio-links { display:flex; gap:10px; }
+  .author-bio-link { border:1px solid var(--border); color:var(--muted); padding:5px 14px; border-radius:2px; font-family:var(--font-mono); font-size:0.72rem; text-decoration:none; transition:all 0.2s; }
+  .author-bio-link:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* Related */
+  .related-section { margin-top:60px; }
+  .related-title { font-family:var(--font-display); font-size:1.8rem; letter-spacing:1px; color:var(--white); margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .related-title::before { content:''; width:3px; height:24px; background:var(--accent); border-radius:2px; }
+  .related-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .related-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:22px; text-decoration:none; color:inherit; transition:all 0.3s; display:flex; flex-direction:column; gap:10px; position:relative; overflow:hidden; }
+  .related-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transform:scaleX(0); transform-origin:left; transition:transform 0.3s; }
+  .related-card:hover::after { transform:scaleX(1); }
+  .related-card:hover { border-color:rgba(255,77,0,0.3); transform:translateY(-3px); }
+  .related-cat { font-family:var(--font-mono); font-size:0.68rem; color:var(--accent); text-transform:uppercase; letter-spacing:1px; }
+  .related-post-title { font-size:0.9rem; font-weight:700; color:var(--white); line-height:1.4; }
+  .related-meta { font-family:var(--font-mono); font-size:0.68rem; color:var(--muted); }
+
+  /* Sidebar */
+  .article-sidebar { display:flex; flex-direction:column; gap:24px; position:sticky; top:90px; }
+  .sidebar-widget { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .widget-head { padding:13px 18px; background:var(--dark); border-bottom:1px solid var(--border); font-family:var(--font-display); font-size:0.95rem; letter-spacing:1px; color:var(--white); display:flex; align-items:center; gap:10px; }
+  .widget-head::before { content:''; width:3px; height:14px; background:var(--accent); border-radius:2px; }
+  .widget-body { padding:18px; }
+
+  .toc-list { display:flex; flex-direction:column; gap:2px; }
+  .toc-item { display:flex; align-items:flex-start; gap:10px; padding:7px 10px; border-radius:4px; text-decoration:none; color:var(--muted); font-size:0.82rem; line-height:1.4; transition:all 0.2s; cursor:pointer; border:none; background:none; font-family:var(--font-body); text-align:left; width:100%; }
+  .toc-item:hover,.toc-item.active { background:rgba(255,77,0,0.08); color:var(--white); }
+  .toc-item.active { color:var(--accent); }
+  .toc-num { font-family:var(--font-mono); font-size:0.68rem; color:var(--accent); opacity:0.7; min-width:18px; margin-top:1px; }
+
+  .cta-widget { background:linear-gradient(135deg,rgba(255,77,0,0.08),rgba(255,184,0,0.04)) !important; border:1px solid rgba(255,77,0,0.2) !important; }
+  .cta-widget .widget-body { text-align:center; }
+  .cta-title { font-family:var(--font-display); font-size:1.3rem; letter-spacing:1px; color:var(--white); margin-bottom:10px; }
+  .cta-desc { color:var(--muted); font-size:0.82rem; line-height:1.6; margin-bottom:18px; }
+  .cta-btn { display:block; background:var(--accent); color:var(--white); padding:11px 20px; text-decoration:none; font-weight:600; font-size:0.85rem; border-radius:2px; transition:all 0.2s; text-align:center; }
+  .cta-btn:hover { background:#e04400; transform:translateY(-2px); }
+
+  .tags-cloud { display:flex; flex-wrap:wrap; gap:6px; }
+  .tag-pill { background:rgba(255,255,255,0.04); border:1px solid var(--border); padding:4px 10px; border-radius:100px; font-size:0.72rem; font-family:var(--font-mono); color:var(--muted); text-decoration:none; transition:all 0.2s; }
+  .tag-pill:hover { background:rgba(255,77,0,0.1); border-color:rgba(255,77,0,0.4); color:var(--accent); }
+
+  /* Footer */
+  footer { background:var(--dark); border-top:1px solid var(--border); padding:40px; }
+  .footer-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+  .footer-logo { font-family:var(--font-display); font-size:1.5rem; letter-spacing:2px; color:var(--white); }
+  .footer-logo span { color:var(--accent); }
+  .footer-copy { color:var(--muted); font-size:0.82rem; }
+  .footer-links { display:flex; gap:24px; list-style:none; }
+  .footer-links a { color:var(--muted); text-decoration:none; font-size:0.82rem; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--white); }
+
+  /* Responsive */
+  @media(max-width:1100px){ .page-layout{grid-template-columns:1fr;gap:40px} .article-sidebar{position:static;display:grid;grid-template-columns:repeat(2,1fr)} }
+  @media(max-width:900px){ nav{padding:0 24px} .nav-links{display:none} .hamburger{display:flex} }
+  @media(max-width:700px){
+    .page-layout{padding:36px 20px 60px} .article-hero-inner{padding:36px 20px} .article-sidebar{grid-template-columns:1fr}
+    .related-grid{grid-template-columns:1fr} .meta-author{padding-right:0;margin-right:0;border-right:none;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;width:100%}
+    .article-meta{flex-direction:column;align-items:flex-start} body{cursor:auto} .cursor,.cursor-ring{display:none}
+    .hero-code-bg{display:none}
+  }
+  @media(max-width:500px){ footer{padding:32px 20px} .footer-inner{flex-direction:column;text-align:center} .author-bio-card{flex-direction:column} .code-pre{font-size:0.74rem} }
+
+  
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-btn" onclick="closeMobile()">✕</button>
+  <a href="https://codecraftsystems.github.io/" onclick="closeMobile()">Home</a>
+  <a href="https://codecraftsystems.github.io/#services" onclick="closeMobile()">Services</a>
+  <a href="https://codecraftsystems.github.io/#about" onclick="closeMobile()">About</a>
+  <a href="https://codecraftsystems.github.io/blog" onclick="closeMobile()">Blog</a>
+  <a href="https://codecraftsystems.github.io/#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<nav id="navbar">
+  <a href="https://codecraftsystems.github.io/" class="logo">Code<span>Craft</span></a>
+  <ul class="nav-links">
+    <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+    <li><a href="https://codecraftsystems.github.io/#services">Services</a></li>
+    <li><a href="https://codecraftsystems.github.io/#about">About</a></li>
+    <li><a href="https://codecraftsystems.github.io/blog">Blog</a></li>
+    <li><a href="https://codecraftsystems.github.io/#contact" class="nav-cta">Hire Us</a></li>
+  </ul>
+  <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ── HERO ── -->
+<header class="article-hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-code-bg">
+Route::middleware(['auth:sanctum','throttle:60,1'])
+  ->prefix('v1')
+  ->group(function() {
+    Route::apiResource('posts', PostController::class);
+    Route::apiResource('users', UserController::class);
+    Route::post('/refresh', [AuthController::class, 'refresh']);
+  });
+
+class PostResource extends JsonResource {
+  public function toArray($request): array {
+    return [
+      'id'         => $this->id,
+      'title'      => $this->title,
+      'author'     => new UserResource($this->user),
+      'created_at' => $this->created_at->toISOString(),
+    ];
+  }
+}
+  </div>
+  <div class="article-hero-inner">
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="https://codecraftsystems.github.io/">Home</a>
+      <span class="sep">›</span>
+      <a href="https://codecraftsystems.github.io/blog">Blog</a>
+      <span class="sep">›</span>
+      <span>Laravel REST API Best Practices</span>
+    </nav>
+
+    <div class="article-cat"><span class="cat-dot"></span> Laravel</div>
+
+    <h1 class="article-title">
+      LARAVEL REST API<br>
+      <em>BEST PRACTICES</em><br>
+      FOR PRODUCTION SAAS
+    </h1>
+    <p class="article-desc">Learn how to build secure, scalable REST APIs using Laravel Sanctum, proper rate limiting, API versioning, and resource transformers — with real patterns from production SaaS projects.</p>
+
+    <div class="article-meta">
+      <div class="meta-author">
+        <div class="author-avatar-sm">👨‍💻</div>
+        <div>
+          <div class="author-info-name">Sonu Sahani</div>
+          <div class="author-info-role">Full Stack Developer · CodeCraft Studio</div>
+        </div>
+      </div>
+      <div class="meta-items">
+        <span class="meta-item">📅 Jan 15, 2025</span>
+        <span class="meta-item">⏱ 8 min read</span>
+        <span class="meta-item">👁 2.4k views</span>
+        <span class="meta-item">💬 Laravel</span>
+      </div>
+    </div>
+
+    <div class="article-tags">
+      <span class="atag">Laravel</span>
+      <span class="atag">REST API</span>
+      <span class="atag">Sanctum</span>
+      <span class="atag">Rate Limiting</span>
+      <span class="atag">API Versioning</span>
+      <span class="atag">SaaS</span>
+      <span class="atag">PHP</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── MAIN ── -->
+<div class="page-layout">
+
+  <article class="article-body">
+    <div class="prose">
+
+      <!-- 1 -->
+      <h2 id="intro">Why API Design Matters in SaaS</h2>
+      <p>A well-designed REST API is the backbone of any SaaS product. In my 6+ years building Laravel applications — including a large-scale UK job portal currently serving thousands of users — I've learned that the difference between a maintainable API and a legacy nightmare comes down to a handful of key practices.</p>
+      <p>This article covers the <strong>exact patterns I use in production</strong>: authentication, versioning, rate limiting, resource transformers, error handling, and more. No fluff — just working code.</p>
+
+      <div class="callout info">
+        <div class="callout-title">ℹ️ Stack Used</div>
+        <p>Laravel 11, PHP 8.3, MySQL 8, Laravel Sanctum, Redis (for caching & rate limiting). All patterns apply to Laravel 9+ as well.</p>
+      </div>
+
+      <!-- 2 -->
+      <h2 id="auth">Authentication with Laravel Sanctum</h2>
+      <p>For SaaS APIs, <strong>Laravel Sanctum</strong> is the right choice over Passport for most use cases. It's lightweight, supports both SPA cookie-based auth and token-based API auth, and integrates with Laravel's built-in middleware perfectly.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">AuthController.php</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="ck">class</span> <span class="cf">AuthController</span> <span class="ck">extends</span> Controller
+{
+    <span class="ck">public function</span> <span class="cf">login</span>(LoginRequest <span class="ca">$request</span>): JsonResponse
+    {
+        <span class="ck">if</span> (!Auth::<span class="cf">attempt</span>(<span class="ca">$request</span>-><span class="cf">only</span>(<span class="cs">'email'</span>, <span class="cs">'password'</span>))) {
+            <span class="ck">return</span> <span class="cf">response</span>()-><span class="cf">json</span>([
+                <span class="cs">'message'</span> => <span class="cs">'Invalid credentials'</span>
+            ], <span class="cn">401</span>);
+        }
+
+        <span class="ca">$user</span>  = Auth::<span class="cf">user</span>();
+        <span class="ca">$token</span> = <span class="ca">$user</span>-><span class="cf">createToken</span>(
+            <span class="cs">'api-token'</span>,
+            [<span class="cs">'*'</span>],                           <span class="cm">// abilities</span>
+            now()-><span class="cf">addDays</span>(<span class="cn">30</span>)              <span class="cm">// expiry</span>
+        )-><span class="cf">plainTextToken</span>;
+
+        <span class="ck">return</span> <span class="cf">response</span>()-><span class="cf">json</span>([
+            <span class="cs">'token'</span> => <span class="ca">$token</span>,
+            <span class="cs">'user'</span>  => <span class="ck">new</span> UserResource(<span class="ca">$user</span>),
+        ]);
+    }
+
+    <span class="ck">public function</span> <span class="cf">logout</span>(Request <span class="ca">$request</span>): JsonResponse
+    {
+        <span class="ca">$request</span>-><span class="cf">user</span>()-><span class="cf">currentAccessToken</span>()-><span class="cf">delete</span>();
+        <span class="ck">return</span> <span class="cf">response</span>()-><span class="cf">json</span>([<span class="cs">'message'</span> => <span class="cs">'Logged out'</span>]);
+    }
+}</pre>
+      </div>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ Token Expiry</div>
+        <p>Always set token expiry. Never create tokens with <code>createToken('name')</code> without an expiry date — this creates permanent tokens that are a security risk if leaked.</p>
+      </div>
+
+      <!-- 3 -->
+      <h2 id="versioning">API Versioning</h2>
+      <p>API versioning is non-negotiable for any SaaS product. The moment you have paying customers, you <strong>cannot break their integrations</strong>. Here's the clean URL prefix approach I use:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">routes/api.php</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="cm">// ── V1 Routes ─────────────────────────────────</span>
+Route::<span class="cf">prefix</span>(<span class="cs">'v1'</span>)
+    -><span class="cf">middleware</span>([<span class="cs">'auth:sanctum'</span>, <span class="cs">'throttle:api'</span>])
+    -><span class="cf">group</span>(<span class="ck">base_path</span>(<span class="cs">'routes/api/v1.php'</span>));
+
+<span class="cm">// ── V2 Routes (new features, no breaking changes in v1) ──</span>
+Route::<span class="cf">prefix</span>(<span class="cs">'v2'</span>)
+    -><span class="cf">middleware</span>([<span class="cs">'auth:sanctum'</span>, <span class="cs">'throttle:api'</span>])
+    -><span class="cf">group</span>(<span class="ck">base_path</span>(<span class="cs">'routes/api/v2.php'</span>));
+
+<span class="cm">// routes/api/v1.php</span>
+Route::<span class="cf">apiResource</span>(<span class="cs">'posts'</span>,   <span class="cf">PostController</span>::<span class="ck">class</span>);
+Route::<span class="cf">apiResource</span>(<span class="cs">'users'</span>,   <span class="cf">UserController</span>::<span class="ck">class</span>);
+Route::<span class="cf">apiResource</span>(<span class="cs">'jobs'</span>,    <span class="cf">JobController</span>::<span class="ck">class</span>);
+
+<span class="cm">// Your API endpoints become:</span>
+<span class="cm">// GET  /api/v1/posts      — list</span>
+<span class="cm">// POST /api/v1/posts      — create</span>
+<span class="cm">// GET  /api/v1/posts/{id} — show</span></pre>
+      </div>
+
+      <h3>Controller Namespace per Version</h3>
+      <p>Keep v1 and v2 controllers in separate namespaces so they can evolve independently without touching shared code:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">Directory Structure</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre">app/Http/Controllers/
+├── <span class="cf">Api/</span>
+│   ├── <span class="ca">V1/</span>
+│   │   ├── PostController.php    <span class="cm">// stable, no breaking changes</span>
+│   │   └── UserController.php
+│   └── <span class="ca">V2/</span>
+│       ├── PostController.php    <span class="cm">// new response structure</span>
+│       └── UserController.php
+app/Http/Resources/
+├── <span class="ca">V1/</span>
+│   └── PostResource.php
+└── <span class="ca">V2/</span>
+    └── PostResource.php          <span class="cm">// new fields, same data</span></pre>
+      </div>
+
+      <!-- 4 -->
+      <h2 id="rate-limiting">Rate Limiting</h2>
+      <p>Laravel 10+ has a powerful <code>RateLimiter</code> facade. Define your limiters in <code>AppServiceProvider</code> (or <code>RouteServiceProvider</code> in older versions) for clean, testable rate limiting:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">AppServiceProvider.php</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="ck">use</span> Illuminate\Cache\RateLimiting\Limit;
+<span class="ck">use</span> Illuminate\Support\Facades\RateLimiter;
+
+<span class="ck">public function</span> <span class="cf">boot</span>(): <span class="ct">void</span>
+{
+    <span class="cm">// Standard API: 60 req/min per user</span>
+    RateLimiter::<span class="cf">for</span>(<span class="cs">'api'</span>, <span class="ck">function</span> (Request <span class="ca">$request</span>) {
+        <span class="ck">return</span> Limit::<span class="cf">perMinute</span>(<span class="cn">60</span>)
+            -><span class="cf">by</span>(<span class="ca">$request</span>-><span class="cf">user</span>()?->id ?: <span class="ca">$request</span>-><span class="cf">ip</span>());
+    });
+
+    <span class="cm">// Strict: auth endpoints — 5 req/min to prevent brute force</span>
+    RateLimiter::<span class="cf">for</span>(<span class="cs">'auth'</span>, <span class="ck">function</span> (Request <span class="ca">$request</span>) {
+        <span class="ck">return</span> Limit::<span class="cf">perMinute</span>(<span class="cn">5</span>)
+            -><span class="cf">by</span>(<span class="ca">$request</span>-><span class="cf">ip</span>())
+            -><span class="cf">response</span>(<span class="ck">function</span>() {
+                <span class="ck">return</span> <span class="cf">response</span>()-><span class="cf">json</span>([
+                    <span class="cs">'message'</span> => <span class="cs">'Too many attempts. Try again in 1 minute.'</span>,
+                    <span class="cs">'retry_after'</span> => <span class="cn">60</span>
+                ], <span class="cn">429</span>);
+            });
+    });
+
+    <span class="cm">// Paid plan: higher limits per subscription tier</span>
+    RateLimiter::<span class="cf">for</span>(<span class="cs">'premium'</span>, <span class="ck">function</span> (Request <span class="ca">$request</span>) {
+        <span class="ca">$limit</span> = <span class="ca">$request</span>-><span class="cf">user</span>()->isPremium() ? <span class="cn">500</span> : <span class="cn">60</span>;
+        <span class="ck">return</span> Limit::<span class="cf">perMinute</span>(<span class="ca">$limit</span>)-><span class="cf">by</span>(<span class="ca">$request</span>-><span class="cf">user</span>()->id);
+    });
+}</pre>
+      </div>
+
+      <!-- 5 -->
+      <h2 id="resources">Resource Transformers</h2>
+      <p>Never return Eloquent models directly from your API. <strong>Always use API Resources</strong>. This decouples your database schema from your API contract — you can rename columns, add relations, or change formats without breaking clients.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">app/Http/Resources/V1/PostResource.php</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="ck">class</span> <span class="cf">PostResource</span> <span class="ck">extends</span> JsonResource
+{
+    <span class="ck">public function</span> <span class="cf">toArray</span>(Request <span class="ca">$request</span>): <span class="ct">array</span>
+    {
+        <span class="ck">return</span> [
+            <span class="cs">'id'</span>         => <span class="ca">$this</span>->id,
+            <span class="cs">'title'</span>      => <span class="ca">$this</span>->title,
+            <span class="cs">'slug'</span>       => <span class="ca">$this</span>->slug,
+            <span class="cs">'excerpt'</span>    => <span class="ca">$this</span>->excerpt,
+            <span class="cs">'status'</span>     => <span class="ca">$this</span>->status,
+            <span class="cs">'author'</span>     => <span class="ck">new</span> <span class="cf">UserResource</span>(<span class="ca">$this</span>->whenLoaded(<span class="cs">'user'</span>)),
+            <span class="cs">'tags'</span>       => TagResource::<span class="cf">collection</span>(<span class="ca">$this</span>->whenLoaded(<span class="cs">'tags'</span>)),
+            <span class="cs">'created_at'</span> => <span class="ca">$this</span>->created_at?-><span class="cf">toISOString</span>(),
+            <span class="cs">'updated_at'</span> => <span class="ca">$this</span>->updated_at?-><span class="cf">toISOString</span>(),
+
+            <span class="cm">// Conditional — only for authenticated users</span>
+            <span class="ca">$this</span>-><span class="cf">mergeWhen</span>(<span class="ca">$request</span>-><span class="cf">user</span>()?->isAdmin(), [
+                <span class="cs">'internal_notes'</span> => <span class="ca">$this</span>->internal_notes,
+                <span class="cs">'ip_address'</span>     => <span class="ca">$this</span>->ip_address,
+            ]),
+        ];
+    }
+}</pre>
+      </div>
+
+      <div class="callout success">
+        <div class="callout-title">✅ Pro Tip: whenLoaded()</div>
+        <p>Always use <code>whenLoaded()</code> for relations in resources. This prevents N+1 queries — the relation is only included in the response if it was eager-loaded in the controller.</p>
+      </div>
+
+      <!-- 6 -->
+      <h2 id="errors">Consistent Error Handling</h2>
+      <p>Inconsistent error responses are one of the biggest frustrations for API consumers. Every error from your API should follow the same JSON structure. Laravel's exception handler makes this easy:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">bootstrap/app.php · Laravel 11</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="ck">use</span> Illuminate\Validation\ValidationException;
+<span class="ck">use</span> Illuminate\Auth\AuthenticationException;
+<span class="ck">use</span> Illuminate\Database\Eloquent\ModelNotFoundException;
+
+->withExceptions(<span class="ck">function</span> (Exceptions <span class="ca">$exceptions</span>) {
+    <span class="cm">// 422 Validation errors</span>
+    <span class="ca">$exceptions</span>-><span class="cf">render</span>(<span class="ck">function</span> (ValidationException <span class="ca">$e</span>, Request <span class="ca">$req</span>) {
+        <span class="ck">if</span> (<span class="ca">$req</span>-><span class="cf">expectsJson</span>()) {
+            <span class="ck">return</span> <span class="cf">response</span>()-><span class="cf">json</span>([
+                <span class="cs">'message'</span> => <span class="cs">'Validation failed'</span>,
+                <span class="cs">'errors'</span>  => <span class="ca">$e</span>-><span class="cf">errors</span>(),
+            ], <span class="cn">422</span>);
+        }
+    });
+
+    <span class="cm">// 404 Model not found</span>
+    <span class="ca">$exceptions</span>-><span class="cf">render</span>(<span class="ck">function</span> (ModelNotFoundException <span class="ca">$e</span>, Request <span class="ca">$req</span>) {
+        <span class="ck">if</span> (<span class="ca">$req</span>-><span class="cf">expectsJson</span>()) {
+            <span class="ck">return</span> <span class="cf">response</span>()-><span class="cf">json</span>([
+                <span class="cs">'message'</span> => <span class="cs">'Resource not found'</span>,
+            ], <span class="cn">404</span>);
+        }
+    });
+
+    <span class="cm">// 401 Unauthenticated</span>
+    <span class="ca">$exceptions</span>-><span class="cf">render</span>(<span class="ck">function</span> (AuthenticationException <span class="ca">$e</span>, Request <span class="ca">$req</span>) {
+        <span class="ck">if</span> (<span class="ca">$req</span>-><span class="cf">expectsJson</span>()) {
+            <span class="ck">return</span> <span class="cf">response</span>()-><span class="cf">json</span>([
+                <span class="cs">'message'</span> => <span class="cs">'Unauthenticated'</span>,
+            ], <span class="cn">401</span>);
+        }
+    });
+})</pre>
+      </div>
+
+      <!-- 7 -->
+      <h2 id="responses">Standardised Response Structure</h2>
+      <p>Use a base controller or trait to enforce a consistent response envelope across all your endpoints:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-header-left"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div><span class="code-lang">app/Traits/ApiResponse.php</span></div>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-pre"><span class="ck">trait</span> <span class="cf">ApiResponse</span>
+{
+    <span class="ck">protected function</span> <span class="cf">success</span>(
+        <span class="ca">$data</span>,
+        <span class="ct">string</span> <span class="ca">$message</span> = <span class="cs">'Success'</span>,
+        <span class="ct">int</span>    <span class="ca">$status</span>  = <span class="cn">200</span>
+    ): JsonResponse {
+        <span class="ck">return</span> <span class="cf">response</span>()-><span class="cf">json</span>([
+            <span class="cs">'success'</span> => <span class="cn">true</span>,
+            <span class="cs">'message'</span> => <span class="ca">$message</span>,
+            <span class="cs">'data'</span>    => <span class="ca">$data</span>,
+        ], <span class="ca">$status</span>);
+    }
+
+    <span class="ck">protected function</span> <span class="cf">error</span>(
+        <span class="ct">string</span> <span class="ca">$message</span>,
+        <span class="ct">int</span>    <span class="ca">$status</span> = <span class="cn">400</span>,
+        <span class="ct">array</span>  <span class="ca">$errors</span> = []
+    ): JsonResponse {
+        <span class="ck">return</span> <span class="cf">response</span>()-><span class="cf">json</span>([
+            <span class="cs">'success'</span> => <span class="cn">false</span>,
+            <span class="cs">'message'</span> => <span class="ca">$message</span>,
+            <span class="cs">'errors'</span>  => <span class="ca">$errors</span>,
+        ], <span class="ca">$status</span>);
+    }
+}
+
+<span class="cm">// In your controller:</span>
+<span class="ck">class</span> <span class="cf">PostController</span> <span class="ck">extends</span> Controller
+{
+    <span class="ck">use</span> ApiResponse;
+
+    <span class="ck">public function</span> <span class="cf">store</span>(StorePostRequest <span class="ca">$request</span>): JsonResponse
+    {
+        <span class="ca">$post</span> = Post::<span class="cf">create</span>(<span class="ca">$request</span>-><span class="cf">validated</span>());
+        <span class="ck">return</span> <span class="ca">$this</span>-><span class="cf">success</span>(<span class="ck">new</span> PostResource(<span class="ca">$post</span>), <span class="cs">'Post created'</span>, <span class="cn">201</span>);
+    }
+}</pre>
+      </div>
+
+      <!-- 8 -->
+      <h2 id="checklist">Production Checklist</h2>
+      <p>Before deploying any Laravel API to production, run through this checklist:</p>
+
+      <table class="compare-table">
+        <thead>
+          <tr><th>Item</th><th>Importance</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="feature">Sanctum / Passport auth</td><td><span class="badge-good">Critical</span></td><td>Never expose unprotected endpoints</td></tr>
+          <tr><td class="feature">Rate limiting</td><td><span class="badge-good">Critical</span></td><td>5/min for auth, 60/min for API</td></tr>
+          <tr><td class="feature">API versioning</td><td><span class="badge-good">Critical</span></td><td>/api/v1/ prefix from day one</td></tr>
+          <tr><td class="feature">API Resources</td><td><span class="badge-good">Critical</span></td><td>Never expose raw Eloquent models</td></tr>
+          <tr><td class="feature">Form Request validation</td><td><span class="badge-good">Critical</span></td><td>Validate all input in FormRequest classes</td></tr>
+          <tr><td class="feature">Consistent error responses</td><td><span class="badge-ok">High</span></td><td>Same JSON shape for all errors</td></tr>
+          <tr><td class="feature">CORS configuration</td><td><span class="badge-ok">High</span></td><td>Whitelist only your frontend domains</td></tr>
+          <tr><td class="feature">Response caching (Redis)</td><td><span class="badge-ok">High</span></td><td>Cache read-heavy endpoints</td></tr>
+          <tr><td class="feature">Eager loading (N+1)</td><td><span class="badge-ok">High</span></td><td>Use with() on all relation queries</td></tr>
+          <tr><td class="feature">API documentation</td><td><span class="badge-ok">Medium</span></td><td>Scribe or L5-Swagger</td></tr>
+        </tbody>
+      </table>
+
+      <!-- Verdict -->
+      <div class="verdict-box">
+        <div class="verdict-title">🏁 Key Takeaways</div>
+        <p><strong>Security first:</strong> Sanctum for auth, strict rate limiting on all endpoints especially login/register, validated FormRequests for every input.</p>
+        <p><strong>Contract stability:</strong> Version your API from day one (<code>/api/v1/</code>). Use API Resources as the only output layer — never raw models. This lets your database evolve independently from your API contract.</p>
+        <p><strong>Consistency:</strong> A single error response trait, a single success wrapper, and a single versioning convention eliminates entire categories of bugs and client confusion.</p>
+      </div>
+
+    </div><!-- /prose -->
+
+    <!-- Share -->
+    <div class="share-row">
+      <span class="share-label">SHARE:</span>
+      <a href="https://twitter.com/intent/tweet?text=Laravel REST API Best Practices for Production SaaS&url=https://codecraftsystems.github.io/blog/laravel-api-best-practices.html" target="_blank" class="share-btn">𝕏 Twitter</a>
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://codecraftsystems.github.io/blog/laravel-api-best-practices.html" target="_blank" class="share-btn">💼 LinkedIn</a>
+      <button class="share-btn" onclick="copyLink()">🔗 Copy Link</button>
+    </div>
+
+    <!-- Author -->
+    <div class="author-bio-card">
+      <div class="author-bio-avatar">👨‍💻</div>
+      <div>
+        <div class="author-bio-name">Sonu Sahani</div>
+        <div class="author-bio-role">Full Stack Developer · CodeCraft Studio</div>
+        <p class="author-bio-text">6+ years building production Laravel APIs, Vue.js SPAs & cloud SaaS products. Currently working with Lifelancer (UK) — a large-scale job portal serving thousands of users. Writing about real patterns I use every day.</p>
+        <div class="author-bio-links">
+          <a href="https://www.linkedin.com/in/sonu-vuejs-laravel-api" target="_blank" class="author-bio-link">LinkedIn</a>
+          <a href="https://github.com/sonusonusahani098" target="_blank" class="author-bio-link">GitHub</a>
+          <a href="https://codecraftsystems.github.io/#contact" class="author-bio-link">Hire Me</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related -->
+    <div class="related-section">
+      <div class="related-title">Related Articles</div>
+      <div class="related-grid">
+        <a href="laravel-websockets-realtime.html" class="related-card">
+          <div class="related-cat">Laravel</div>
+          <div class="related-post-title">Real-Time Chat with Laravel Reverb & Vue.js in 2025</div>
+          <div class="related-meta">Jan 10, 2025 · 9 min read</div>
+        </a>
+        <a href="oracle-cloud-laravel-deploy.html" class="related-card">
+          <div class="related-cat">DevOps</div>
+          <div class="related-post-title">Deploy Laravel on Oracle Cloud Free Tier — Full Guide</div>
+          <div class="related-meta">Jan 20, 2025 · 12 min read</div>
+        </a>
+        <a href="stripe-subscription-laravel.html" class="related-card">
+          <div class="related-cat">SaaS</div>
+          <div class="related-post-title">Stripe Subscriptions with Laravel Cashier — Complete Tutorial</div>
+          <div class="related-meta">Dec 22, 2024 · 11 min read</div>
+        </a>
+        <a href="vuejs-state-management-pinia.html" class="related-card">
+          <div class="related-cat">Vue.js</div>
+          <div class="related-post-title">Pinia vs Vuex: State Management in Vue 3 Projects</div>
+          <div class="related-meta">Feb 3, 2025 · 6 min read</div>
+        </a>
+      </div>
+    </div>
+
+  </article>
+
+  <!-- SIDEBAR -->
+  <aside class="article-sidebar">
+
+    <div class="sidebar-widget">
+      <div class="widget-head">Contents</div>
+      <div class="widget-body">
+        <div class="toc-list">
+          <button class="toc-item active" onclick="scrollTo('intro')"><span class="toc-num">01</span>Why API Design Matters</button>
+          <button class="toc-item" onclick="scrollTo('auth')"><span class="toc-num">02</span>Sanctum Authentication</button>
+          <button class="toc-item" onclick="scrollTo('versioning')"><span class="toc-num">03</span>API Versioning</button>
+          <button class="toc-item" onclick="scrollTo('rate-limiting')"><span class="toc-num">04</span>Rate Limiting</button>
+          <button class="toc-item" onclick="scrollTo('resources')"><span class="toc-num">05</span>Resource Transformers</button>
+          <button class="toc-item" onclick="scrollTo('errors')"><span class="toc-num">06</span>Error Handling</button>
+          <button class="toc-item" onclick="scrollTo('responses')"><span class="toc-num">07</span>Response Structure</button>
+          <button class="toc-item" onclick="scrollTo('checklist')"><span class="toc-num">08</span>Production Checklist</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-widget cta-widget">
+      <div class="widget-head">Hire Us</div>
+      <div class="widget-body">
+        <div class="cta-title">NEED A LARAVEL EXPERT?</div>
+        <p class="cta-desc">We build production-grade Laravel APIs for UK, USA & global SaaS clients. Sanctum, queues, microservices — we've done it all.</p>
+        <a href="https://codecraftsystems.github.io/#contact" class="cta-btn">Get a Free Quote →</a>
+      </div>
+    </div>
+
+    <div class="sidebar-widget">
+      <div class="widget-head">Tags</div>
+      <div class="widget-body">
+        <div class="tags-cloud">
+          <a href="#" class="tag-pill">Laravel</a>
+          <a href="#" class="tag-pill">Sanctum</a>
+          <a href="#" class="tag-pill">REST API</a>
+          <a href="#" class="tag-pill">PHP 8.3</a>
+          <a href="#" class="tag-pill">Rate Limiting</a>
+          <a href="#" class="tag-pill">API Versioning</a>
+          <a href="#" class="tag-pill">Resources</a>
+          <a href="#" class="tag-pill">SaaS</a>
+          <a href="#" class="tag-pill">MySQL</a>
+          <a href="#" class="tag-pill">Redis</a>
+        </div>
+      </div>
+    </div>
+
+    <a href="https://codecraftsystems.github.io/blog"
+      style="display:flex;align-items:center;gap:8px;border:1px solid var(--border);color:var(--muted);padding:12px 18px;border-radius:6px;font-family:var(--font-mono);font-size:0.78rem;text-decoration:none;transition:all 0.2s;"
+      onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+      onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+      ← Back to Blog
+    </a>
+
+  </aside>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Code<span>Craft</span></div>
+    <p class="footer-copy">© <span id="year"></span> CodeCraft Studio · Sonu Sahani · All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+      <li><a href="https://codecraftsystems.github.io/#services">Services</a></li>
+      <li><a href="https://codecraftsystems.github.io/blog">Blog</a></li>
+      <li><a href="https://codecraftsystems.github.io/#contact">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  (function tick(){
+    cursor.style.transform=`translate(${mx-6}px,${my-6}px)`;
+    rx+=(mx-rx-20)*0.12; ry+=(my-ry-20)*0.12;
+    ring.style.transform=`translate(${rx}px,${ry}px)`;
+    requestAnimationFrame(tick);
+  })();
+
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    updateProgress();
+    updateTOC();
+  });
+
+  function openMobile()  { document.getElementById('mobileMenu').classList.add('open'); }
+  function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+  // Progress bar
+  function updateProgress() {
+    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+
+  // TOC
+  const sections = ['intro','auth','versioning','rate-limiting','resources','errors','responses','checklist'];
+  function scrollTo(id) { document.getElementById(id)?.scrollIntoView({ behavior:'smooth' }); }
+  function updateTOC() {
+    let current = sections[0];
+    sections.forEach(id => { const el = document.getElementById(id); if (el && window.scrollY >= el.offsetTop - 120) current = id; });
+    document.querySelectorAll('.toc-item').forEach((item, i) => item.classList.toggle('active', sections[i] === current));
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      const btn = document.querySelector('[onclick="copyLink()"]');
+      const orig = btn.textContent; btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = orig, 2000);
+    });
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('.code-pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      const orig = btn.textContent; btn.textContent = '✓ Copied';
+      setTimeout(() => btn.textContent = orig, 2000);
+    });
+  }
+</script>
+</body>
+</html>
