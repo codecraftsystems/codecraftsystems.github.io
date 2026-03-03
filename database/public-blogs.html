@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Blogs API</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="db.js"></script>
+
+<script>
+async function getBlogs() {
+
+  // Pagination parameters from URL
+  const params = new URLSearchParams(window.location.search);
+  const page = parseInt(params.get('page')) || 1;
+  const limit = parseInt(params.get('limit')) || 5;
+
+  const offset = (page - 1) * limit;
+
+  const { data, error, count } = await supabaseClient
+    .from('blogs')
+    .select('title, content', { count: 'exact' })
+    .eq('status', true)
+    .order('published_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  const response = {
+    page,
+    limit,
+    total: count,
+    total_pages: Math.ceil(count / limit),
+    data: data || [],
+    error: error ? error.message : null
+  };
+
+  document.body.innerHTML = `<pre>${JSON.stringify(response, null, 2)}</pre>`;
+}
+
+getBlogs();
+</script>
+
+</body>
+</html>

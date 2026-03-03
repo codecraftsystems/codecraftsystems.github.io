@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Supabase Blog System</title>
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 800px;
+      margin: 40px auto;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 15px;
+      cursor: pointer;
+    }
+    .blog {
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+    }
+    .blog img {
+      max-width: 100%;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Create Blog (Draft)</h2>
+
+<input type="text" id="title" placeholder="Title">
+<textarea id="content" placeholder="Content"></textarea>
+<input type="text" id="image_url" placeholder="Image URL (optional)">
+<button onclick="createBlog()">Save Blog</button>
+
+<hr>
+
+<h2>Published Blogs</h2>
+<div id="blogList"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="db.js"></script>
+
+<script>
+
+// SHA256 hash generator
+async function generateHash(text) {
+  const buffer = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(text)
+  );
+  return Array.from(new Uint8Array(buffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function createBlog() {
+
+  const title = document.getElementById('title').value;
+  const content = document.getElementById('content').value;
+  const image_url = document.getElementById('image_url').value;
+
+  if (!title || !content) {
+    alert("Title and Content required");
+    return;
+  }
+
+  const slug = title.toLowerCase().replace(/\s+/g, '-');
+  const content_hash = await generateHash(content);
+
+  const { data, error } = await supabaseClient
+    .from('blogs')
+    .insert([{
+      title,
+      slug,
+      content,
+      content_hash,
+      image_url,
+      status: false   // draft
+    }]);
+
+  console.log("INSERT DATA:", data);
+  console.log("INSERT ERROR:", error);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Blog saved as draft ✅");
+
+  document.getElementById('title').value = '';
+  document.getElementById('content').value = '';
+  document.getElementById('image_url').value = '';
+
+  loadBlogs();
+}
+
+async function loadBlogs() {
+
+  const { data, error } = await supabaseClient
+    .from('blogs')
+    .select('*')
+    .eq('status', true)
+    .order('published_at', { ascending: false });
+
+  console.log("SELECT DATA:", data);
+  console.log("SELECT ERROR:", error);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  const container = document.getElementById('blogList');
+  container.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    container.innerHTML = "<p>No published blogs found</p>";
+    return;
+  }
+
+  data.forEach(blog => {
+    container.innerHTML += `
+      <div class="blog">
+        <h3>${blog.title}</h3>
+        <p>${blog.content}</p>
+        
+      </div>
+    `;
+  });
+}
+
+loadBlogs();
+
+</script>
+
+</body>
+</html>

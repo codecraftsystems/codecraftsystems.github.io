@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Supabase Post Example</title>
+</head>
+<body>
+
+<h2>Create Post</h2>
+
+<input type="text" id="title" placeholder="Title"><br><br>
+<textarea id="content" placeholder="Content"></textarea><br><br>
+<button onclick="addPost()">Save Post</button>
+
+<h2>All Posts</h2>
+<ul id="postList"></ul>
+
+<!-- Supabase Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Database Connection -->
+<script src="db.js"></script>
+
+<script>
+async function addPost() {
+  const title = document.getElementById('title').value;
+  const content = document.getElementById('content').value;
+
+  const { data, error } = await supabaseClient
+    .from('posts')
+    .insert([{ title, content }]);
+
+  if (error) {
+    alert(error.message);
+  } else {
+    alert("Post saved!");
+    loadPosts();
+  }
+}
+
+async function loadPosts() {
+  const { data, error } = await supabaseClient
+    .from('posts')
+    .select('*')
+    .order('id', { ascending: false });
+
+  const list = document.getElementById('postList');
+  list.innerHTML = '';
+
+  data.forEach(post => {
+    const li = document.createElement('li');
+    li.innerHTML = `<b>${post.title}</b><br>${post.content}<hr>`;
+    list.appendChild(li);
+  });
+}
+
+loadPosts();
+</script>
+
+</body>
+</html>
