@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://codecraftsystems.github.io/sitemap.xml
