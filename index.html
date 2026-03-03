@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeCraft Studio | Laravel & Vue.js Development Agency</title>
+<meta name="description" content="CodeCraft Studio – Expert Laravel & Vue.js development agency. We build scalable SaaS, job portals, real-time apps & REST APIs. UK, USA, Australia clients welcome.">
+<meta name="keywords" content="Laravel developer, Vue.js developer, full stack web developer, SaaS development, REST API, Surat India, hire developer">
+<meta name="author" content="Sonu Sahani - CodeCraft Studio">
+<meta property="og:title" content="CodeCraft Studio | Laravel & Vue.js Experts">
+<meta property="og:description" content="6+ years building scalable web apps. Laravel APIs, Vue.js SPA, real-time systems & cloud deployment.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://codecraftstudio.dev">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0a0a0a;
+    --dark: #111111;
+    --card: #161616;
+    --border: #2a2a2a;
+    --accent: #ff4d00;
+    --accent2: #ffb800;
+    --white: #f5f0eb;
+    --muted: #888;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 40px; height: 40px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.3s ease;
+    opacity: 0.5;
+  }
+
+  /* Noise Overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s;
+    background: transparent;
+  }
+  nav.scrolled {
+    background: rgba(10,10,10,0.95);
+    border-color: var(--border);
+    backdrop-filter: blur(20px);
+    padding: 14px 40px;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: var(--white) !important;
+    padding: 10px 24px;
+    border-radius: 2px;
+    font-weight: 600 !important;
+  }
+  .nav-cta:hover { background: #e04400 !important; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 28px;
+    height: 2px;
+    background: var(--white);
+    transition: all 0.3s;
+  }
+
+  /* HERO */
+  #home {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,77,0,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,77,0,0.1);
+    border: 1px solid rgba(255,77,0,0.3);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .tag-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.4); }
+  }
+
+  .hero-h1 {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 8vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: 2px;
+    color: var(--white);
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero-h1 .line-accent { color: var(--accent); }
+  .hero-h1 .line-outline {
+    -webkit-text-stroke: 1px var(--white);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 24px 0 36px;
+    line-height: 1.7;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--white);
+    padding: 14px 32px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    border-radius: 2px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary:hover { background: #e04400; transform: translateY(-2px); }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 14px 32px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--white); }
+
+  .hero-right {
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .hero-code-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .code-topbar {
+    background: var(--dark);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .code-dot.r { background: #ff5f57; }
+  .code-dot.y { background: #febc2e; }
+  .code-dot.g { background: #28c840; }
+  .code-filename {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+  .code-body {
+    padding: 24px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #ccc;
+  }
+  .code-line { display: block; }
+  .code-key { color: #c792ea; }
+  .code-str { color: #c3e88d; }
+  .code-fn { color: #82aaff; }
+  .code-comment { color: #546e7a; font-style: italic; }
+  .code-num { color: var(--accent2); }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .stat-item {
+    padding: 20px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--dark);
+    overflow: hidden;
+    padding: 14px 0;
+  }
+  .marquee-inner {
+    display: flex;
+    gap: 48px;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .marquee-item::before {
+    content: '▸';
+    color: var(--accent);
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* SECTION COMMON */
+  section { padding: 100px 40px; }
+  .container { max-width: 1200px; margin: 0 auto; width: 100%; }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1;
+    letter-spacing: 1px;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    color: var(--muted);
+    max-width: 520px;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 60px;
+  }
+
+  /* SERVICES */
+  #services { background: var(--dark); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .service-card {
+    background: var(--card);
+    padding: 40px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--accent);
+    transition: height 0.3s;
+  }
+  .service-card:hover::before { height: 100%; }
+  .service-card:hover { background: #1a1a1a; }
+
+  .service-icon {
+    width: 52px; height: 52px;
+    background: rgba(255,77,0,0.1);
+    border: 1px solid rgba(255,77,0,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+    transition: all 0.3s;
+  }
+  .service-card:hover .service-icon {
+    background: rgba(255,77,0,0.2);
+    border-color: var(--accent);
+  }
+
+  .service-num {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    margin-bottom: 10px;
+    opacity: 0.6;
+  }
+
+  .service-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .service-desc {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    color: var(--muted);
+  }
+
+  /* ABOUT */
+  #about { background: var(--black); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-left { }
+  .about-text {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  .about-text strong { color: var(--white); }
+
+  .about-skills {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--white);
+  }
+  .skill-item::before {
+    content: '→';
+    color: var(--accent);
+    font-size: 0.8rem;
+  }
+
+  .about-right { }
+  .experience-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .exp-item {
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    position: relative;
+    transition: all 0.2s;
+  }
+  .exp-item:first-child { border-radius: 8px 8px 0 0; }
+  .exp-item:last-child { border-bottom: 1px solid var(--border); border-radius: 0 0 8px 8px; }
+  .exp-item:hover { background: var(--card); }
+
+  .exp-company {
+    font-weight: 700;
+    color: var(--white);
+    font-size: 0.95rem;
+  }
+  .exp-role {
+    font-size: 0.82rem;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    margin: 4px 0;
+  }
+  .exp-period {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* WHY US */
+  #why { background: var(--dark); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-top: 60px;
+  }
+  .why-card {
+    padding: 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+  .why-card:hover {
+    border-color: var(--accent);
+    background: rgba(255,77,0,0.03);
+    transform: translateY(-4px);
+  }
+  .why-icon { font-size: 2rem; margin-bottom: 16px; }
+  .why-title {
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  .why-desc { color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+
+  /* CONTACT */
+  #contact { background: var(--black); }
+  .contact-inner {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  .contact-left .section-title { margin-bottom: 20px; }
+  .contact-info-items { margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
+  .contact-info-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .contact-info-item:hover { border-color: var(--accent); color: var(--white); }
+  .contact-info-icon { font-size: 1.1rem; }
+
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+  }
+  .form-input, .form-select, .form-textarea {
+    background: var(--black);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: var(--font-body);
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .form-textarea { min-height: 120px; resize: vertical; }
+  .form-select option { background: var(--black); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-btn {
+    background: var(--accent);
+    color: var(--white);
+    border: none;
+    padding: 14px 32px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-body);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .form-btn:hover { background: #e04400; transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    padding: 40px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy { color: var(--muted); font-size: 0.82rem; }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+  .footer-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--white); }
+
+  /* MOBILE */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10,10,10,0.98);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+  .close-btn {
+    position: absolute;
+    top: 24px; right: 40px;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+  }
+
+  /* SCROLL ANIMATION */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    #home { padding: 100px 24px 60px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero-h1 { font-size: 4rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .contact-inner { grid-template-columns: 1fr; padding: 36px 24px; }
+    section { padding: 70px 24px; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+
+  @media (max-width: 500px) {
+    .hero-h1 { font-size: 3rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .about-skills { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-btn" onclick="closeMobile()">✕</button>
+  <a href="#home" onclick="closeMobile()">Home</a>
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#why" onclick="closeMobile()">Why Us</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#home" class="logo">Code<span>Craft</span></a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#contact" class="nav-cta">Hire Us</a></li>
+  </ul>
+  <div class="hamburger" onclick="openMobile()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-tag">
+        <span class="tag-dot"></span>
+        Available for new projects
+      </div>
+      <h1 class="hero-h1">
+        WE<br>
+        <span class="line-accent">BUILD</span><br>
+        <span class="line-outline">SCALABLE</span><br>
+        APPS
+      </h1>
+      <p class="hero-sub">Laravel APIs, Vue.js SPAs, real-time systems & cloud-deployed SaaS products. 6+ years. UK, USA & Australia clients.</p>
+      <div class="hero-btns">
+        <a href="#services" class="btn-primary">Our Services →</a>
+        <a href="#contact" class="btn-outline">Get a Quote</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-code-card">
+        <div class="code-topbar">
+          <div class="code-dot r"></div>
+          <div class="code-dot y"></div>
+          <div class="code-dot g"></div>
+          <span class="code-filename">api.php · Laravel</span>
+        </div>
+        <div class="code-body">
+<span class="code-line"><span class="code-comment">// Real-time Chat API — Pusher + Laravel</span></span>
+<span class="code-line"><span class="code-key">Route</span>::<span class="code-fn">post</span>(<span class="code-str">'/send-message'</span>, <span class="code-key">fn</span>() => {</span>
+<span class="code-line">  <span class="code-key">$msg</span> = Message::<span class="code-fn">create</span>($request->all());</span>
+<span class="code-line">  <span class="code-fn">broadcast</span>(<span class="code-key">new</span> <span class="code-fn">MessageSent</span>($msg));</span>
+<span class="code-line">  <span class="code-key">return</span> <span class="code-fn">response</span>()->json([</span>
+<span class="code-line">    <span class="code-str">'status'</span> => <span class="code-str">'sent'</span>,</span>
+<span class="code-line">    <span class="code-str">'latency'</span> => <span class="code-num">12</span> . <span class="code-str">'ms'</span></span>
+<span class="code-line">  ]);</span>
+<span class="code-line">});</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num">6+</div>
+          <div class="stat-label">Years Exp.</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">40+</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Countries</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span class="marquee-item">Laravel API</span>
+    <span class="marquee-item">Vue.js SPA</span>
+    <span class="marquee-item">Quasar Framework</span>
+    <span class="marquee-item">Nuxt.js SSR</span>
+    <span class="marquee-item">Stripe Payments</span>
+    <span class="marquee-item">Real-time Chat</span>
+    <span class="marquee-item">Oracle Cloud</span>
+    <span class="marquee-item">REST APIs</span>
+    <span class="marquee-item">Microservices</span>
+    <span class="marquee-item">cPanel Expert</span>
+    <span class="marquee-item">MySQL</span>
+    <span class="marquee-item">AI Integration</span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">Laravel API</span>
+    <span class="marquee-item">Vue.js SPA</span>
+    <span class="marquee-item">Quasar Framework</span>
+    <span class="marquee-item">Nuxt.js SSR</span>
+    <span class="marquee-item">Stripe Payments</span>
+    <span class="marquee-item">Real-time Chat</span>
+    <span class="marquee-item">Oracle Cloud</span>
+    <span class="marquee-item">REST APIs</span>
+    <span class="marquee-item">Microservices</span>
+    <span class="marquee-item">cPanel Expert</span>
+    <span class="marquee-item">MySQL</span>
+    <span class="marquee-item">AI Integration</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-label">What We Do</div>
+    <h2 class="section-title reveal">OUR SERVICES</h2>
+    <p class="section-sub reveal">From backend APIs to full-stack SaaS platforms — we cover the entire product lifecycle.</p>
+
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div class="service-icon">⚙️</div>
+        <div class="service-title">Laravel API Development</div>
+        <p class="service-desc">Robust, scalable RESTful APIs using Laravel MVC. Authentication, authorization, rate limiting, caching — all built to production standards.</p>
+        <div class="service-tags">
+          <span class="tag">Laravel</span>
+          <span class="tag">REST API</span>
+          <span class="tag">Sanctum</span>
+          <span class="tag">MySQL</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div class="service-icon">🖥️</div>
+        <div class="service-title">Vue.js / Quasar Frontend</div>
+        <p class="service-desc">Reactive, performant single-page applications. Vuex state management, Vue Router, SSR with Nuxt.js for SEO-first projects.</p>
+        <div class="service-tags">
+          <span class="tag">Vue.js</span>
+          <span class="tag">Quasar</span>
+          <span class="tag">Nuxt.js</span>
+          <span class="tag">Vuex</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <div class="service-icon">💬</div>
+        <div class="service-title">Real-Time Applications</div>
+        <p class="service-desc">Live chat systems, live dashboards, and push notifications using Laravel Pusher & WebSockets — no page reload, instant data transfer.</p>
+        <div class="service-tags">
+          <span class="tag">Pusher</span>
+          <span class="tag">WebSocket</span>
+          <span class="tag">MQTT</span>
+          <span class="tag">Laravel Echo</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <div class="service-icon">💳</div>
+        <div class="service-title">Payment Gateway Integration</div>
+        <p class="service-desc">Secure payment flows with Stripe, PayU, and Razorpay. Subscriptions, one-time payments, refunds, and webhook handling.</p>
+        <div class="service-tags">
+          <span class="tag">Stripe</span>
+          <span class="tag">PayUmoney</span>
+          <span class="tag">Webhook</span>
+          <span class="tag">PCI</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">05</div>
+        <div class="service-icon">☁️</div>
+        <div class="service-title">Cloud Deployment & DevOps</div>
+        <p class="service-desc">Microservices architecture on Oracle Cloud (OCI), Vercel, and VPS. WHM/cPanel expert, DNS, LiteSpeed, SSL, auto backups.</p>
+        <div class="service-tags">
+          <span class="tag">Oracle OCI</span>
+          <span class="tag">Vercel</span>
+          <span class="tag">cPanel</span>
+          <span class="tag">Linux</span>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">06</div>
+        <div class="service-icon">🤖</div>
+        <div class="service-title">AI & IoT Integration</div>
+        <p class="service-desc">Google Gemini AI for text & image generation. Custom IoT smart switch systems using Laravel API, ESP8266 & self-hosted MQTT.</p>
+        <div class="service-tags">
+          <span class="tag">Gemini AI</span>
+          <span class="tag">ESP8266</span>
+          <span class="tag">MQTT</span>
+          <span class="tag">IoT</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-left">
+        <div class="section-label reveal">Who We Are</div>
+        <h2 class="section-title reveal">BUILT BY<br><span style="color:var(--accent)">DEVELOPERS,</span><br>FOR BUSINESS</h2>
+        <p class="about-text reveal">
+          CodeCraft Studio is led by <strong>Sonu Sahani</strong>, a full-stack developer with <strong>6+ years of experience</strong> building production-grade web applications.
+        </p>
+        <p class="about-text reveal">
+          Currently working full-time with <strong>Lifelancer (UK)</strong> — a large-scale job portal platform — we bring enterprise-level engineering to startups and growing businesses worldwide.
+        </p>
+        <p class="about-text reveal">
+          We're passionate about <strong>clean code, automation, and building meaningful digital products</strong> that actually solve real problems.
+        </p>
+        <div class="about-skills reveal">
+          <span class="skill-item">Laravel / PHP</span>
+          <span class="skill-item">Vue.js / Quasar</span>
+          <span class="skill-item">Nuxt.js / SSR</span>
+          <span class="skill-item">REST API Design</span>
+          <span class="skill-item">MySQL / Redis</span>
+          <span class="skill-item">Git / CI/CD</span>
+          <span class="skill-item">Oracle Cloud</span>
+          <span class="skill-item">Linux Admin</span>
+        </div>
+      </div>
+      <div class="about-right reveal">
+        <div class="experience-timeline">
+          <div class="exp-item">
+            <div class="exp-company">TechNGL Pvt Ltd → Lifelancer (UK)</div>
+            <div class="exp-role">Sr. Software Developer · Vue.js + Laravel</div>
+            <div class="exp-period">Feb 2022 – Present · Remote</div>
+          </div>
+          <div class="exp-item">
+            <div class="exp-company">Infinitybrains</div>
+            <div class="exp-role">Software Developer · Vue.js + Laravel + DevOps</div>
+            <div class="exp-period">Dec 2020 – Jan 2022 · Surat</div>
+          </div>
+          <div class="exp-item">
+            <div class="exp-company">Ekaasha Technologies</div>
+            <div class="exp-role">Full Stack Developer · Digital Marketing</div>
+            <div class="exp-period">Jun 2019 – Nov 2020 · Prayagraj</div>
+          </div>
+          <div class="exp-item">
+            <div class="exp-company">B.Tech – Computer Science</div>
+            <div class="exp-role">Dr. A.P.J. Abdul Kalam Technical University</div>
+            <div class="exp-period">2019</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="container">
+    <div class="section-label reveal">Our Edge</div>
+    <h2 class="section-title reveal">WHY CHOOSE<br><span style="color:var(--accent)">CODECRAFT?</span></h2>
+
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon">🎯</div>
+        <div class="why-title">Niche Expertise</div>
+        <p class="why-desc">We specialize in Laravel + Vue.js — not jack of all trades. Deep expertise means faster, better code.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">🌍</div>
+        <div class="why-title">UK / Global Experience</div>
+        <p class="why-desc">Active collaboration with UK-based clients. We understand Western work culture, communication, and timelines.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">⚡</div>
+        <div class="why-title">Fast Delivery</div>
+        <p class="why-desc">Agile methodology. Weekly sprints. Clear milestones. We ship on time without cutting corners on quality.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">🔒</div>
+        <div class="why-title">Secure by Default</div>
+        <p class="why-desc">Auth, validation, CORS, XSS protection, encrypted payments. Security is not an afterthought — it's built-in.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">📈</div>
+        <div class="why-title">Scalable Architecture</div>
+        <p class="why-desc">Microservices, API versioning, caching layers. Your app won't break at 10x traffic — we design for growth.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">🤝</div>
+        <div class="why-title">Long-term Partnership</div>
+        <p class="why-desc">We don't just deliver and disappear. Maintenance, updates, and scaling support — we're in it for the long run.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-inner reveal">
+      <div class="contact-left">
+        <div class="section-label">Get In Touch</div>
+        <h2 class="section-title">LET'S BUILD<br><span style="color:var(--accent)">TOGETHER</span></h2>
+        <p style="color:var(--muted); font-size:0.95rem; line-height:1.7;">Tell us about your project and we'll get back to you within 24 hours. UK, USA, Australia, India — all welcome.</p>
+
+        <div class="contact-info-items">
+          <a href="mailto:sonusahani086@gmail.com" class="contact-info-item">
+            <span class="contact-info-icon">✉️</span>
+            sonusahani086@gmail.com
+          </a>
+          <a href="tel:+917897954794" class="contact-info-item">
+            <span class="contact-info-icon">📱</span>
+            +91 7897954794
+          </a>
+          <a href="https://www.linkedin.com/in/sonuvuejs-laravel-api/" target="_blank" class="contact-info-item">
+            <span class="contact-info-icon">💼</span>
+            LinkedIn Profile
+          </a>
+          <div class="contact-info-item">
+            <span class="contact-info-icon">📍</span>
+            Adajan, Surat, Gujarat, India
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-right">
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input type="text" class="form-input" placeholder="John Smith" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" placeholder="john@company.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Service Needed</label>
+            <select class="form-select">
+              <option value="">Select a service...</option>
+              <option>Laravel API Development</option>
+              <option>Vue.js / Quasar Frontend</option>
+              <option>Real-Time Application</option>
+              <option>Payment Gateway Integration</option>
+              <option>Cloud Deployment & DevOps</option>
+              <option>AI / IoT Integration</option>
+              <option>Full Stack SaaS Project</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Budget Range (USD)</label>
+            <select class="form-select">
+              <option value="">Select budget...</option>
+              <option>$500 – $1,500</option>
+              <option>$1,500 – $5,000</option>
+              <option>$5,000 – $15,000</option>
+              <option>$15,000+</option>
+              <option>Monthly Retainer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Project Details</label>
+            <textarea class="form-textarea" placeholder="Describe your project — tech stack, features, timeline, etc."></textarea>
+          </div>
+          <button type="submit" class="form-btn">
+            Send Message ✉️
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Code<span>Craft</span></div>
+    <p class="footer-copy">© 2025 CodeCraft Studio · Sonu Sahani · All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    if (cursor) {
+      cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+      rx += (mx - rx - 20) * 0.12;
+      ry += (my - ry - 20) * 0.12;
+      ring.style.transform = `translate(${rx}px, ${ry}px)`;
+    }
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Mobile menu
+  function openMobile() { document.getElementById('mobileMenu').classList.add('open'); }
+  function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.form-btn');
+    btn.textContent = '✅ Message Sent!';
+    btn.style.background = '#22c55e';
+    setTimeout(() => {
+      btn.textContent = 'Send Message ✉️';
+      btn.style.background = '';
+      e.target.reset();
+    }, 3000);
+  }
+
+  // Smooth anchor scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+
+</body>
+</html>
