@@ -1,5 +1,1006 @@
-📱
-Vue.js
-Vue.js
-Build Cross-Platform Apps with Quasar Framework & Vue 3
-How to build web + mobile apps from a single Vue.js codebase using Quasar Framework. Setup, routing, and deployment.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.02, user-scalable=no">
+<title>Build Cross-Platform Apps with Quasar Framework & Vue 3 | CodeCraft Studio</title>
+<meta name="description" content="How to build web + mobile apps from a single Vue.js codebase using Quasar Framework. Setup, routing, Capacitor deployment — complete guide 2025.">
+<meta name="author" content="Sonu Sahani - CodeCraft Studio">
+<meta name="robots" content="index, follow">
+<meta name="keywords" content="Quasar Framework Vue 3, cross-platform Vue.js, Quasar Capacitor, Quasar mobile app, Vue 3 mobile 2025, Quasar PWA">
+<link rel="canonical" href="https://codecraftsystems.github.io/blog/quasar-cross-platform.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://codecraftsystems.github.io/blog/quasar-cross-platform.html">
+<meta property="og:title" content="Build Cross-Platform Apps with Quasar Framework & Vue 3">
+<meta property="og:description" content="Web + mobile from a single Vue.js codebase using Quasar. Setup, routing, Capacitor deployment.">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/49108546?v=4">
+<meta property="article:published_time" content="2024-12-15">
+<meta property="article:section" content="Vue.js">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Build Cross-Platform Apps with Quasar Framework & Vue 3","datePublished":"2024-12-15","author":{"@type":"Person","name":"Sonu Sahani"},"publisher":{"@type":"Organization","name":"CodeCraft Studio"},"keywords":"Quasar Framework, Vue 3, Capacitor, Cross-Platform, Mobile"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://codecraftsystems.github.io/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://codecraftsystems.github.io/blog"},{"@type":"ListItem","position":3,"name":"Quasar Cross-Platform","item":"https://codecraftsystems.github.io/blog/quasar-cross-platform.html"}]}</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
+<meta name="theme-color" content="#ff4d00">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{max-width:100%;overflow-x:hidden}
+img,video,svg{max-width:100%;height:auto;display:block}
+
+:root{
+  --black:#06080a;
+  --dark:#0c0f12;
+  --card:#111518;
+  --card2:#171b1f;
+  --border:#1c2026;
+  --border2:#252b32;
+
+  /* Quasar brand — teal/cyan */
+  --q:#00b4d8;
+  --q2:#48cae4;
+  --q3:#90e0ef;
+  --qg:rgba(0,180,216,.12);
+  --qg2:rgba(0,180,216,.05);
+
+  /* Android green / iOS blue accents */
+  --android:#3ddc84;
+  --ios:#007aff;
+  --pwa:#5a55ff;
+
+  --accent:#ff4d00;
+  --white:#e8edf2;
+  --muted:#64748b;
+  --muted2:#2f3740;
+
+  --fd:'Bebas Neue',sans-serif;
+  --fb:'DM Sans',sans-serif;
+  --fm:'JetBrains Mono',monospace;
+  --nh:64px;
+  --r:8px;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:var(--fb);line-height:1.65;cursor:none}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.4}
+
+/* cursor */
+.cur{width:10px;height:10px;background:var(--q);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:difference;transition:transform .12s}
+.cur2{width:36px;height:36px;border:1px solid rgba(0,180,216,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:all .28s ease}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nh);padding:0 clamp(14px,4vw,48px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:all .3s}
+.nav.scrolled{background:rgba(6,8,10,.97);border-color:var(--border);backdrop-filter:blur(24px)}
+.nav-logo{font-family:var(--fd);font-size:clamp(1.35rem,4vw,1.8rem);letter-spacing:2px;color:var(--white);text-decoration:none;flex-shrink:0}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:clamp(18px,3vw,36px);list-style:none;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;transition:color .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{background:var(--accent)!important;color:var(--white)!important;padding:9px 20px;border-radius:2px;font-weight:600!important}
+.nav-cta:hover{background:#d94000!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;border:none;background:none}
+.hamburger span{display:block;width:26px;height:2px;background:var(--white);border-radius:2px;transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mob-menu{display:none;position:fixed;inset:0;z-index:990;background:rgba(6,8,10,.99);flex-direction:column;align-items:center;justify-content:center;gap:clamp(16px,5vh,36px)}
+.mob-menu.open{display:flex}
+.mob-menu a{font-family:var(--fd);font-size:clamp(1.6rem,6vw,2.8rem);color:var(--white);text-decoration:none;letter-spacing:2px;transition:color .2s}
+.mob-menu a:hover{color:var(--q2)}
+
+/* progress — teal */
+.prog{position:fixed;top:var(--nh);left:0;height:2px;background:linear-gradient(90deg,var(--q),var(--q2),var(--android));z-index:900;width:0;transition:width .08s linear}
+
+/* ── HERO ── */
+.hero{padding-top:var(--nh);background:var(--dark);border-bottom:1px solid var(--border);position:relative;overflow:hidden;min-height:clamp(400px,58vh,640px);display:flex;align-items:center}
+
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:52px 52px;opacity:.15;mask-image:radial-gradient(ellipse 120% 100% at 50% 0%,black 30%,transparent)}
+
+/* teal glow */
+.orb1{position:absolute;width:min(560px,90vw);height:min(560px,90vw);background:radial-gradient(circle,rgba(0,180,216,.07) 0%,transparent 65%);top:-15%;right:-8%;pointer-events:none}
+.orb2{position:absolute;width:min(380px,70vw);height:min(380px,70vw);background:radial-gradient(circle,rgba(61,220,132,.04) 0%,transparent 65%);bottom:-15%;left:-5%;pointer-events:none}
+
+/* phone mockup deco */
+.phone-deco{position:absolute;right:clamp(24px,5vw,90px);top:50%;transform:translateY(-50%);width:220px;pointer-events:none;animation:phoneFloat 5s ease-in-out infinite}
+@keyframes phoneFloat{0%,100%{transform:translateY(-50%) rotate(-2deg)}50%{transform:translateY(calc(-50% - 12px)) rotate(2deg)}}
+.phone-shell{background:var(--card2);border:1px solid var(--border2);border-radius:28px;padding:14px 10px;box-shadow:0 32px 64px rgba(0,0,0,.6),0 0 0 1px rgba(0,180,216,.08),inset 0 1px 0 rgba(255,255,255,.04);position:relative}
+.phone-notch{width:60px;height:6px;background:var(--border2);border-radius:100px;margin:0 auto 10px}
+.phone-screen{background:#0a1018;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+.ps-topbar{background:var(--q);padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
+.ps-title{font-family:var(--fd);font-size:.75rem;letter-spacing:1px;color:#fff}
+.ps-icons{display:flex;gap:5px}
+.ps-icons span{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.6)}
+.ps-body{padding:10px 12px}
+.ps-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:7px}
+.ps-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ps-label{font-family:var(--fm);font-size:.55rem;color:var(--muted)}
+.ps-val{font-family:var(--fm);font-size:.65rem;color:var(--q2)}
+.ps-bar{height:3px;background:var(--border2);border-radius:2px;overflow:hidden;margin-bottom:4px}
+.ps-bar-fill{height:100%;border-radius:2px;animation:barFill 2s ease-in-out infinite alternate}
+.ps-bar-fill.a{background:var(--android);width:72%}
+.ps-bar-fill.b{background:var(--ios);width:55%}
+.ps-bar-fill.c{background:var(--pwa);width:88%}
+@keyframes barFill{from{opacity:.7}to{opacity:1}}
+.ps-nav{display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid var(--border)}
+.ps-nav-item{display:flex;flex-direction:column;align-items:center;gap:2px}
+.ps-nav-dot{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem}
+.ps-nav-dot.active{background:var(--qg);color:var(--q)}
+.ps-nav-dot.inactive{color:var(--muted2)}
+.ps-nav-label{font-family:var(--fm);font-size:.45rem;color:var(--muted)}
+.phone-btn{width:40px;height:4px;background:var(--border2);border-radius:100px;margin:10px auto 0}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+.hero-inner{max-width:1100px;margin:0 auto;width:100%;padding:clamp(28px,5vw,56px) clamp(14px,4vw,48px);position:relative;z-index:1;animation:fadeUp .6s ease both;display:grid;grid-template-columns:1fr auto;gap:36px;align-items:center}
+
+.bc{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-family:var(--fm);font-size:.68rem;color:var(--muted);margin-bottom:18px;grid-column:1/-1}
+.bc a{color:var(--muted);text-decoration:none;transition:color .2s}
+.bc a:hover{color:var(--q2)}
+.bc-sep{color:#1c2026}
+.cat{display:inline-flex;align-items:center;gap:7px;background:rgba(0,180,216,.09);border:1px solid rgba(0,180,216,.28);padding:5px 13px;border-radius:100px;font-family:var(--fm);font-size:.68rem;color:var(--q2);letter-spacing:.5px;margin-bottom:16px}
+.cat-d{width:5px;height:5px;border-radius:50%;background:var(--q2);animation:blink 1.4s infinite}
+.h-left{display:flex;flex-direction:column;min-width:0}
+.atitle{font-family:var(--fd);font-size:clamp(1.9rem,5.5vw,4.2rem);line-height:.96;letter-spacing:.5px;color:var(--white);margin-bottom:16px}
+.atitle .qc{color:var(--q2)}
+.atitle .gc{color:var(--android)}
+.adesc{font-size:clamp(.88rem,2vw,1.02rem);color:var(--muted);line-height:1.72;max-width:580px;margin-bottom:24px}
+.mbar{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.mauthor{display:flex;align-items:center;gap:10px;padding-right:16px;border-right:1px solid var(--border)}
+.avsm{width:38px;height:38px;border-radius:50%;border:2px solid var(--q);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.aname{font-weight:600;font-size:.84rem;color:var(--white)}
+.arole{font-family:var(--fm);font-size:.62rem;color:var(--muted)}
+.mchips{display:flex;gap:12px;flex-wrap:wrap}
+.mchip{font-family:var(--fm);font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:4px}
+.trow{display:flex;gap:5px;flex-wrap:wrap;margin-top:16px}
+.tag{background:rgba(255,255,255,.04);border:1px solid var(--border);padding:3px 10px;border-radius:100px;font-size:.68rem;font-family:var(--fm);color:var(--muted)}
+.tag.qt{background:rgba(0,180,216,.08);border-color:rgba(0,180,216,.22);color:var(--q2)}
+.tag.at{background:rgba(61,220,132,.07);border-color:rgba(61,220,132,.2);color:var(--android)}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1200px;margin:0 auto;width:100%;padding:clamp(20px,4vw,56px) clamp(14px,4vw,48px) 80px;display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:clamp(24px,4vw,52px);align-items:start}
+
+/* ── PROSE ── */
+.abody{min-width:0;max-width:100%;animation:fadeUp .55s .12s ease both}
+.prose{color:#b0b8c4;font-size:clamp(.94rem,2vw,1.02rem);line-height:1.85}
+.prose h2{font-family:var(--fd);font-size:clamp(1.35rem,3.5vw,2.1rem);letter-spacing:.4px;color:var(--white);margin:clamp(32px,5vw,52px) 0 14px;padding-top:clamp(32px,5vw,52px);border-top:1px solid var(--border);line-height:1;scroll-margin-top:82px}
+.prose h2:first-child{border-top:none;padding-top:0;margin-top:0}
+.prose h3{font-size:1.05rem;font-weight:700;color:var(--white);margin:24px 0 10px;scroll-margin-top:82px}
+.prose p{margin-bottom:16px}
+.prose strong{color:var(--white);font-weight:600}
+.prose a{color:var(--q2);text-decoration:none;border-bottom:1px solid rgba(72,202,228,.28);transition:border-color .2s}
+.prose a:hover{border-color:var(--q2)}
+.prose ul,.prose ol{margin:0 0 16px 18px;display:flex;flex-direction:column;gap:6px}
+.prose li::marker{color:var(--q2)}
+.prose code{background:rgba(0,180,216,.09);border:1px solid rgba(0,180,216,.18);padding:2px 6px;border-radius:3px;font-family:var(--fm);font-size:.78rem;color:var(--q2);word-break:break-all}
+
+/* code blocks */
+.cb{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin:20px 0}
+.ch{background:var(--dark);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:10px}
+.chl{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+.cfile{font-family:var(--fm);font-size:.62rem;color:var(--muted);margin-left:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.cpb{background:none;border:1px solid var(--border);color:var(--muted);font-family:var(--fm);font-size:.6rem;padding:2px 8px;border-radius:3px;cursor:pointer;transition:all .2s;flex-shrink:0;white-space:nowrap}
+.cpb:hover{border-color:var(--q2);color:var(--q2)}
+.cp{padding:clamp(10px,2.5vw,20px) clamp(12px,2.5vw,22px);overflow-x:auto;font-family:var(--fm);font-size:clamp(.66rem,1.8vw,.8rem);line-height:1.72;color:#c8d0da;-webkit-overflow-scrolling:touch;white-space:pre;word-break:normal;max-width:100%}
+.cm{color:#3d4a56;font-style:italic}
+.ck{color:#c792ea}
+.cs{color:#a3be8c}
+.cfn{color:#80b3ff}
+.ca{color:var(--q2);font-weight:600}
+.cn{color:#f5a623}
+.ct{color:#ef9a9a}
+.cq{color:var(--q2)}    /* quasar teal */
+.cg{color:var(--android)} /* green */
+
+/* callouts */
+.cl{border-left:3px solid;padding:14px 16px;border-radius:0 6px 6px 0;margin:20px 0}
+.cl.info  {border-color:var(--q2);background:rgba(0,180,216,.06)}
+.cl.warn  {border-color:#f5a623;background:rgba(245,166,35,.05)}
+.cl.ok    {border-color:var(--android);background:rgba(61,220,132,.04)}
+.cl.tip   {border-color:var(--pwa);background:rgba(90,85,255,.05)}
+.cl-t{font-weight:700;font-size:.8rem;color:var(--white);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.cl p{margin:0;font-size:.88rem;color:#7d8c9a}
+
+/* ── PLATFORM TARGET CARDS ── */
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:20px 0}
+.plat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 14px;text-align:center;transition:all .3s;position:relative;overflow:hidden}
+.plat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--plat-c1,transparent),var(--plat-c2,transparent));opacity:0;transition:opacity .3s}
+.plat-card:hover::before{opacity:1}
+.plat-card:hover{border-color:var(--plat-border,var(--border));transform:translateY(-3px)}
+.plat-card.web{--plat-c1:rgba(0,180,216,.06);--plat-c2:rgba(0,180,216,.02);--plat-border:rgba(0,180,216,.3)}
+.plat-card.android{--plat-c1:rgba(61,220,132,.06);--plat-c2:rgba(61,220,132,.02);--plat-border:rgba(61,220,132,.3)}
+.plat-card.ios{--plat-c1:rgba(0,122,255,.06);--plat-c2:rgba(0,122,255,.02);--plat-border:rgba(0,122,255,.3)}
+.plat-card.pwa{--plat-c1:rgba(90,85,255,.06);--plat-c2:rgba(90,85,255,.02);--plat-border:rgba(90,85,255,.3)}
+.plat-card.electron{--plat-c1:rgba(150,150,150,.06);--plat-c2:transparent;--plat-border:rgba(150,150,150,.3)}
+.plat-icon{font-size:1.6rem;margin-bottom:8px;position:relative;z-index:1}
+.plat-name{font-family:var(--fd);font-size:.88rem;letter-spacing:1px;color:var(--white);margin-bottom:4px;position:relative;z-index:1}
+.plat-cmd{font-family:var(--fm);font-size:.58rem;color:var(--muted);background:var(--dark);padding:2px 7px;border-radius:3px;display:inline-block;position:relative;z-index:1}
+
+/* ── COMPARE TABLE ── */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:20px 0;border-radius:var(--r);border:1px solid var(--border)}
+.ctab{width:100%;min-width:420px;border-collapse:collapse;font-size:.84rem}
+.ctab th{background:var(--dark);padding:11px 13px;text-align:left;font-family:var(--fm);font-size:.66rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+.ctab th:first-child{color:var(--white)}
+.ctab td{padding:10px 13px;border-bottom:1px solid var(--border);color:#7d8c9a;vertical-align:middle}
+.ctab tr:last-child td{border-bottom:none}
+.ctab tr:hover td{background:rgba(255,255,255,.012)}
+.ctab .ft{color:var(--white);font-weight:500;font-family:var(--fm);font-size:.78rem}
+.bq{color:var(--q2);font-family:var(--fm);font-size:.73rem}
+.bg{color:var(--android);font-family:var(--fm);font-size:.73rem}
+.bo{color:#f5a623;font-family:var(--fm);font-size:.73rem}
+.br{color:#ff4757;font-family:var(--fm);font-size:.73rem}
+
+/* ── PROJECT STRUCTURE ── */
+.folder-tree{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:clamp(14px,3vw,22px);margin:20px 0;font-family:var(--fm);font-size:clamp(.66rem,1.8vw,.78rem);line-height:1.9}
+.ft-line{display:flex;align-items:center;gap:7px;padding:1px 0}
+.ft-ind{color:var(--muted2);flex-shrink:0}
+.ft-folder{color:var(--q2);font-weight:600}
+.ft-file{color:#c8d0da}
+.ft-comment{color:var(--muted);font-style:italic;font-size:.9em}
+
+/* ── DEPLOY STEPS ── */
+.deploy-steps{display:flex;flex-direction:column;gap:0;margin:20px 0;position:relative}
+.deploy-steps::before{content:'';position:absolute;left:17px;top:24px;bottom:24px;width:1px;background:var(--border)}
+.ds{display:flex;gap:14px;padding:14px 0;position:relative}
+.ds-num{width:34px;height:34px;border-radius:50%;border:1px solid rgba(0,180,216,.4);background:rgba(0,180,216,.08);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.68rem;font-weight:600;color:var(--q2);flex-shrink:0;z-index:1}
+.ds-body{flex:1;padding-top:7px;min-width:0}
+.ds-title{font-weight:700;color:var(--white);font-size:.9rem;margin-bottom:5px}
+.ds-desc{color:var(--muted);font-size:.84rem;line-height:1.55}
+
+/* verdict */
+.vbox{background:var(--card);border:1px solid rgba(0,180,216,.18);border-top:3px solid var(--q);border-radius:var(--r);padding:clamp(16px,3vw,26px);margin:28px 0}
+.vt{font-family:var(--fd);font-size:1.25rem;letter-spacing:1px;color:var(--white);margin-bottom:10px;display:flex;align-items:center;gap:9px}
+.vbox p{color:var(--muted);font-size:.88rem;line-height:1.7;margin-bottom:10px}
+.vbox p:last-child{margin-bottom:0}
+
+/* share */
+.shr{display:flex;align-items:center;gap:9px;padding:20px 0;border-top:1px solid var(--border);flex-wrap:wrap;margin-top:36px}
+.shl{font-family:var(--fm);font-size:.68rem;color:var(--muted);letter-spacing:1px;width:100%}
+.shb{border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:2px;font-family:var(--fm);font-size:.68rem;text-decoration:none;cursor:pointer;background:none;transition:all .2s;white-space:nowrap}
+.shb:hover{border-color:var(--accent);color:var(--accent)}
+
+/* author */
+.acard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:clamp(16px,3vw,24px);display:flex;gap:16px;align-items:flex-start;margin-top:10px}
+.aav{width:56px;height:56px;border-radius:50%;border:2px solid var(--q);background:var(--dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.an{font-weight:700;color:var(--white);font-size:.92rem;margin-bottom:3px}
+.ar{font-family:var(--fm);font-size:.66rem;color:var(--q2);margin-bottom:8px}
+.ab{color:var(--muted);font-size:.83rem;line-height:1.55;margin-bottom:10px}
+.alks{display:flex;gap:7px;flex-wrap:wrap}
+.alk{border:1px solid var(--border);color:var(--muted);padding:4px 11px;border-radius:2px;font-family:var(--fm);font-size:.66rem;text-decoration:none;transition:all .2s}
+.alk:hover{border-color:var(--q2);color:var(--q2)}
+
+/* related */
+.rel{margin-top:48px}
+.rh{font-family:var(--fd);font-size:1.65rem;letter-spacing:1px;color:var(--white);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.rh::before{content:'';width:3px;height:20px;background:var(--q);border-radius:2px;flex-shrink:0}
+.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.rc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-decoration:none;color:inherit;transition:all .3s;display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden}
+.rc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--q),var(--android));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.rc:hover::after{transform:scaleX(1)}
+.rc:hover{border-color:rgba(0,180,216,.3);transform:translateY(-3px)}
+.rc-cat{font-family:var(--fm);font-size:.62rem;color:var(--q2);text-transform:uppercase;letter-spacing:1px}
+.rc-title{font-size:.84rem;font-weight:700;color:var(--white);line-height:1.4}
+.rc-meta{font-family:var(--fm);font-size:.62rem;color:var(--muted)}
+
+/* ── SIDEBAR ── */
+.sb{display:flex;flex-direction:column;gap:18px;position:sticky;top:82px;min-width:0}
+.wid{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.wh{padding:11px 15px;background:var(--dark);border-bottom:1px solid var(--border);font-family:var(--fd);font-size:.88rem;letter-spacing:1px;color:var(--white);display:flex;align-items:center;gap:8px}
+.wh::before{content:'';width:3px;height:12px;background:var(--q2);border-radius:2px;flex-shrink:0}
+.wb{padding:14px 15px}
+.tl{display:flex;flex-direction:column;gap:1px}
+.tbtn{display:flex;align-items:flex-start;gap:8px;padding:5px 8px;border-radius:4px;color:var(--muted);font-size:.76rem;line-height:1.4;transition:all .2s;cursor:pointer;border:none;background:none;font-family:var(--fb);text-align:left;width:100%}
+.tbtn:hover,.tbtn.active{background:rgba(0,180,216,.06);color:var(--white)}
+.tbtn.active{color:var(--q2)}
+.tn{font-family:var(--fm);font-size:.6rem;color:var(--q2);opacity:.6;min-width:15px;margin-top:1px;flex-shrink:0}
+.cta-w{background:linear-gradient(135deg,rgba(0,180,216,.08),rgba(61,220,132,.04))!important;border:1px solid rgba(0,180,216,.18)!important}
+.cta-w .wb{text-align:center}
+.cth{font-family:var(--fd);font-size:1.15rem;letter-spacing:1px;color:var(--white);margin-bottom:8px}
+.ctp{color:var(--muted);font-size:.78rem;line-height:1.6;margin-bottom:14px}
+.ctb{display:block;background:var(--accent);color:var(--white);padding:10px 16px;text-decoration:none;font-weight:600;font-size:.8rem;border-radius:2px;transition:all .2s;text-align:center}
+.ctb:hover{background:#d94000;transform:translateY(-2px)}
+.tgw{display:flex;flex-wrap:wrap;gap:4px}
+.tp{background:rgba(255,255,255,.04);border:1px solid var(--border);padding:3px 8px;border-radius:100px;font-size:.65rem;font-family:var(--fm);color:var(--muted);text-decoration:none;transition:all .2s}
+.tp:hover{background:rgba(0,180,216,.09);border-color:rgba(0,180,216,.3);color:var(--q2)}
+.bkl{display:flex;align-items:center;gap:7px;border:1px solid var(--border);color:var(--muted);padding:10px 14px;border-radius:var(--r);font-family:var(--fm);font-size:.7rem;text-decoration:none;transition:all .2s}
+.bkl:hover{border-color:var(--q2);color:var(--q2)}
+
+/* ── FOOTER ── */
+.foot{background:var(--dark);border-top:1px solid var(--border);padding:clamp(18px,4vw,40px) clamp(14px,4vw,40px)}
+.fi{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.fl2{font-family:var(--fd);font-size:clamp(1.1rem,3vw,1.4rem);letter-spacing:2px;color:var(--white)}
+.fl2 span{color:var(--accent)}
+.fc{color:var(--muted);font-size:.76rem}
+.fls{display:flex;gap:clamp(10px,2vw,20px);list-style:none;flex-wrap:wrap}
+.fls a{color:var(--muted);text-decoration:none;font-size:.76rem;transition:color .2s}
+.fls a:hover{color:var(--white)}
+
+/* ══════════════════════════════════
+   RESPONSIVE — ALL DEVICES
+══════════════════════════════════ */
+@media(max-width:1080px){
+  .wrap{grid-template-columns:minmax(0,1fr);padding:24px 18px 56px}
+  .sb{position:static;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+}
+@media(max-width:860px){
+  :root{--nh:58px}
+  .nav{padding:0 16px}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .phone-deco{display:none}
+  .hero{min-height:auto}
+  .hero-inner{grid-template-columns:minmax(0,1fr);padding:26px 16px 30px;gap:0}
+  .wrap{padding:22px 16px 48px}
+}
+@media(max-width:640px){
+  :root{--nh:54px}
+  .nav{padding:0 12px}
+  .nav-logo{font-size:1.35rem;letter-spacing:1px}
+  .hero-inner{padding:20px 12px 26px}
+  .atitle{font-size:clamp(1.6rem,8vw,2.2rem)}
+  .adesc{font-size:.87rem;margin-bottom:18px}
+  .bc{font-size:.6rem;gap:5px;margin-bottom:12px}
+  .cat{font-size:.6rem;padding:4px 10px;margin-bottom:10px}
+  .mbar{flex-direction:column;align-items:flex-start;gap:8px;padding:12px 0}
+  .mauthor{padding-right:0;border-right:none;border-bottom:1px solid var(--border);padding-bottom:8px;width:100%}
+  .mchips{gap:8px}
+  .mchip{font-size:.62rem}
+  .avsm{width:32px;height:32px;font-size:.9rem}
+  .aname{font-size:.8rem}
+  .arole{font-size:.6rem}
+  .trow{gap:4px;margin-top:12px}
+  .tag{font-size:.6rem;padding:2px 7px}
+  .wrap{padding:16px 12px 44px;gap:18px}
+  .prose{font-size:.91rem}
+  .prose h2{font-size:clamp(1.2rem,5.5vw,1.55rem);margin:26px 0 11px;padding-top:26px}
+  .prose h3{font-size:.95rem;margin:18px 0 8px}
+  .prose p{margin-bottom:12px}
+  .prose ul,.prose ol{margin-left:13px;gap:5px}
+  .prose code{font-size:.72rem;padding:1px 4px}
+  .cb{margin:14px 0;border-radius:5px}
+  .ch{padding:7px 9px;gap:6px}
+  .dot{width:7px;height:7px}
+  .cfile{font-size:.56rem;max-width:110px}
+  .cpb{font-size:.54rem;padding:2px 6px}
+  .cp{padding:10px 9px;font-size:.64rem;line-height:1.6}
+  .cl{padding:10px 12px;margin:14px 0}
+  .cl-t{font-size:.74rem}
+  .cl p{font-size:.82rem}
+  .platform-grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:14px 0}
+  .plat-card{padding:13px 10px}
+  .plat-icon{font-size:1.35rem;margin-bottom:6px}
+  .plat-name{font-size:.78rem}
+  .plat-cmd{font-size:.52rem}
+  .tw{margin:14px 0}
+  .ctab{font-size:.7rem;min-width:360px}
+  .ctab th,.ctab td{padding:7px 8px}
+  .folder-tree{padding:12px 10px;font-size:.62rem;margin:14px 0}
+  .deploy-steps{margin:14px 0}
+  .deploy-steps::before{left:14px}
+  .ds{gap:11px;padding:11px 0}
+  .ds-num{width:28px;height:28px;font-size:.62rem}
+  .ds-title{font-size:.84rem}
+  .ds-desc{font-size:.79rem}
+  .vbox{padding:14px 12px;margin:18px 0}
+  .vt{font-size:1rem}
+  .vbox p{font-size:.84rem;margin-bottom:8px}
+  .shr{gap:7px;padding:16px 0;margin-top:24px}
+  .shb{font-size:.62rem;padding:5px 9px}
+  .shl{font-size:.62rem}
+  .acard{flex-direction:column;gap:12px;padding:14px 12px}
+  .aav{width:46px;height:46px;font-size:1.3rem}
+  .an{font-size:.86rem}
+  .ar{font-size:.62rem}
+  .ab{font-size:.79rem;margin-bottom:8px}
+  .alks{flex-wrap:wrap;gap:5px}
+  .alk{font-size:.61rem;padding:3px 8px}
+  .rel{margin-top:32px}
+  .rh{font-size:1.3rem;margin-bottom:12px;padding-bottom:10px}
+  .rg{grid-template-columns:1fr;gap:8px}
+  .rc{padding:12px}
+  .rc-title{font-size:.79rem}
+  .sb{grid-template-columns:1fr;gap:11px}
+  .wh{font-size:.8rem;padding:9px 12px}
+  .wb{padding:11px 12px}
+  .tbtn{font-size:.71rem;padding:5px 6px}
+  .cth{font-size:1rem}
+  .ctp{font-size:.74rem;margin-bottom:11px}
+  .ctb{font-size:.74rem;padding:8px 12px}
+  .tp{font-size:.62rem;padding:2px 6px}
+  .bkl{font-size:.65rem;padding:8px 11px}
+  .foot{padding:18px 12px}
+  .fi{flex-direction:column;align-items:center;text-align:center;gap:9px}
+  .fl2{font-size:1.2rem}
+  .fc{font-size:.7rem}
+  .fls{justify-content:center;gap:11px}
+  .fls a{font-size:.7rem}
+  .cur,.cur2{display:none!important}
+  body{cursor:auto!important}
+}
+@media(max-width:390px){
+  :root{--nh:50px}
+  .nav-logo{font-size:1.25rem}
+  .hero-inner{padding:16px 10px 22px}
+  .wrap{padding:14px 10px 40px}
+  .atitle{font-size:clamp(1.45rem,9vw,1.85rem)}
+  .cp{font-size:.6rem}
+  .ctab{min-width:320px;font-size:.66rem}
+  .folder-tree{font-size:.58rem}
+  .mob-menu a{font-size:1.6rem}
+  .fi{gap:7px}
+  .fls{gap:9px}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur2" id="cur2"></div>
+<div class="prog" id="prog"></div>
+
+<div class="mob-menu" id="mob">
+  <a href="https://codecraftsystems.github.io/" onclick="cM()">Home</a>
+  <a href="https://codecraftsystems.github.io/#services" onclick="cM()">Services</a>
+  <a href="https://codecraftsystems.github.io/#about" onclick="cM()">About</a>
+  <a href="https://codecraftsystems.github.io/blog" onclick="cM()">Blog</a>
+  <a href="https://codecraftsystems.github.io/#contact" onclick="cM()">Contact</a>
+</div>
+
+<header class="nav" id="nav">
+  <a href="https://codecraftsystems.github.io/" class="nav-logo">Code<span>Craft</span></a>
+  <ul class="nav-links">
+    <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+    <li><a href="https://codecraftsystems.github.io/#services">Services</a></li>
+    <li><a href="https://codecraftsystems.github.io/#about">About</a></li>
+    <li><a href="https://codecraftsystems.github.io/blog">Blog</a></li>
+    <li><a href="https://codecraftsystems.github.io/#contact" class="nav-cta">Hire Us</a></li>
+  </ul>
+  <button class="hamburger" id="ham" onclick="tM()" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="orb1"></div>
+  <div class="orb2"></div>
+
+  <!-- Phone mockup (desktop only) -->
+  <div class="phone-deco">
+    <div class="phone-shell">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="ps-topbar">
+          <div class="ps-title">MY APP</div>
+          <div class="ps-icons"><span></span><span></span><span></span></div>
+        </div>
+        <div class="ps-body">
+          <div class="ps-card">
+            <div class="ps-card-top">
+              <span class="ps-label">Android</span>
+              <span class="ps-val">72%</span>
+            </div>
+            <div class="ps-bar"><div class="ps-bar-fill a"></div></div>
+          </div>
+          <div class="ps-card">
+            <div class="ps-card-top">
+              <span class="ps-label">iOS</span>
+              <span class="ps-val">55%</span>
+            </div>
+            <div class="ps-bar"><div class="ps-bar-fill b"></div></div>
+          </div>
+          <div class="ps-card">
+            <div class="ps-card-top">
+              <span class="ps-label">Web / PWA</span>
+              <span class="ps-val">88%</span>
+            </div>
+            <div class="ps-bar"><div class="ps-bar-fill c"></div></div>
+          </div>
+        </div>
+        <div class="ps-nav">
+          <div class="ps-nav-item"><div class="ps-nav-dot active">⌂</div><div class="ps-nav-label">Home</div></div>
+          <div class="ps-nav-item"><div class="ps-nav-dot inactive">☰</div><div class="ps-nav-label">Menu</div></div>
+          <div class="ps-nav-item"><div class="ps-nav-dot inactive">♡</div><div class="ps-nav-label">Saved</div></div>
+          <div class="ps-nav-item"><div class="ps-nav-dot inactive">👤</div><div class="ps-nav-label">Profile</div></div>
+        </div>
+      </div>
+      <div class="phone-btn"></div>
+    </div>
+  </div>
+
+  <div class="hero-inner">
+    <nav class="bc" aria-label="breadcrumb">
+      <a href="https://codecraftsystems.github.io/">Home</a><span class="bc-sep">›</span>
+      <a href="https://codecraftsystems.github.io/blog">Blog</a><span class="bc-sep">›</span>
+      <span>Quasar Cross-Platform</span>
+    </nav>
+
+    <div class="h-left">
+      <div class="cat"><span class="cat-d"></span> Vue.js · Mobile</div>
+      <h1 class="atitle">BUILD<br><span class="qc">CROSS-PLATFORM</span><br>WITH <span class="gc">QUASAR</span></h1>
+      <p class="adesc">Web + Android + iOS from a single Vue 3 codebase using Quasar Framework. Setup, routing, Capacitor integration, and multi-target deployment — all in one guide.</p>
+
+      <div class="mbar">
+        <div class="mauthor">
+          <div class="avsm">👨‍💻</div>
+          <div><div class="aname">Sonu Sahani</div><div class="arole">Full Stack Developer · CodeCraft Studio</div></div>
+        </div>
+        <div class="mchips">
+          <span class="mchip">📅 Dec 15, 2024</span>
+          <span class="mchip">⏱ 7 min read</span>
+          <span class="mchip">👁 1.9k views</span>
+        </div>
+      </div>
+      <div class="trow">
+        <span class="tag qt">Quasar</span>
+        <span class="tag qt">Vue 3</span>
+        <span class="tag at">Capacitor</span>
+        <span class="tag at">Android</span>
+        <span class="tag">iOS</span>
+        <span class="tag">PWA</span>
+        <span class="tag">Mobile</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="wrap">
+  <article class="abody">
+    <div class="prose">
+
+      <!-- 1 -->
+      <h2 id="intro">Why Quasar?</h2>
+      <p>Most cross-platform frameworks force you to choose: React Native for mobile, or a web framework for browsers. <strong>Quasar Framework</strong> takes a different approach — one Vue 3 codebase, multiple build targets, zero compromises.</p>
+      <p>With a single <code>quasar build</code> command you get a production SPA, SSR, PWA, Android APK, iOS IPA, and even an Electron desktop app. Quasar ships 70+ Material Design components that adapt their appearance to each platform automatically.</p>
+
+      <div class="cl info">
+        <div class="cl-t">📦 Stack Used</div>
+        <p>Quasar CLI v2, Vue 3 Composition API, Vite, Capacitor 6 (iOS/Android), Node 20, Android Studio / Xcode. Connects to a Laravel 11 REST API backend.</p>
+      </div>
+
+      <!-- platform targets -->
+      <h3>One Codebase → 5 Targets</h3>
+      <div class="platform-grid">
+        <div class="plat-card web">
+          <div class="plat-icon">🌐</div>
+          <div class="plat-name">SPA / SSR</div>
+          <div class="plat-cmd">quasar build</div>
+        </div>
+        <div class="plat-card pwa">
+          <div class="plat-icon">📲</div>
+          <div class="plat-name">PWA</div>
+          <div class="plat-cmd">-m pwa</div>
+        </div>
+        <div class="plat-card android">
+          <div class="plat-icon">🤖</div>
+          <div class="plat-name">Android</div>
+          <div class="plat-cmd">-m capacitor</div>
+        </div>
+        <div class="plat-card ios">
+          <div class="plat-icon">🍎</div>
+          <div class="plat-name">iOS</div>
+          <div class="plat-cmd">-m capacitor</div>
+        </div>
+        <div class="plat-card electron">
+          <div class="plat-icon">🖥</div>
+          <div class="plat-name">Desktop</div>
+          <div class="plat-cmd">-m electron</div>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <h2 id="install">Install Quasar CLI & Create Project</h2>
+
+      <div class="cb">
+        <div class="ch"><div class="chl"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="cfile">terminal — install & scaffold</span></div><button class="cpb" onclick="copyCode(this)">Copy</button></div>
+        <pre class="cp"><span class="cm"># Install Quasar CLI globally</span>
+npm i -g @quasar/cli
+
+<span class="cm"># Create new project (interactive wizard)</span>
+npm create quasar@latest my-app
+
+<span class="cm"># Wizard options to choose:</span>
+<span class="cm"># ✓ Quasar App with Vite</span>
+<span class="cm"># ✓ Vue 3 Composition API (with &lt;script setup&gt;)</span>
+<span class="cm"># ✓ Pinia (state management)</span>
+<span class="cm"># ✓ Vue Router</span>
+<span class="cm"># ✓ ESLint + Prettier</span>
+
+cd my-app
+npm install
+quasar dev    <span class="cm"># → http://localhost:9000</span></pre>
+      </div>
+
+      <!-- 3 -->
+      <h2 id="structure">Project Structure</h2>
+
+      <div class="folder-tree">
+        <div class="ft-line"><span class="ft-folder">my-app/</span></div>
+        <div class="ft-line"><span class="ft-ind">├─</span><span class="ft-folder">src/</span></div>
+        <div class="ft-line"><span class="ft-ind">│  ├─</span><span class="ft-folder">assets/</span><span class="ft-comment">&nbsp;&nbsp;# images, fonts</span></div>
+        <div class="ft-line"><span class="ft-ind">│  ├─</span><span class="ft-folder">boot/</span><span class="ft-comment">&nbsp;&nbsp;&nbsp;# app plugins (axios, pinia)</span></div>
+        <div class="ft-line"><span class="ft-ind">│  ├─</span><span class="ft-folder">components/</span></div>
+        <div class="ft-line"><span class="ft-ind">│  ├─</span><span class="ft-folder">composables/</span></div>
+        <div class="ft-line"><span class="ft-ind">│  ├─</span><span class="ft-folder">layouts/</span><span class="ft-comment">&nbsp;&nbsp;# MainLayout.vue</span></div>
+        <div class="ft-line"><span class="ft-ind">│  ├─</span><span class="ft-folder">pages/</span><span class="ft-comment">&nbsp;&nbsp;&nbsp;# routed views</span></div>
+        <div class="ft-line"><span class="ft-ind">│  ├─</span><span class="ft-folder">router/</span><span class="ft-comment">&nbsp;&nbsp;# routes/index.js</span></div>
+        <div class="ft-line"><span class="ft-ind">│  ├─</span><span class="ft-folder">stores/</span><span class="ft-comment">&nbsp;&nbsp;# Pinia stores</span></div>
+        <div class="ft-line"><span class="ft-ind">│  └─</span><span class="ft-file">App.vue</span></div>
+        <div class="ft-line"><span class="ft-ind">├─</span><span class="ft-file">quasar.config.js</span><span class="ft-comment">&nbsp;&nbsp;# ← main config</span></div>
+        <div class="ft-line"><span class="ft-ind">├─</span><span class="ft-file">capacitor.config.json</span><span class="ft-comment">&nbsp;&nbsp;# mobile config</span></div>
+        <div class="ft-line"><span class="ft-ind">└─</span><span class="ft-file">package.json</span></div>
+      </div>
+
+      <!-- 4 -->
+      <h2 id="layout">Layouts, Pages & Routing</h2>
+      <p>Quasar uses a layout-driven routing system. A layout wraps multiple pages — think of it as your shell with header, drawer, and footer. Pages are the content inside.</p>
+
+      <div class="cb">
+        <div class="ch"><div class="chl"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="cfile">src/layouts/MainLayout.vue</span></div><button class="cpb" onclick="copyCode(this)">Copy</button></div>
+        <pre class="cp"><span class="ck">&lt;template&gt;</span>
+  <span class="cq">&lt;q-layout</span> view=<span class="cs">"lHh Lpr lFf"</span><span class="cq">&gt;</span>
+
+    <span class="cq">&lt;q-header</span> elevated<span class="cq">&gt;</span>
+      <span class="cq">&lt;q-toolbar&gt;</span>
+        <span class="cq">&lt;q-btn</span> flat dense round icon=<span class="cs">"menu"</span> @click=<span class="cs">"leftDrawer = !leftDrawer"</span> <span class="cq">/&gt;</span>
+        <span class="cq">&lt;q-toolbar-title&gt;</span>My App<span class="cq">&lt;/q-toolbar-title&gt;</span>
+      <span class="cq">&lt;/q-toolbar&gt;</span>
+    <span class="cq">&lt;/q-header&gt;</span>
+
+    <span class="cq">&lt;q-drawer</span> v-model=<span class="cs">"leftDrawer"</span> show-if-above bordered<span class="cq">&gt;</span>
+      <span class="cq">&lt;q-list&gt;</span>
+        <span class="cq">&lt;q-item</span> v-for=<span class="cs">"link in navLinks"</span> :key=<span class="cs">"link.title"</span>
+               :to=<span class="cs">"link.path"</span> clickable v-ripple<span class="cq">&gt;</span>
+          <span class="cq">&lt;q-item-section</span> avatar<span class="cq">&gt;&lt;q-icon</span> :name=<span class="cs">"link.icon"</span> <span class="cq">/&gt;&lt;/q-item-section&gt;</span>
+          <span class="cq">&lt;q-item-section&gt;</span>{{ link.title }}<span class="cq">&lt;/q-item-section&gt;</span>
+        <span class="cq">&lt;/q-item&gt;</span>
+      <span class="cq">&lt;/q-list&gt;</span>
+    <span class="cq">&lt;/q-drawer&gt;</span>
+
+    <span class="cq">&lt;q-page-container&gt;</span>
+      <span class="cq">&lt;router-view /&gt;</span>
+    <span class="cq">&lt;/q-page-container&gt;</span>
+
+  <span class="cq">&lt;/q-layout&gt;</span>
+<span class="ck">&lt;/template&gt;</span>
+
+<span class="ck">&lt;script setup&gt;</span>
+<span class="ck">import</span> { ref } <span class="ck">from</span> <span class="cs">'vue'</span>
+<span class="ck">const</span> leftDrawer = ref(<span class="cn">false</span>)
+<span class="ck">const</span> navLinks = [
+  { title: <span class="cs">'Dashboard'</span>, icon: <span class="cs">'dashboard'</span>, path: <span class="cs">'/'</span> },
+  { title: <span class="cs">'Profile'</span>,   icon: <span class="cs">'person'</span>,    path: <span class="cs">'/profile'</span> },
+  { title: <span class="cs">'Settings'</span>,  icon: <span class="cs">'settings'</span>,  path: <span class="cs">'/settings'</span> },
+]
+<span class="ck">&lt;/script&gt;</span></pre>
+      </div>
+
+      <div class="cb">
+        <div class="ch"><div class="chl"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="cfile">src/router/routes.js</span></div><button class="cpb" onclick="copyCode(this)">Copy</button></div>
+        <pre class="cp"><span class="ck">const</span> routes = [
+  {
+    path: <span class="cs">'/'</span>,
+    component: () => <span class="ck">import</span>(<span class="cs">'layouts/MainLayout.vue'</span>),
+    children: [
+      { path: <span class="cs">''</span>,         component: () => <span class="ck">import</span>(<span class="cs">'pages/IndexPage.vue'</span>) },
+      { path: <span class="cs">'profile'</span>,   component: () => <span class="ck">import</span>(<span class="cs">'pages/ProfilePage.vue'</span>) },
+      { path: <span class="cs">'settings'</span>,  component: () => <span class="ck">import</span>(<span class="cs">'pages/SettingsPage.vue'</span>) },
+    ]
+  },
+  <span class="cm">// Auth pages (no drawer/header)</span>
+  {
+    path: <span class="cs">'/auth'</span>,
+    component: () => <span class="ck">import</span>(<span class="cs">'layouts/AuthLayout.vue'</span>),
+    children: [
+      { path: <span class="cs">'login'</span>,    component: () => <span class="ck">import</span>(<span class="cs">'pages/LoginPage.vue'</span>) },
+      { path: <span class="cs">'register'</span>, component: () => <span class="ck">import</span>(<span class="cs">'pages/RegisterPage.vue'</span>) },
+    ]
+  },
+  <span class="cm">// 404</span>
+  { path: <span class="cs">'/:catchAll(.*)*'</span>, component: () => <span class="ck">import</span>(<span class="cs">'pages/ErrorNotFound.vue'</span>) }
+]</pre>
+      </div>
+
+      <!-- 5 -->
+      <h2 id="api">Connect to Laravel API</h2>
+      <p>Configure Axios as a Quasar <strong>boot plugin</strong> — boot files run once at app startup before Vue mounts. This is where you set base URLs, auth headers, and interceptors.</p>
+
+      <div class="cb">
+        <div class="ch"><div class="chl"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="cfile">src/boot/axios.js</span></div><button class="cpb" onclick="copyCode(this)">Copy</button></div>
+        <pre class="cp"><span class="ck">import</span> { boot } <span class="ck">from</span> <span class="cs">'quasar/wrappers'</span>
+<span class="ck">import</span> axios  <span class="ck">from</span> <span class="cs">'axios'</span>
+
+<span class="ck">const</span> api = axios.create({
+  baseURL: process.env.<span class="ca">VITE_API_URL</span> || <span class="cs">'https://api.yourapp.com'</span>,
+  headers: { <span class="cs">'Accept'</span>: <span class="cs">'application/json'</span> }
+})
+
+<span class="cm">// Inject Sanctum token on every request</span>
+api.interceptors.request.use(config => {
+  <span class="ck">const</span> token = localStorage.getItem(<span class="cs">'token'</span>)
+  <span class="ck">if</span> (token) config.headers.Authorization = <span class="cs">`Bearer ${token}`</span>
+  <span class="ck">return</span> config
+})
+
+<span class="cm">// Global 401 → redirect to login</span>
+api.interceptors.response.use(
+  res  => res,
+  err  => {
+    <span class="ck">if</span> (err.response?.status === <span class="cn">401</span>) {
+      localStorage.removeItem(<span class="cs">'token'</span>)
+      window.location.href = <span class="cs">'/auth/login'</span>
+    }
+    <span class="ck">return</span> Promise.reject(err)
+  }
+)
+
+<span class="ck">export default</span> boot(({ app }) => {
+  app.config.globalProperties.<span class="ca">$api</span> = api
+})
+
+<span class="ck">export</span> { api }</pre>
+      </div>
+
+      <!-- 6 -->
+      <h2 id="capacitor">Capacitor — Deploy to Android & iOS</h2>
+      <p><strong>Capacitor</strong> bridges your web app to native device APIs. Add it to Quasar with one command, then build and open the native project in Android Studio or Xcode.</p>
+
+      <div class="tw">
+        <table class="ctab">
+          <thead><tr><th>Feature</th><th>Capacitor</th><th>Cordova</th><th>React Native</th></tr></thead>
+          <tbody>
+            <tr><td class="ft">Web Tech</td><td><span class="bq">✓ HTML/CSS/JS</span></td><td><span class="bq">✓ HTML/CSS/JS</span></td><td><span class="bo">~ JSX only</span></td></tr>
+            <tr><td class="ft">Native APIs</td><td><span class="bg">✓ Modern</span></td><td><span class="bo">~ Legacy</span></td><td><span class="bg">✓ Deep</span></td></tr>
+            <tr><td class="ft">Live Reload</td><td><span class="bg">✓ Yes</span></td><td><span class="bo">~ Slow</span></td><td><span class="bg">✓ Yes</span></td></tr>
+            <tr><td class="ft">Plugin Ecosystem</td><td><span class="bg">✓ Rich</span></td><td><span class="bo">~ Outdated</span></td><td><span class="bg">✓ Huge</span></td></tr>
+            <tr><td class="ft">Quasar Support</td><td><span class="bg">✓ Official</span></td><td><span class="bg">✓ Legacy</span></td><td><span class="br">✗ Separate</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cb">
+        <div class="ch"><div class="chl"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="cfile">terminal — add Capacitor to Quasar</span></div><button class="cpb" onclick="copyCode(this)">Copy</button></div>
+        <pre class="cp"><span class="cm"># Add Capacitor mode to your Quasar project</span>
+quasar mode add capacitor
+
+<span class="cm"># Install Capacitor packages</span>
+npm install @capacitor/core @capacitor/cli
+npm install @capacitor/android @capacitor/ios
+
+<span class="cm"># Add native platforms</span>
+npx cap add android
+npx cap add ios</pre>
+      </div>
+
+      <div class="cb">
+        <div class="ch"><div class="chl"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="cfile">capacitor.config.json</span></div><button class="cpb" onclick="copyCode(this)">Copy</button></div>
+        <pre class="cp">{
+  <span class="ca">"appId"</span>:      <span class="cs">"com.codecraft.myapp"</span>,
+  <span class="ca">"appName"</span>:    <span class="cs">"My App"</span>,
+  <span class="ca">"webDir"</span>:     <span class="cs">"dist/capacitor/www"</span>,
+  <span class="ca">"bundledWebRuntime"</span>: <span class="cn">false</span>,
+  <span class="ca">"plugins"</span>: {
+    <span class="ca">"SplashScreen"</span>: {
+      <span class="ca">"launchShowDuration"</span>: <span class="cn">2000</span>,
+      <span class="ca">"backgroundColor"</span>: <span class="cs">"#06080a"</span>
+    },
+    <span class="ca">"StatusBar"</span>: {
+      <span class="ca">"style"</span>: <span class="cs">"Dark"</span>,
+      <span class="ca">"backgroundColor"</span>: <span class="cs">"#06080a"</span>
+    }
+  }
+}</pre>
+      </div>
+
+      <!-- 7 -->
+      <h2 id="deploy">Build & Deploy — All Targets</h2>
+
+      <div class="deploy-steps">
+        <div class="ds">
+          <div class="ds-num">01</div>
+          <div class="ds-body">
+            <div class="ds-title">SPA / Web</div>
+            <div class="ds-desc">Run <code>quasar build</code> → outputs to <code>dist/spa/</code>. Deploy to Nginx, Vercel, Netlify, or any static host. Works with your Laravel API backend.</div>
+          </div>
+        </div>
+        <div class="ds">
+          <div class="ds-num">02</div>
+          <div class="ds-body">
+            <div class="ds-title">PWA (Progressive Web App)</div>
+            <div class="ds-desc">Run <code>quasar build -m pwa</code>. Generates a service worker, manifest.json, and offline support automatically. Users can "Add to Home Screen" on Android and iOS.</div>
+          </div>
+        </div>
+        <div class="ds">
+          <div class="ds-num">03</div>
+          <div class="ds-body">
+            <div class="ds-title">Android APK / AAB</div>
+            <div class="ds-desc">Run <code>quasar build -m capacitor -T android</code> then <code>npx cap open android</code>. Opens Android Studio where you sign and generate your release APK/AAB for the Play Store.</div>
+          </div>
+        </div>
+        <div class="ds">
+          <div class="ds-num">04</div>
+          <div class="ds-body">
+            <div class="ds-title">iOS IPA (Mac only)</div>
+            <div class="ds-desc">Run <code>quasar build -m capacitor -T ios</code> then <code>npx cap open ios</code>. Opens Xcode — set your signing team, bump build number, archive and upload to App Store Connect.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cb">
+        <div class="ch"><div class="chl"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span class="cfile">terminal — all build commands</span></div><button class="cpb" onclick="copyCode(this)">Copy</button></div>
+        <pre class="cp"><span class="cm"># Web SPA</span>
+quasar build
+
+<span class="cm"># PWA</span>
+quasar build -m pwa
+
+<span class="cm"># Android (build + sync + open Android Studio)</span>
+quasar build -m capacitor -T android
+npx cap sync android
+npx cap open android
+
+<span class="cm"># iOS (Mac only)</span>
+quasar build -m capacitor -T ios
+npx cap sync ios
+npx cap open ios
+
+<span class="cm"># Live reload on device during development</span>
+quasar dev -m capacitor -T android --ide</pre>
+      </div>
+
+      <div class="cl ok">
+        <div class="cl-t">✅ Platform-Specific Code</div>
+        <p>Use <code>$q.platform.is.mobile</code>, <code>$q.platform.is.android</code>, <code>$q.platform.is.ios</code> inside Vue components to conditionally render platform-specific UI. Quasar automatically applies Material Design on Android and iOS Human Interface Guidelines on iOS.</p>
+      </div>
+
+      <div class="cl tip">
+        <div class="cl-t">💡 Quasar vs NativeScript vs React Native</div>
+        <p>Quasar renders in a WebView (like Capacitor/Cordova) — not truly native widgets. For apps that need deep native performance (60fps animations, heavy gestures), consider React Native or NativeScript. For standard business apps, dashboards, and CRUD — Quasar is significantly faster to ship.</p>
+      </div>
+
+      <!-- verdict -->
+      <div class="vbox">
+        <div class="vt">🏁 Key Takeaways</div>
+        <p><strong>Quasar is the fastest way</strong> to ship a Vue 3 app to web, Android, and iOS. One team, one codebase, one deployment pipeline. For B2B SaaS, internal tools, and MVPs — this tradeoff is overwhelmingly worth it.</p>
+        <p><strong>PWA first, then Capacitor.</strong> Deploy the PWA build first — it works on all devices instantly, no app store review, and users install it from the browser. Add Capacitor (native app) only when you need push notifications, deep native APIs, or App Store presence.</p>
+        <p><strong>Pair with Laravel API.</strong> Quasar + Laravel is a powerful stack — Quasar handles all UI and mobile targets, Laravel handles auth (Sanctum), business logic, and the database. The boot plugin pattern keeps the API layer clean and testable.</p>
+      </div>
+
+    </div><!-- /prose -->
+
+    <div class="shr">
+      <span class="shl">SHARE THIS ARTICLE:</span>
+      <a href="https://twitter.com/intent/tweet?text=Build Cross-Platform Apps with Quasar Framework and Vue 3&url=https://codecraftsystems.github.io/blog/quasar-cross-platform.html" target="_blank" class="shb">𝕏 Twitter</a>
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://codecraftsystems.github.io/blog/quasar-cross-platform.html" target="_blank" class="shb">💼 LinkedIn</a>
+      <button class="shb" onclick="copyLink()">🔗 Copy Link</button>
+    </div>
+
+    <div class="acard">
+      <div class="aav">👨‍💻</div>
+      <div>
+        <div class="an">Sonu Sahani</div>
+        <div class="ar">Full Stack Developer · CodeCraft Studio</div>
+        <p class="ab">6+ years building Vue.js & Laravel apps for UK, USA & global clients. Shipped multiple Quasar apps to Android & iOS alongside Vue 3 web products from a single codebase — the stack we recommend for every cross-platform project.</p>
+        <div class="alks">
+          <a href="https://www.linkedin.com/in/sonu-vuejs-laravel-api" target="_blank" class="alk">LinkedIn</a>
+          <a href="https://github.com/sonusonusahani098" target="_blank" class="alk">GitHub</a>
+          <a href="https://codecraftsystems.github.io/#contact" class="alk">Hire Me</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel">
+      <div class="rh">Related Articles</div>
+      <div class="rg">
+        <a href="vuejs-state-management-pinia.html" class="rc"><div class="rc-cat">Vue.js</div><div class="rc-title">Pinia vs Vuex: State Management in Vue 3 Projects</div><div class="rc-meta">Feb 3, 2025 · 6 min</div></a>
+        <a href="nuxt-ssr-seo-guide.html" class="rc"><div class="rc-cat">Nuxt.js</div><div class="rc-title">Nuxt.js SSR for SEO: Complete Setup Guide 2025</div><div class="rc-meta">Jan 28, 2025 · 10 min</div></a>
+        <a href="laravel-websockets-realtime.html" class="rc"><div class="rc-cat">Laravel</div><div class="rc-title">Real-Time Chat with Laravel Reverb & Vue.js</div><div class="rc-meta">Jan 10, 2025 · 9 min</div></a>
+        <a href="stripe-subscription-laravel.html" class="rc"><div class="rc-cat">SaaS</div><div class="rc-title">Stripe Subscriptions with Laravel Cashier</div><div class="rc-meta">Dec 22, 2024 · 11 min</div></a>
+      </div>
+    </div>
+  </article>
+
+  <!-- SIDEBAR -->
+  <aside class="sb">
+    <div class="wid">
+      <div class="wh">Contents</div>
+      <div class="wb">
+        <div class="tl">
+          <button class="tbtn active" onclick="goTo('intro')"><span class="tn">01</span>Why Quasar?</button>
+          <button class="tbtn" onclick="goTo('install')"><span class="tn">02</span>Install & Setup</button>
+          <button class="tbtn" onclick="goTo('structure')"><span class="tn">03</span>Project Structure</button>
+          <button class="tbtn" onclick="goTo('layout')"><span class="tn">04</span>Layouts & Routing</button>
+          <button class="tbtn" onclick="goTo('api')"><span class="tn">05</span>Laravel API</button>
+          <button class="tbtn" onclick="goTo('capacitor')"><span class="tn">06</span>Capacitor</button>
+          <button class="tbtn" onclick="goTo('deploy')"><span class="tn">07</span>Build & Deploy</button>
+        </div>
+      </div>
+    </div>
+    <div class="wid cta-w">
+      <div class="wh">Hire Us</div>
+      <div class="wb">
+        <div class="cth">NEED A MOBILE APP?</div>
+        <p class="ctp">We build Vue 3 + Quasar cross-platform apps for web, Android & iOS. One codebase, deployed everywhere.</p>
+        <a href="https://codecraftsystems.github.io/#contact" class="ctb">Get a Free Quote →</a>
+      </div>
+    </div>
+    <div class="wid">
+      <div class="wh">Tags</div>
+      <div class="wb">
+        <div class="tgw">
+          <a href="#" class="tp">Quasar</a><a href="#" class="tp">Vue 3</a>
+          <a href="#" class="tp">Capacitor</a><a href="#" class="tp">Android</a>
+          <a href="#" class="tp">iOS</a><a href="#" class="tp">PWA</a>
+          <a href="#" class="tp">Cross-Platform</a><a href="#" class="tp">Mobile</a>
+          <a href="#" class="tp">Vite</a><a href="#" class="tp">Pinia</a>
+        </div>
+      </div>
+    </div>
+    <a href="https://codecraftsystems.github.io/blog" class="bkl">← Back to Blog</a>
+  </aside>
+</div>
+
+<footer class="foot">
+  <div class="fi">
+    <div class="fl2">Code<span>Craft</span></div>
+    <p class="fc">© <span id="yr"></span> CodeCraft Studio · Sonu Sahani</p>
+    <ul class="fls">
+      <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+      <li><a href="https://codecraftsystems.github.io/#services">Services</a></li>
+      <li><a href="https://codecraftsystems.github.io/blog">Blog</a></li>
+      <li><a href="https://codecraftsystems.github.io/#contact">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+/* cursor */
+const c1=document.getElementById('cur'),c2=document.getElementById('cur2');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function t(){c1.style.transform=`translate(${mx-5}px,${my-5}px)`;rx+=(mx-rx-18)*.11;ry+=(my-ry-18)*.11;c2.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(t)})();
+
+/* nav scroll */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>40);uP();uT()});
+
+/* mobile menu */
+const mob=document.getElementById('mob'),ham=document.getElementById('ham');
+function tM(){const o=mob.classList.toggle('open');ham.classList.toggle('open',o)}
+function cM(){mob.classList.remove('open');ham.classList.remove('open')}
+
+/* progress bar */
+function uP(){document.getElementById('prog').style.width=(scrollY/(document.documentElement.scrollHeight-innerHeight)*100)+'%'}
+
+/* TOC */
+const secs=['intro','install','structure','layout','api','capacitor','deploy'];
+function goTo(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth'})}
+function uT(){
+  let cur=secs[0];
+  secs.forEach(id=>{const el=document.getElementById(id);if(el&&scrollY>=el.offsetTop-110)cur=id});
+  document.querySelectorAll('.tbtn').forEach((b,i)=>b.classList.toggle('active',secs[i]===cur));
+}
+
+/* copy link */
+function copyLink(){
+  navigator.clipboard.writeText(location.href).then(()=>{
+    const b=document.querySelector('[onclick="copyLink()"]'),t=b.textContent;
+    b.textContent='✓ Copied!';setTimeout(()=>b.textContent=t,2000);
+  });
+}
+
+/* copy code */
+function copyCode(btn){
+  const pre=btn.closest('.cb').querySelector('.cp');
+  navigator.clipboard.writeText(pre.innerText).then(()=>{
+    const t=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=t,2000);
+  });
+}
+</script>
+</body>
+</html>
