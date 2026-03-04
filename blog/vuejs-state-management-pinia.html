@@ -94,7 +94,7 @@
     --font-body: 'DM Sans', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
     --nav-h: 65px;
-    --content-w: 760px;
+    /* FIX: removed fixed content-w, now handled via max-width in layout */
   }
 
   html { scroll-behavior: smooth; }
@@ -109,6 +109,24 @@
     cursor: none;
   }
 
+
+      /* Cursor */
+  .cursor {
+    width: 12px; height: 12px; background: var(--accent);
+    border-radius: 50%; position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.15s ease; mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 40px; height: 40px; border: 1px solid var(--accent);
+    border-radius: 50%; position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transition: all 0.3s ease; opacity: 0.5;
+  }
+  
+  /* iOS input zoom fix */
+  input, select, textarea { font-size: 16px !important; }
+
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -116,7 +134,7 @@
     pointer-events: none; z-index: 100; opacity: 0.4;
   }
 
-  /* Cursor */
+  /* ── Cursor ── */
   .cursor {
     width: 12px; height: 12px; background: var(--accent);
     border-radius: 50%; position: fixed; top: 0; left: 0;
@@ -144,12 +162,23 @@
     border-color: var(--border);
     backdrop-filter: blur(20px);
   }
-  .logo { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: 2px; color: var(--white); text-decoration: none; }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 1.8rem; letter-spacing: 2px;
+    color: var(--white); text-decoration: none;
+    flex-shrink: 0; /* FIX: prevent logo from shrinking */
+  }
   .logo span { color: var(--accent); }
   .nav-links { display: flex; gap: 36px; list-style: none; align-items: center; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.85rem;
+    font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s;
+  }
   .nav-links a:hover { color: var(--white); }
-  .nav-cta { background: var(--accent) !important; color: var(--white) !important; padding: 10px 24px; border-radius: 2px; font-weight: 600 !important; }
+  .nav-cta {
+    background: var(--accent) !important; color: var(--white) !important;
+    padding: 10px 24px; border-radius: 2px; font-weight: 600 !important;
+  }
   .nav-cta:hover { background: #e04400 !important; }
   .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
   .hamburger span { display: block; width: 28px; height: 2px; background: var(--white); transition: all 0.3s; }
@@ -160,9 +189,15 @@
     flex-direction: column; align-items: center; justify-content: center; gap: 36px;
   }
   .mobile-menu.open { display: flex; }
-  .mobile-menu a { font-family: var(--font-display); font-size: 2.5rem; color: var(--white); text-decoration: none; letter-spacing: 2px; transition: color 0.2s; }
+  .mobile-menu a {
+    font-family: var(--font-display); font-size: 2.5rem;
+    color: var(--white); text-decoration: none; letter-spacing: 2px; transition: color 0.2s;
+  }
   .mobile-menu a:hover { color: var(--accent); }
-  .close-btn { position: absolute; top: 24px; right: 40px; font-size: 2rem; background: none; border: none; color: var(--white); cursor: pointer; }
+  .close-btn {
+    position: absolute; top: 24px; right: 40px;
+    font-size: 2rem; background: none; border: none; color: var(--white); cursor: pointer;
+  }
 
   /* ── ARTICLE HERO ── */
   .article-hero {
@@ -192,16 +227,18 @@
     animation: fadeUp 0.6s ease both;
   }
 
-  /* Breadcrumb */
+  /* ── Breadcrumb ── */
   .breadcrumb {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 6px;
     font-family: var(--font-mono); font-size: 0.73rem;
-    color: var(--muted); margin-bottom: 24px; flex-wrap: wrap;
+    color: var(--muted); margin-bottom: 24px;
+    flex-wrap: wrap; /* FIX: allow wrap */
+    line-height: 1.8;
   }
-  .breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.2s; white-space: nowrap; }
   .breadcrumb a:hover { color: var(--accent); }
   .breadcrumb .sep { color: #444; }
-  .breadcrumb .current { color: var(--muted); }
+  .breadcrumb .current { color: var(--muted); word-break: break-word; }
 
   /* Category pill */
   .article-cat {
@@ -218,14 +255,16 @@
   /* Article title */
   .article-title {
     font-family: var(--font-display);
-    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-size: clamp(2rem, 5vw, 4.2rem); /* FIX: lower min from 2.4rem to 2rem */
     line-height: 1; letter-spacing: 1px;
     color: var(--white); margin-bottom: 20px;
+    word-break: break-word; /* FIX: prevent title overflow */
   }
   .article-title em { font-style: normal; color: var(--accent); }
 
   .article-desc {
-    font-size: 1.1rem; color: var(--muted);
+    font-size: 1rem; /* FIX: down from 1.1rem for consistency */
+    color: var(--muted);
     line-height: 1.7; max-width: 680px;
     margin-bottom: 32px;
   }
@@ -247,11 +286,11 @@
     border: 2px solid var(--accent);
     background: var(--card);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.2rem; flex-shrink: 0; /* FIX: don't shrink avatar */
   }
   .author-info-name { font-weight: 600; font-size: 0.88rem; color: var(--white); }
   .author-info-role { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); }
-  .meta-items { display: flex; gap: 20px; flex-wrap: wrap; }
+  .meta-items { display: flex; gap: 16px; flex-wrap: wrap; } /* FIX: gap 20->16 & wrap */
   .meta-item {
     display: flex; align-items: center; gap: 7px;
     font-family: var(--font-mono); font-size: 0.73rem; color: var(--muted);
@@ -272,19 +311,18 @@
   }
 
   /* ── PAGE LAYOUT ── */
+  /* FIX: use max-width + minmax instead of fixed var(--content-w) */
   .page-layout {
-    max-width: 1200px; margin: 0 auto;
+    max-width: 1260px; margin: 0 auto;
     padding: 56px 40px 80px;
     display: grid;
-    grid-template-columns: var(--content-w) 1fr;
-    gap: 56px;
+    grid-template-columns: minmax(0, 760px) 300px; /* FIX: minmax(0,...) prevents overflow */
+    gap: 48px;
     align-items: start;
   }
 
   /* ── ARTICLE BODY ── */
-  .article-body {
-    animation: fadeUp 0.6s 0.15s ease both; opacity: 0;
-  }
+  .article-body { min-width: 0; } /* FIX: critical — prevents grid blowout */
 
   /* Reading progress bar */
   .progress-bar {
@@ -299,7 +337,7 @@
 
   .prose h2 {
     font-family: var(--font-display);
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-size: clamp(1.4rem, 3vw, 2.2rem); /* FIX: lower min */
     letter-spacing: 0.5px; color: var(--white);
     margin: 52px 0 20px; line-height: 1;
     padding-top: 52px; border-top: 1px solid var(--border);
@@ -308,16 +346,18 @@
   .prose h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
 
   .prose h3 {
-    font-size: 1.15rem; font-weight: 700;
+    font-size: 1.1rem; font-weight: 700;
     color: var(--white); margin: 32px 0 14px;
     scroll-margin-top: 90px;
   }
 
   .prose p { margin-bottom: 20px; }
-
   .prose strong { color: var(--white); font-weight: 600; }
 
-  .prose a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(255,77,0,0.3); transition: border-color 0.2s; }
+  .prose a {
+    color: var(--accent); text-decoration: none;
+    border-bottom: 1px solid rgba(255,77,0,0.3); transition: border-color 0.2s;
+  }
   .prose a:hover { border-color: var(--accent); }
 
   .prose ul, .prose ol {
@@ -332,6 +372,7 @@
     padding: 2px 7px; border-radius: 3px;
     font-family: var(--font-mono); font-size: 0.82rem;
     color: #f8c8a0;
+    word-break: break-word; /* FIX: long code strings won't overflow */
   }
 
   /* Code blocks */
@@ -339,32 +380,41 @@
     background: var(--card); border: 1px solid var(--border);
     border-radius: 8px; overflow: hidden;
     margin: 28px 0;
+    /* FIX: ensure code block never overflows its parent */
+    max-width: 100%;
   }
   .code-header {
     background: var(--dark); padding: 10px 16px;
     display: flex; align-items: center; justify-content: space-between;
     border-bottom: 1px solid var(--border);
+    gap: 8px; /* FIX: gap for tight screens */
   }
-  .code-header-left { display: flex; align-items: center; gap: 8px; }
-  .cdot { width: 9px; height: 9px; border-radius: 50%; }
+  .code-header-left { display: flex; align-items: center; gap: 8px; flex-shrink: 1; min-width: 0; }
+  .cdot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
   .cdot.r { background: #ff5f57; }
   .cdot.y { background: #febc2e; }
   .cdot.g { background: #28c840; }
   .code-lang {
     font-family: var(--font-mono); font-size: 0.7rem;
     color: var(--muted); margin-left: 6px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* FIX: truncate long filenames */
   }
   .copy-btn {
     background: none; border: 1px solid var(--border);
     color: var(--muted); font-family: var(--font-mono);
     font-size: 0.68rem; padding: 3px 10px;
     border-radius: 3px; cursor: pointer; transition: all 0.2s;
+    flex-shrink: 0; white-space: nowrap; /* FIX: don't let button shrink/wrap */
   }
   .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
   .code-pre {
-    padding: 22px 24px; overflow-x: auto;
+    padding: 22px 24px;
+    overflow-x: auto; /* FIX: horizontal scroll for long lines */
+    -webkit-overflow-scrolling: touch; /* FIX: smooth scroll on iOS */
     font-family: var(--font-mono); font-size: 0.82rem;
     line-height: 1.8; color: #ccc;
+    white-space: pre; /* FIX: keep pre formatting */
+    word-break: normal; /* FIX: don't break code mid-token */
   }
   .code-pre .cm  { color: #546e7a; font-style: italic; }
   .code-pre .ck  { color: #c792ea; }
@@ -385,15 +435,26 @@
   .callout.info { border-color: #82aaff; background: rgba(130,170,255,0.05); }
   .callout.warn { border-color: var(--accent2); background: rgba(255,184,0,0.05); }
   .callout.success { border-color: #28c840; background: rgba(40,200,64,0.05); }
-  .callout-title { font-weight: 700; font-size: 0.85rem; color: var(--white); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .callout-title {
+    font-weight: 700; font-size: 0.85rem; color: var(--white);
+    margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+  }
   .callout p { margin: 0; font-size: 0.92rem; }
 
-  /* Comparison table */
+  /* Comparison table — FIX: full responsive wrapper */
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 28px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
   .compare-table {
     width: 100%; border-collapse: collapse;
-    margin: 28px 0; font-size: 0.88rem;
-    border: 1px solid var(--border); border-radius: 8px;
-    overflow: hidden;
+    font-size: 0.88rem;
+    /* FIX: moved border/radius to wrapper so overflow-x works */
+    min-width: 460px; /* FIX: table stays readable before scrolling */
   }
   .compare-table th {
     background: var(--dark); padding: 14px 16px;
@@ -401,6 +462,7 @@
     font-size: 0.75rem; letter-spacing: 1px;
     text-transform: uppercase; color: var(--muted);
     border-bottom: 1px solid var(--border);
+    white-space: nowrap;
   }
   .compare-table th:first-child { color: var(--white); }
   .compare-table td {
@@ -410,10 +472,10 @@
   }
   .compare-table tr:last-child td { border-bottom: none; }
   .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
-  .compare-table .feature { color: var(--white); font-weight: 500; }
-  .badge-good { color: #28c840; font-family: var(--font-mono); font-size: 0.78rem; }
-  .badge-ok   { color: var(--accent2); font-family: var(--font-mono); font-size: 0.78rem; }
-  .badge-bad  { color: #ff5f57; font-family: var(--font-mono); font-size: 0.78rem; }
+  .compare-table .feature { color: var(--white); font-weight: 500; white-space: nowrap; }
+  .badge-good { color: #28c840; font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; }
+  .badge-ok   { color: var(--accent2); font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; }
+  .badge-bad  { color: #ff5f57; font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; }
 
   /* Verdict box */
   .verdict-box {
@@ -434,17 +496,18 @@
 
   /* Share row */
   .share-row {
-    display: flex; align-items: center; gap: 14px;
+    display: flex; align-items: center; gap: 10px; /* FIX: tighter gap */
     padding: 28px 0; border-top: 1px solid var(--border);
     flex-wrap: wrap; margin-top: 48px;
   }
   .share-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 1px; }
   .share-btn {
     border: 1px solid var(--border); color: var(--muted);
-    padding: 7px 16px; border-radius: 2px;
+    padding: 7px 14px; border-radius: 2px; /* FIX: slightly less padding */
     font-family: var(--font-mono); font-size: 0.75rem;
     text-decoration: none; cursor: pointer; background: none;
     transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap; /* FIX: don't break button text */
   }
   .share-btn:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -465,7 +528,7 @@
   .author-bio-name { font-weight: 700; color: var(--white); font-size: 1rem; margin-bottom: 4px; }
   .author-bio-role { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); margin-bottom: 10px; }
   .author-bio-text { color: var(--muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 14px; }
-  .author-bio-links { display: flex; gap: 10px; }
+  .author-bio-links { display: flex; gap: 10px; flex-wrap: wrap; } /* FIX: wrap links */
   .author-bio-link {
     border: 1px solid var(--border); color: var(--muted);
     padding: 5px 14px; border-radius: 2px;
@@ -485,7 +548,7 @@
   }
   .related-title::before {
     content: ''; width: 3px; height: 24px;
-    background: var(--accent); border-radius: 2px;
+    background: var(--accent); border-radius: 2px; flex-shrink: 0;
   }
   .related-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .related-card {
@@ -508,11 +571,16 @@
   .related-meta { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); }
 
   /* ── RIGHT SIDEBAR ── */
-  .article-sidebar { display: flex; flex-direction: column; gap: 24px; position: sticky; top: 90px; }
+  .article-sidebar {
+    display: flex; flex-direction: column; gap: 24px;
+    position: sticky; top: 90px;
+    min-width: 0; /* FIX: prevent sidebar overflow */
+  }
 
   .sidebar-widget {
     background: var(--card); border: 1px solid var(--border);
     border-radius: 8px; overflow: hidden;
+    min-width: 0; /* FIX */
   }
   .widget-head {
     padding: 13px 18px; background: var(--dark);
@@ -564,6 +632,16 @@
   }
   .tag-pill:hover { background: rgba(255,77,0,0.1); border-color: rgba(255,77,0,0.4); color: var(--accent); }
 
+  /* Back to blog link */
+  .back-link {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border); color: var(--muted);
+    padding: 12px 18px; border-radius: 6px;
+    font-family: var(--font-mono); font-size: 0.78rem;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .back-link:hover { border-color: var(--accent); color: var(--accent); }
+
   /* ── FOOTER ── */
   footer {
     background: var(--dark); border-top: 1px solid var(--border); padding: 40px;
@@ -576,37 +654,145 @@
   .footer-logo { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 2px; color: var(--white); }
   .footer-logo span { color: var(--accent); }
   .footer-copy { color: var(--muted); font-size: 0.82rem; }
-  .footer-links { display: flex; gap: 24px; list-style: none; }
+  .footer-links { display: flex; gap: 20px; list-style: none; flex-wrap: wrap; } /* FIX: allow wrap */
   .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
   .footer-links a:hover { color: var(--white); }
 
-  /* ── RESPONSIVE ── */
+  /* ════════════════════════════════════════
+     RESPONSIVE BREAKPOINTS — FULLY REBUILT
+  ════════════════════════════════════════ */
+
+  /* ── 1100px: sidebar moves below ── */
   @media (max-width: 1100px) {
-    .page-layout { grid-template-columns: 1fr; gap: 40px; }
-    .article-sidebar { position: static; display: grid; grid-template-columns: repeat(2,1fr); }
+    .page-layout {
+      grid-template-columns: 1fr; /* FIX: single column */
+      gap: 40px;
+      padding: 48px 32px 72px;
+    }
+    .article-sidebar {
+      position: static; /* FIX: no sticky on mobile layout */
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* FIX: 2-col sidebar row */
+      gap: 20px;
+    }
+    /* Back link and CTA span full width */
+    .article-sidebar .back-link,
+    .article-sidebar .cta-widget { grid-column: 1 / -1; }
   }
+
+  /* ── 900px: hamburger nav ── */
   @media (max-width: 900px) {
     nav { padding: 0 24px; }
     .nav-links { display: none; }
     .hamburger { display: flex; }
   }
+
+  /* ── 768px: tighten hero & layout ── */
+  @media (max-width: 768px) {
+    .article-hero-inner { padding: 36px 24px 32px; }
+    .page-layout { padding: 40px 24px 60px; }
+    .article-desc { font-size: 0.95rem; }
+    .prose { font-size: 0.97rem; }
+    .verdict-box { padding: 22px 18px; }
+    .author-bio-card { padding: 22px 18px; }
+  }
+
+  /* ── 700px: sidebar single column & meta stack ── */
   @media (max-width: 700px) {
-    .page-layout { padding: 36px 20px 60px; }
-    .article-hero-inner { padding: 36px 20px 36px; }
-    .article-sidebar { grid-template-columns: 1fr; }
-    .related-grid { grid-template-columns: 1fr; }
-    .meta-author { padding-right: 0; margin-right: 0; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 16px; width: 100%; }
+    /* Meta bar stacks vertically */
+    .meta-author {
+      padding-right: 0; margin-right: 0;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px; margin-bottom: 16px;
+      width: 100%;
+    }
     .article-meta { flex-direction: column; align-items: flex-start; }
+
+    /* Sidebar single column */
+    .article-sidebar { grid-template-columns: 1fr; }
+    .article-sidebar .back-link,
+    .article-sidebar .cta-widget { grid-column: auto; }
+
+    /* Related posts single column */
+    .related-grid { grid-template-columns: 1fr; }
+
+    /* Disable custom cursor */
     body { cursor: auto; }
     .cursor, .cursor-ring { display: none; }
-    .compare-table { font-size: 0.78rem; }
-    .compare-table th, .compare-table td { padding: 10px 12px; }
+
+    /* Code blocks: slightly smaller font */
+    .code-pre { font-size: 0.78rem; padding: 16px 14px; }
+
+    /* Author bio card stack */
+    .author-bio-card { flex-direction: column; gap: 14px; }
+    .author-bio-avatar { width: 52px; height: 52px; font-size: 1.4rem; }
   }
-  @media (max-width: 500px) {
-    footer { padding: 32px 20px; }
-    .footer-inner { flex-direction: column; text-align: center; }
-    .author-bio-card { flex-direction: column; }
-    .code-pre { font-size: 0.74rem; }
+
+  /* ── 600px: further content tightening ── */
+  @media (max-width: 600px) {
+    .page-layout { padding: 32px 16px 56px; }
+    .article-hero-inner { padding: 28px 16px 28px; }
+
+    /* Article title even smaller */
+    .article-title { font-size: clamp(1.7rem, 8vw, 2.4rem); }
+
+    /* Prose slightly more compact */
+    .prose { font-size: 0.94rem; line-height: 1.8; }
+    .prose h2 { margin-top: 40px; padding-top: 40px; }
+
+    /* Code blocks */
+    .code-pre { font-size: 0.73rem; padding: 14px 12px; }
+    .code-lang { font-size: 0.65rem; }
+
+    /* Callout */
+    .callout { padding: 14px 16px; }
+
+    /* Share row */
+    .share-row { gap: 8px; }
+    .share-label { width: 100%; margin-bottom: 2px; }
+
+    /* Related grid */
+    .related-card { padding: 16px; }
+  }
+
+  /* ── 480px: phone portrait ── */
+  @media (max-width: 480px) {
+    nav { padding: 0 16px; }
+    .logo { font-size: 1.5rem; }
+
+    .article-hero-inner { padding: 24px 16px 24px; }
+    .breadcrumb { font-size: 0.68rem; gap: 4px; }
+    .article-title { font-size: clamp(1.6rem, 9vw, 2rem); }
+    .article-desc { font-size: 0.9rem; }
+
+    .meta-items { gap: 10px; }
+    .meta-item { font-size: 0.68rem; }
+
+    .code-pre { font-size: 0.7rem; padding: 12px 10px; }
+
+    .verdict-box { padding: 18px 14px; }
+    .verdict-title { font-size: 1.2rem; }
+
+    .related-title { font-size: 1.4rem; }
+
+    footer { padding: 28px 16px; }
+    .footer-inner { flex-direction: column; text-align: center; gap: 14px; }
+    .footer-links { justify-content: center; gap: 14px; }
+
+    .close-btn { right: 20px; }
+
+    /* Verdict and callout inner text */
+    .verdict-box p, .callout p { font-size: 0.88rem; }
+  }
+
+  /* ── 360px: very small phones (Galaxy A, older iPhones) ── */
+  @media (max-width: 360px) {
+    .article-title { font-size: 1.55rem; }
+    .code-pre { font-size: 0.65rem; }
+    .share-btn { font-size: 0.68rem; padding: 6px 10px; }
+    .article-tags { gap: 5px; }
+    .atag { font-size: 0.65rem; padding: 3px 9px; }
   }
 </style>
 </head>
@@ -645,7 +831,6 @@
   <div class="hero-glow"></div>
   <div class="article-hero-inner">
 
-    <!-- Breadcrumb -->
     <nav class="breadcrumb" aria-label="breadcrumb">
       <a href="https://codecraftsystems.github.io/">Home</a>
       <span class="sep">›</span>
@@ -661,7 +846,6 @@
     </h1>
     <p class="article-desc">A practical comparison of Pinia and Vuex for large Vue.js SPAs — with real code examples from production projects. Learn which to choose in 2025.</p>
 
-    <!-- Meta -->
     <div class="article-meta">
       <div class="meta-author">
         <div class="author-avatar-sm">👨‍💻</div>
@@ -696,7 +880,6 @@
   <article class="article-body">
     <div class="prose">
 
-      <!-- Section 1 -->
       <h2 id="intro">Introduction</h2>
       <p>If you've been building Vue.js applications for any length of time, you've probably used <strong>Vuex</strong> for state management. It was the go-to solution for years. But with Vue 3, a new challenger arrived — <strong>Pinia</strong> — and it's now the officially recommended state management library.</p>
       <p>In this article, I'll compare both from a practical perspective, using real patterns I've used in production projects including a large-scale job portal built with Laravel + Vue 3.</p>
@@ -706,7 +889,6 @@
         <p>Pinia is now the <strong>official state management library</strong> for Vue 3 as of 2023. Vuex 5 development has been paused and the team recommends migrating to Pinia for new projects.</p>
       </div>
 
-      <!-- Section 2 -->
       <h2 id="setup">Setup & Boilerplate</h2>
       <p>One of the first things you notice switching from Vuex to Pinia is how much less code you write. Let's see a simple user store in both:</p>
 
@@ -782,7 +964,6 @@
         <p>Pinia eliminates <code>mutations</code> entirely. You mutate state directly in actions. No more <code>commit('SET_USER')</code> boilerplate — just <code>user.value = data</code>.</p>
       </div>
 
-      <!-- Section 3 -->
       <h2 id="typescript">TypeScript Support</h2>
       <p>If you're using TypeScript (and you should be for any large SPA), Pinia wins by a massive margin. Vuex 4's TypeScript support requires significant workarounds — manual type augmentation, typed dispatch wrappers, and so on.</p>
 
@@ -820,7 +1001,6 @@
 
       <p>Full type inference, zero boilerplate. Your IDE autocompletes everything from <code>useCartStore()</code> directly.</p>
 
-      <!-- Section 4 -->
       <h2 id="devtools">DevTools & Debugging</h2>
       <p>Both have Vue DevTools integration, but the experience differs. Pinia shows each store independently with its state, getters, and a full action history. You can even <strong>time-travel debug</strong> in Pinia by inspecting action snapshots.</p>
 
@@ -829,33 +1009,34 @@
         <p>In Vuex, all state lives in one tree which can get overwhelming in large apps. Pinia's modular store approach keeps DevTools clean and focused.</p>
       </div>
 
-      <!-- Section 5 -->
       <h2 id="comparison">Side-by-Side Comparison</h2>
       <p>Here's a full breakdown of both libraries across the features that matter most in production:</p>
 
-      <table class="compare-table">
-        <thead>
-          <tr>
-            <th>Feature</th>
-            <th>Pinia</th>
-            <th>Vuex 4</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td class="feature">Vue 3 Support</td><td><span class="badge-good">✓ Native</span></td><td><span class="badge-ok">~ Compatible</span></td></tr>
-          <tr><td class="feature">TypeScript</td><td><span class="badge-good">✓ First-class</span></td><td><span class="badge-bad">✗ Workarounds needed</span></td></tr>
-          <tr><td class="feature">Boilerplate</td><td><span class="badge-good">✓ Minimal</span></td><td><span class="badge-bad">✗ Verbose</span></td></tr>
-          <tr><td class="feature">Mutations required</td><td><span class="badge-good">✓ No</span></td><td><span class="badge-bad">✗ Yes</span></td></tr>
-          <tr><td class="feature">Composition API</td><td><span class="badge-good">✓ Native</span></td><td><span class="badge-ok">~ Limited</span></td></tr>
-          <tr><td class="feature">Modular by default</td><td><span class="badge-good">✓ Yes</span></td><td><span class="badge-ok">~ Namespaced</span></td></tr>
-          <tr><td class="feature">SSR Support</td><td><span class="badge-good">✓ Full</span></td><td><span class="badge-good">✓ Full</span></td></tr>
-          <tr><td class="feature">Bundle size</td><td><span class="badge-good">✓ ~1kb</span></td><td><span class="badge-ok">~ ~10kb</span></td></tr>
-          <tr><td class="feature">Official recommendation</td><td><span class="badge-good">✓ Recommended</span></td><td><span class="badge-bad">✗ Maintenance only</span></td></tr>
-          <tr><td class="feature">Learning curve</td><td><span class="badge-good">✓ Low</span></td><td><span class="badge-ok">~ Medium</span></td></tr>
-        </tbody>
-      </table>
+      <!-- FIX: wrapped in .table-wrapper for horizontal scroll on mobile -->
+      <div class="table-wrapper">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Pinia</th>
+              <th>Vuex 4</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="feature">Vue 3 Support</td><td><span class="badge-good">✓ Native</span></td><td><span class="badge-ok">~ Compatible</span></td></tr>
+            <tr><td class="feature">TypeScript</td><td><span class="badge-good">✓ First-class</span></td><td><span class="badge-bad">✗ Workarounds needed</span></td></tr>
+            <tr><td class="feature">Boilerplate</td><td><span class="badge-good">✓ Minimal</span></td><td><span class="badge-bad">✗ Verbose</span></td></tr>
+            <tr><td class="feature">Mutations required</td><td><span class="badge-good">✓ No</span></td><td><span class="badge-bad">✗ Yes</span></td></tr>
+            <tr><td class="feature">Composition API</td><td><span class="badge-good">✓ Native</span></td><td><span class="badge-ok">~ Limited</span></td></tr>
+            <tr><td class="feature">Modular by default</td><td><span class="badge-good">✓ Yes</span></td><td><span class="badge-ok">~ Namespaced</span></td></tr>
+            <tr><td class="feature">SSR Support</td><td><span class="badge-good">✓ Full</span></td><td><span class="badge-good">✓ Full</span></td></tr>
+            <tr><td class="feature">Bundle size</td><td><span class="badge-good">✓ ~1kb</span></td><td><span class="badge-ok">~ ~10kb</span></td></tr>
+            <tr><td class="feature">Official recommendation</td><td><span class="badge-good">✓ Recommended</span></td><td><span class="badge-bad">✗ Maintenance only</span></td></tr>
+            <tr><td class="feature">Learning curve</td><td><span class="badge-good">✓ Low</span></td><td><span class="badge-ok">~ Medium</span></td></tr>
+          </tbody>
+        </table>
+      </div>
 
-      <!-- Section 6 -->
       <h2 id="real-world">Real-World Usage Pattern</h2>
       <p>Here's how I structure Pinia stores in a real Laravel + Vue 3 project. The pattern below handles API calls, error states, and loading indicators cleanly:</p>
 
@@ -922,7 +1103,6 @@
 <span class="ck">&lt;/template&gt;</span></pre>
       </div>
 
-      <!-- Section 7 -->
       <h2 id="when">When To Still Use Vuex</h2>
       <p>Pinia is the better choice for almost all new Vue 3 projects. However, there are still situations where Vuex makes sense:</p>
       <ul>
@@ -931,7 +1111,6 @@
         <li>You have a very large existing codebase where a Vuex → Pinia migration would be high risk</li>
       </ul>
 
-      <!-- Verdict -->
       <div class="verdict-box">
         <div class="verdict-title">🏁 Final Verdict</div>
         <p><strong>Use Pinia for all new Vue 3 projects.</strong> It's the official recommendation, has a fraction of the boilerplate, and TypeScript support is first-class. The learning curve is minimal if you already know the Composition API.</p>
@@ -1000,13 +1179,13 @@
       <div class="widget-head">Contents</div>
       <div class="widget-body">
         <div class="toc-list">
-          <button class="toc-item active" onclick="scrollTo('intro')"><span class="toc-num">01</span> Introduction</button>
-          <button class="toc-item" onclick="scrollTo('setup')"><span class="toc-num">02</span> Setup & Boilerplate</button>
-          <button class="toc-item" onclick="scrollTo('typescript')"><span class="toc-num">03</span> TypeScript Support</button>
-          <button class="toc-item" onclick="scrollTo('devtools')"><span class="toc-num">04</span> DevTools & Debugging</button>
-          <button class="toc-item" onclick="scrollTo('comparison')"><span class="toc-num">05</span> Side-by-Side Comparison</button>
-          <button class="toc-item" onclick="scrollTo('real-world')"><span class="toc-num">06</span> Real-World Usage</button>
-          <button class="toc-item" onclick="scrollTo('when')"><span class="toc-num">07</span> When To Use Vuex</button>
+          <button class="toc-item active" onclick="scrollToSection('intro')"><span class="toc-num">01</span> Introduction</button>
+          <button class="toc-item" onclick="scrollToSection('setup')"><span class="toc-num">02</span> Setup & Boilerplate</button>
+          <button class="toc-item" onclick="scrollToSection('typescript')"><span class="toc-num">03</span> TypeScript Support</button>
+          <button class="toc-item" onclick="scrollToSection('devtools')"><span class="toc-num">04</span> DevTools & Debugging</button>
+          <button class="toc-item" onclick="scrollToSection('comparison')"><span class="toc-num">05</span> Side-by-Side Comparison</button>
+          <button class="toc-item" onclick="scrollToSection('real-world')"><span class="toc-num">06</span> Real-World Usage</button>
+          <button class="toc-item" onclick="scrollToSection('when')"><span class="toc-num">07</span> When To Use Vuex</button>
         </div>
       </div>
     </div>
@@ -1039,9 +1218,7 @@
     </div>
 
     <!-- Back to blog -->
-    <a href="https://codecraftsystems.github.io/blog" style="display:flex;align-items:center;gap:8px;border:1px solid var(--border);color:var(--muted);padding:12px 18px;border-radius:6px;font-family:var(--font-mono);font-size:0.78px;text-decoration:none;transition:all 0.2s;font-size:0.78rem;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
-      ← Back to Blog
-    </a>
+    <a href="https://codecraftsystems.github.io/blog" class="back-link">← Back to Blog</a>
 
   </aside>
 
@@ -1064,24 +1241,26 @@
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Cursor
+  // Cursor (desktop only)
   const cursor = document.getElementById('cursor');
   const ring   = document.getElementById('cursorRing');
-  let mx=0, my=0, rx=0, ry=0;
-  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
-  (function animateCursor() {
-    cursor.style.transform = `translate(${mx-6}px,${my-6}px)`;
-    rx += (mx-rx-20)*0.12; ry += (my-ry-20)*0.12;
-    ring.style.transform = `translate(${rx}px,${ry}px)`;
-    requestAnimationFrame(animateCursor);
-  })();
+  if (cursor && ring && window.matchMedia('(pointer: fine)').matches) {
+    let mx=0, my=0, rx=0, ry=0;
+    document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+    (function animateCursor() {
+      cursor.style.transform = `translate(${mx-6}px,${my-6}px)`;
+      rx += (mx-rx-20)*0.12; ry += (my-ry-20)*0.12;
+      ring.style.transform = `translate(${rx}px,${ry}px)`;
+      requestAnimationFrame(animateCursor);
+    })();
+  }
 
   // Navbar scroll
   window.addEventListener('scroll', () => {
     document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
     updateProgress();
     updateTOC();
-  });
+  }, { passive: true });
 
   // Mobile menu
   function openMobile()  { document.getElementById('mobileMenu').classList.add('open'); }
@@ -1095,8 +1274,8 @@
     document.getElementById('progressBar').style.width = pct + '%';
   }
 
-  // TOC scroll & highlight
-  function scrollTo(id) {
+  // TOC scroll — renamed to avoid conflict with window.scrollTo
+  function scrollToSection(id) {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   }
@@ -1132,9 +1311,6 @@
       setTimeout(() => btn.textContent = 'Copy', 2000);
     });
   }
-
-  // Animate article body on load
-  document.querySelector('.article-body').style.opacity = '1';
 </script>
 
 </body>
