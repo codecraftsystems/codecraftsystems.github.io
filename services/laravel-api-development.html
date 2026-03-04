@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.02, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>Laravel API Development Services India | CodeCraft Studio</title>
+<meta name="description" content="Expert Laravel REST API development — authentication, authorization, rate limiting, caching & production-grade architecture. Serving UK, USA & global clients.">
+<meta name="author" content="Sonu Sahani - CodeCraft Studio">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://codecraftsystems.github.io/services/laravel-api-development.html">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://codecraftsystems.github.io/services/laravel-api-development.html">
+<meta property="og:title" content="Laravel API Development | CodeCraft Studio">
+<meta property="og:description" content="Robust, scalable RESTful APIs using Laravel MVC. Auth, rate limiting, caching — production standards.">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/49108546?v=4">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Laravel API Development | CodeCraft Studio">
+<meta name="twitter:description" content="Production-grade Laravel REST APIs for SaaS, portals & mobile backends.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Laravel API Development",
+  "provider": { "@type": "Organization", "name": "CodeCraft Studio", "url": "https://codecraftsystems.github.io" },
+  "description": "Robust, scalable RESTful APIs using Laravel MVC with authentication, authorization, rate limiting and caching.",
+  "areaServed": ["IN","GB","US","AU"],
+  "serviceType": "Web Development"
+}
+</script>
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
+<meta name="theme-color" content="#ff4d00">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  :root {
+    --black:  #0a0a0a;
+    --dark:   #111111;
+    --card:   #161616;
+    --border: #2a2a2a;
+    --accent: #ff4d00;
+    --accent2:#ffb800;
+    --white:  #f5f0eb;
+    --muted:  #888;
+    --laravel:#ff2d20; /* Laravel brand red — used subtly */
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body:    'DM Sans', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+    --nav-h: 65px;
+  }
+
+  html { scroll-behavior:smooth; }
+  body { background:var(--black); color:var(--white); font-family:var(--font-body); font-size:16px; line-height:1.6; overflow-x:hidden; cursor:none; }
+
+  /* Noise overlay */
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:100; opacity:0.4; }
+
+  /* Custom cursor */
+  .cursor      { width:12px; height:12px; background:var(--accent); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9999; transition:transform 0.15s ease; mix-blend-mode:difference; }
+  .cursor-ring { width:40px; height:40px; border:1px solid var(--accent); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9998; transition:all 0.3s ease; opacity:0.5; }
+
+  /* Reading progress */
+  .progress-bar { position:fixed; top:var(--nav-h); left:0; height:2px; background:var(--accent); z-index:900; width:0%; transition:width 0.1s linear; }
+
+  /* ── NAV ── */
+  nav { position:fixed; top:0; left:0; right:0; z-index:1000; height:var(--nav-h); padding:0 40px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid transparent; transition:all 0.3s; }
+  nav.scrolled { background:rgba(10,10,10,0.95); border-color:var(--border); backdrop-filter:blur(20px); }
+  .logo { font-family:var(--font-display); font-size:1.8rem; letter-spacing:2px; color:var(--white); text-decoration:none; }
+  .logo span { color:var(--accent); }
+  .nav-links { display:flex; gap:36px; list-style:none; align-items:center; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--white); }
+  .nav-cta { background:var(--accent)!important; color:var(--white)!important; padding:10px 24px; border-radius:2px; font-weight:600!important; }
+  .nav-cta:hover { background:#e04400!important; }
+  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+  .hamburger span { display:block; width:28px; height:2px; background:var(--white); transition:all 0.3s; }
+  .mobile-menu { display:none; position:fixed; inset:0; background:rgba(10,10,10,0.98); z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:36px; }
+  .mobile-menu.open { display:flex; }
+  .mobile-menu a { font-family:var(--font-display); font-size:2.5rem; color:var(--white); text-decoration:none; letter-spacing:2px; transition:color 0.2s; }
+  .mobile-menu a:hover { color:var(--accent); }
+  .close-btn { position:absolute; top:24px; right:40px; font-size:2rem; background:none; border:none; color:var(--white); cursor:pointer; }
+
+  /* ── HERO ── */
+  .service-hero { padding-top:var(--nav-h); background:var(--dark); border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+  .hero-grid-bg { position:absolute; inset:0; background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px); background-size:60px 60px; opacity:0.18; mask-image:radial-gradient(ellipse 100% 80% at 50% 0%,black,transparent); }
+  .hero-glow { position:absolute; width:900px; height:600px; background:radial-gradient(ellipse,rgba(255,77,0,0.09) 0%,rgba(255,45,32,0.04) 50%,transparent 70%); top:0; left:50%; transform:translateX(-50%); pointer-events:none; }
+
+  /* Decorative rotating ring */
+  .hero-ring { position:absolute; right:-120px; top:50%; transform:translateY(-50%); width:520px; height:520px; border:1px solid rgba(255,77,0,0.07); border-radius:50%; pointer-events:none; }
+  .hero-ring::before { content:''; position:absolute; inset:40px; border:1px solid rgba(255,77,0,0.05); border-radius:50%; }
+  .hero-ring::after  { content:''; position:absolute; inset:80px; border:1px solid rgba(255,77,0,0.04); border-radius:50%; }
+
+  .hero-inner { max-width:960px; margin:0 auto; padding:52px 40px 56px; position:relative; z-index:1; }
+
+  .breadcrumb { display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:0.73rem; color:var(--muted); margin-bottom:24px; flex-wrap:wrap; }
+  .breadcrumb a { color:var(--muted); text-decoration:none; transition:color 0.2s; }
+  .breadcrumb a:hover { color:var(--accent); }
+  .breadcrumb .sep { color:#444; }
+
+  .service-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,77,0,0.08); border:1px solid rgba(255,77,0,0.25); padding:6px 16px; border-radius:100px; font-family:var(--font-mono); font-size:0.72rem; color:var(--accent); letter-spacing:1px; margin-bottom:20px; animation:fadeUp 0.5s ease both; }
+  .badge-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); animation:pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.4)} }
+
+  .service-num-label { font-family:var(--font-mono); font-size:0.7rem; color:var(--accent); opacity:0.5; letter-spacing:2px; margin-bottom:8px; animation:fadeUp 0.5s 0.05s ease both; }
+
+  .service-title { font-family:var(--font-display); font-size:clamp(2.4rem,6vw,4.5rem); line-height:0.95; letter-spacing:1px; color:var(--white); margin-bottom:24px; animation:fadeUp 0.5s 0.1s ease both; }
+  .service-title .accent { color:var(--accent); }
+  .service-title .outline { -webkit-text-stroke:1px var(--white); color:transparent; }
+
+  .service-desc { font-size:1.05rem; color:var(--muted); line-height:1.75; max-width:600px; margin-bottom:36px; animation:fadeUp 0.5s 0.15s ease both; }
+
+  .hero-tags { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:36px; animation:fadeUp 0.5s 0.2s ease both; }
+  .htag { background:rgba(255,255,255,0.05); border:1px solid var(--border); padding:5px 14px; border-radius:100px; font-family:var(--font-mono); font-size:0.75rem; color:var(--muted); }
+
+  .hero-cta-row { display:flex; gap:14px; flex-wrap:wrap; animation:fadeUp 0.5s 0.25s ease both; }
+  .btn-primary { background:var(--accent); color:var(--white); padding:14px 32px; text-decoration:none; font-weight:600; font-size:0.9rem; border-radius:2px; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
+  .btn-primary:hover { background:#e04400; transform:translateY(-2px); }
+  .btn-outline { border:1px solid var(--border); color:var(--white); padding:14px 32px; text-decoration:none; font-weight:500; font-size:0.9rem; border-radius:2px; transition:all 0.2s; display:inline-flex; align-items:center; gap:8px; }
+  .btn-outline:hover { border-color:var(--white); }
+
+  .hero-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:48px; border:1px solid var(--border); border-radius:8px; overflow:hidden; animation:fadeUp 0.5s 0.3s ease both; }
+  .hstat { padding:20px 16px; text-align:center; border-right:1px solid var(--border); }
+  .hstat:last-child { border-right:none; }
+  .hstat-num { font-family:var(--font-display); font-size:2rem; color:var(--accent); line-height:1; }
+  .hstat-label { font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; font-family:var(--font-mono); margin-top:4px; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap { border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--dark); overflow:hidden; padding:12px 0; }
+  .marquee-inner { display:flex; gap:40px; animation:marquee 22s linear infinite; white-space:nowrap; }
+  .marquee-item { font-family:var(--font-mono); font-size:0.75rem; color:var(--muted); letter-spacing:1px; display:flex; align-items:center; gap:10px; }
+  .marquee-item::before { content:'▸'; color:var(--accent); }
+  @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+  /* ── COMMON SECTION ── */
+  section { padding:90px 40px; }
+  .container { max-width:1100px; margin:0 auto; width:100%; }
+  .section-label { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent); letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:10px; }
+  .section-label::before { content:''; display:inline-block; width:24px; height:1px; background:var(--accent); }
+  .section-title { font-family:var(--font-display); font-size:clamp(2rem,4vw,3.2rem); line-height:1; letter-spacing:1px; color:var(--white); margin-bottom:16px; }
+  .section-sub { color:var(--muted); max-width:520px; font-size:1rem; line-height:1.7; margin-bottom:52px; }
+
+  /* Reveal animation */
+  .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+
+  /* ── WHAT WE BUILD ── */
+  #what { background:var(--dark); }
+  .what-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .what-card { background:var(--card); padding:32px 28px; position:relative; overflow:hidden; transition:background 0.3s; }
+  .what-card:hover { background:#1a1a1a; }
+  .what-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transform:scaleX(0); transform-origin:left; transition:transform 0.3s; }
+  .what-card:hover::after { transform:scaleX(1); }
+  .what-icon { font-size:1.8rem; margin-bottom:16px; }
+  .what-title { font-weight:700; color:var(--white); font-size:1rem; margin-bottom:10px; }
+  .what-desc { color:var(--muted); font-size:0.88rem; line-height:1.65; }
+
+  /* ── TECH STACK ── */
+  #stack { background:var(--black); }
+  .stack-layout { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
+  .stack-left {}
+  .stack-items { display:flex; flex-direction:column; gap:0; }
+  .stack-item { display:flex; align-items:center; gap:20px; padding:18px 0; border-bottom:1px solid var(--border); transition:all 0.2s; cursor:default; }
+  .stack-item:first-child { padding-top:0; }
+  .stack-item:hover .stack-bar-fill { filter:brightness(1.2); }
+  .stack-icon-wrap { width:44px; height:44px; border-radius:8px; background:rgba(255,77,0,0.08); border:1px solid rgba(255,77,0,0.15); display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+  .stack-info { flex:1; min-width:0; }
+  .stack-name { font-weight:600; color:var(--white); font-size:0.9rem; margin-bottom:6px; }
+  .stack-bar { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .stack-bar-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:2px; transition:width 1s ease; width:0%; }
+  .stack-pct { font-family:var(--font-mono); font-size:0.68rem; color:var(--accent); min-width:32px; text-align:right; flex-shrink:0; }
+
+  /* Code preview card */
+  .code-card { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; position:sticky; top:90px; }
+  .code-topbar { background:var(--dark); padding:12px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); }
+  .cdot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .cdot.r{background:#ff5f57} .cdot.y{background:#febc2e} .cdot.g{background:#28c840}
+  .code-filename { font-family:var(--font-mono); font-size:0.72rem; color:var(--muted); margin-left:8px; }
+  .code-body { padding:22px 20px; font-family:var(--font-mono); font-size:0.78rem; line-height:1.9; color:#ccc; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .ck{color:#c792ea} .cs{color:#c3e88d} .cf{color:#82aaff} .cm{color:#546e7a;font-style:italic}
+  .ca{color:var(--accent)} .cn{color:var(--accent2)} .cstr{color:#c3e88d}
+
+  /* ── FEATURES ── */
+  #features { background:var(--dark); }
+  .features-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .feature-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:32px; transition:all 0.3s; position:relative; overflow:hidden; }
+  .feature-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:0; background:var(--accent); transition:height 0.3s; border-radius:0 0 3px 3px; }
+  .feature-card:hover::before { height:100%; }
+  .feature-card:hover { border-color:rgba(255,77,0,0.2); background:#1a1a1a; }
+  .feature-num { font-family:var(--font-mono); font-size:0.68rem; color:var(--accent); opacity:0.5; margin-bottom:12px; letter-spacing:1px; }
+  .feature-icon { font-size:1.6rem; margin-bottom:14px; }
+  .feature-title { font-weight:700; color:var(--white); font-size:1rem; margin-bottom:10px; }
+  .feature-desc { color:var(--muted); font-size:0.88rem; line-height:1.65; margin-bottom:16px; }
+  .feature-tags { display:flex; flex-wrap:wrap; gap:6px; }
+  .ftag { background:rgba(255,255,255,0.04); border:1px solid var(--border); padding:3px 10px; border-radius:100px; font-family:var(--font-mono); font-size:0.68rem; color:var(--muted); }
+
+  /* ── PROCESS ── */
+  #process { background:var(--black); }
+  .process-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative; }
+  .process-steps::before { content:''; position:absolute; top:36px; left:10%; right:10%; height:1px; background:linear-gradient(90deg,transparent,var(--border),var(--border),transparent); }
+  .process-step { padding:0 20px 0; text-align:center; position:relative; }
+  .pstep-circle { width:72px; height:72px; border-radius:50%; background:var(--card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:1.5rem; position:relative; z-index:1; transition:all 0.3s; }
+  .process-step:hover .pstep-circle { border-color:var(--accent); background:rgba(255,77,0,0.08); }
+  .pstep-num { position:absolute; top:-6px; right:-6px; width:22px; height:22px; background:var(--accent); border-radius:50%; font-family:var(--font-mono); font-size:0.6rem; color:var(--white); display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .pstep-title { font-weight:700; color:var(--white); font-size:0.92rem; margin-bottom:8px; }
+  .pstep-desc { color:var(--muted); font-size:0.82rem; line-height:1.6; }
+
+  /* ── PRICING ── */
+  #pricing { background:var(--dark); }
+  .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .pricing-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:36px 28px; position:relative; transition:all 0.3s; overflow:hidden; }
+  .pricing-card.popular { border-color:var(--accent); }
+  .pricing-card.popular::before { content:'MOST POPULAR'; position:absolute; top:18px; right:-28px; background:var(--accent); color:var(--white); font-family:var(--font-mono); font-size:0.6rem; letter-spacing:1px; padding:4px 40px; transform:rotate(45deg); }
+  .pricing-card:hover { transform:translateY(-4px); }
+  .pricing-card.popular:hover { transform:translateY(-4px); box-shadow:0 20px 60px rgba(255,77,0,0.1); }
+  .plan-name { font-family:var(--font-mono); font-size:0.75rem; color:var(--accent); letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; }
+  .plan-price { font-family:var(--font-display); font-size:3rem; color:var(--white); line-height:1; margin-bottom:4px; }
+  .plan-price span { font-size:1.2rem; color:var(--muted); font-family:var(--font-body); font-weight:400; }
+  .plan-note { font-size:0.78rem; color:var(--muted); margin-bottom:24px; font-family:var(--font-mono); }
+  .plan-divider { height:1px; background:var(--border); margin:20px 0; }
+  .plan-features { display:flex; flex-direction:column; gap:10px; margin-bottom:28px; }
+  .plan-feature { display:flex; align-items:flex-start; gap:10px; font-size:0.88rem; color:var(--muted); }
+  .plan-feature.included { color:var(--white); }
+  .plan-feature-icon { flex-shrink:0; font-size:0.85rem; margin-top:1px; }
+  .plan-btn { display:block; text-align:center; padding:13px 20px; border-radius:2px; font-weight:600; font-size:0.88rem; text-decoration:none; transition:all 0.2s; }
+  .plan-btn.solid { background:var(--accent); color:var(--white); }
+  .plan-btn.solid:hover { background:#e04400; transform:translateY(-2px); }
+  .plan-btn.ghost { border:1px solid var(--border); color:var(--white); }
+  .plan-btn.ghost:hover { border-color:var(--accent); }
+
+  /* ── FAQ ── */
+  #faq { background:var(--black); }
+  .faq-layout { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
+  .faq-list { display:flex; flex-direction:column; gap:0; }
+  .faq-item { border-bottom:1px solid var(--border); overflow:hidden; }
+  .faq-question { display:flex; align-items:center; justify-content:space-between; padding:20px 0; cursor:pointer; gap:16px; }
+  .faq-q-text { font-weight:600; color:var(--white); font-size:0.95rem; line-height:1.4; }
+  .faq-icon { width:28px; height:28px; border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:0.9rem; color:var(--accent); transition:all 0.3s; }
+  .faq-item.open .faq-icon { background:var(--accent); color:var(--white); transform:rotate(45deg); }
+  .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.35s ease; }
+  .faq-answer-inner { padding-bottom:20px; color:var(--muted); font-size:0.9rem; line-height:1.7; }
+  .faq-item.open .faq-answer { max-height:300px; }
+
+  /* Right column highlight box */
+  .faq-highlight { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:32px; position:sticky; top:90px; }
+  .faq-hl-title { font-family:var(--font-display); font-size:1.6rem; letter-spacing:1px; color:var(--white); margin-bottom:16px; line-height:1; }
+  .faq-hl-title span { color:var(--accent); }
+  .faq-hl-desc { color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:24px; }
+  .faq-hl-items { display:flex; flex-direction:column; gap:12px; margin-bottom:28px; }
+  .faq-hl-item { display:flex; align-items:center; gap:12px; font-size:0.88rem; color:var(--white); }
+  .faq-hl-item::before { content:'✓'; color:var(--accent); font-weight:700; font-size:0.85rem; flex-shrink:0; }
+  .faq-hl-btn { display:block; background:var(--accent); color:var(--white); padding:14px 24px; text-align:center; text-decoration:none; font-weight:600; font-size:0.9rem; border-radius:2px; transition:all 0.2s; }
+  .faq-hl-btn:hover { background:#e04400; transform:translateY(-2px); }
+
+  /* ── OTHER SERVICES ── */
+  #other-services { background:var(--dark); }
+  .other-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .other-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:24px; text-decoration:none; color:inherit; transition:all 0.3s; display:flex; flex-direction:column; gap:10px; }
+  .other-card:hover { border-color:rgba(255,77,0,0.3); transform:translateY(-3px); }
+  .other-icon { font-size:1.5rem; }
+  .other-num { font-family:var(--font-mono); font-size:0.65rem; color:var(--accent); opacity:0.5; }
+  .other-title { font-weight:700; color:var(--white); font-size:0.92rem; line-height:1.3; }
+  .other-arrow { font-size:0.85rem; color:var(--accent); margin-top:auto; }
+
+  /* ── CTA BAND ── */
+  #cta-band { background:var(--black); padding:80px 40px; }
+  .cta-band-inner { max-width:800px; margin:0 auto; text-align:center; }
+  .cta-band-title { font-family:var(--font-display); font-size:clamp(2.5rem,5vw,4rem); letter-spacing:1px; color:var(--white); line-height:1; margin-bottom:20px; }
+  .cta-band-title span { color:var(--accent); }
+  .cta-band-sub { color:var(--muted); font-size:1rem; line-height:1.7; margin-bottom:36px; max-width:520px; margin-left:auto; margin-right:auto; }
+  .cta-band-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+
+  /* ── FOOTER ── */
+  footer { background:var(--dark); border-top:1px solid var(--border); padding:40px; }
+  .footer-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+  .footer-logo { font-family:var(--font-display); font-size:1.5rem; letter-spacing:2px; color:var(--white); }
+  .footer-logo span { color:var(--accent); }
+  .footer-copy { color:var(--muted); font-size:0.82rem; }
+  .footer-links { display:flex; gap:24px; list-style:none; }
+  .footer-links a { color:var(--muted); text-decoration:none; font-size:0.82rem; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--white); }
+
+  /* ════════════════════════════
+     RESPONSIVE
+  ════════════════════════════ */
+
+  @media (max-width:1050px) {
+    .pricing-grid { grid-template-columns:1fr; max-width:480px; }
+    .other-grid   { grid-template-columns:repeat(2,1fr); }
+  }
+
+  @media (max-width:900px) {
+    nav { padding:0 24px; }
+    .nav-links { display:none; }
+    .hamburger { display:flex; }
+    .hero-ring  { display:none; }
+    .what-grid  { grid-template-columns:1fr 1fr; }
+    .stack-layout { grid-template-columns:1fr; gap:36px; }
+    .code-card  { position:static; }
+    .features-grid { grid-template-columns:1fr 1fr; }
+    .process-steps { grid-template-columns:repeat(2,1fr); gap:32px; }
+    .process-steps::before { display:none; }
+    .faq-layout { grid-template-columns:1fr; gap:36px; }
+    .faq-highlight { position:static; }
+    .hero-stats-row { grid-template-columns:repeat(2,1fr); }
+    .hstat:nth-child(2) { border-right:none; }
+    .hstat:nth-child(3) { border-top:1px solid var(--border); }
+    .hstat:nth-child(4) { border-top:1px solid var(--border); border-right:none; }
+  }
+
+  @media (max-width:700px) {
+    body { cursor:auto; }
+    .cursor, .cursor-ring { display:none; }
+    section { padding:60px 20px; }
+    #cta-band { padding:60px 20px; }
+    .hero-inner { padding:32px 20px 40px; }
+    .service-title { font-size:clamp(2rem,9vw,3rem); }
+    .what-grid { grid-template-columns:1fr; }
+    .features-grid { grid-template-columns:1fr; }
+    .other-grid { grid-template-columns:1fr; }
+    .process-steps { grid-template-columns:1fr 1fr; }
+    .hero-cta-row { flex-direction:column; }
+    .btn-primary, .btn-outline { width:100%; justify-content:center; }
+    .faq-q-text { font-size:0.88rem; }
+    .pricing-grid { max-width:100%; }
+    .hero-stats-row { grid-template-columns:repeat(2,1fr); }
+  }
+
+  @media (max-width:480px) {
+    .hero-inner { padding:28px 16px 32px; }
+    section { padding:50px 16px; }
+    #cta-band { padding:50px 16px; }
+    .service-title { font-size:clamp(1.8rem,9vw,2.6rem); }
+    .process-steps { grid-template-columns:1fr; gap:24px; }
+    .process-steps::before { display:none; }
+    .hero-stats-row { grid-template-columns:1fr 1fr; }
+    .section-title { font-size:clamp(1.8rem,7vw,2.6rem); }
+    .feature-card { padding:24px 18px; }
+    .what-card { padding:24px 18px; }
+    .code-body { font-size:0.72rem; padding:16px 14px; }
+    footer { padding:28px 16px; }
+    .footer-inner { flex-direction:column; text-align:center; }
+    .footer-links { gap:16px; flex-wrap:wrap; justify-content:center; }
+    .cta-band-btns { flex-direction:column; align-items:center; }
+    .cta-band-btns .btn-primary,
+    .cta-band-btns .btn-outline { width:100%; max-width:320px; justify-content:center; }
+    .pricing-card { padding:28px 20px; }
+    .plan-price { font-size:2.4rem; }
+    .faq-layout { gap:28px; }
+    .faq-hl-title { font-size:1.3rem; }
+    .breadcrumb { font-size:0.68rem; }
+    .close-btn { right:20px; }
+  }
+
+  @media (max-width:360px) {
+    .hero-stats-row { grid-template-columns:1fr 1fr; }
+    .hstat { padding:14px 10px; }
+    .hstat-num { font-size:1.6rem; }
+    .process-steps { grid-template-columns:1fr; }
+  }
+
+  input, select, textarea { font-size:16px !important; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-btn" onclick="closeMobile()">✕</button>
+  <a href="https://codecraftsystems.github.io/" onclick="closeMobile()">Home</a>
+  <a href="https://codecraftsystems.github.io/#services" onclick="closeMobile()">Services</a>
+  <a href="https://codecraftsystems.github.io/#about" onclick="closeMobile()">About</a>
+  <a href="https://codecraftsystems.github.io/blog" onclick="closeMobile()">Blog</a>
+  <a href="https://codecraftsystems.github.io/#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<nav id="navbar">
+  <a href="https://codecraftsystems.github.io/" class="logo">Code<span>Craft</span></a>
+  <ul class="nav-links">
+    <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+    <li><a href="https://codecraftsystems.github.io/#services">Services</a></li>
+    <li><a href="https://codecraftsystems.github.io/#about">About</a></li>
+    <li><a href="https://codecraftsystems.github.io/blog">Blog</a></li>
+    <li><a href="https://codecraftsystems.github.io/#contact" class="nav-cta">Hire Us</a></li>
+  </ul>
+  <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ══════════════════════ HERO ══════════════════════ -->
+<header class="service-hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-ring"></div>
+
+  <div class="hero-inner">
+    <!-- <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="https://codecraftsystems.github.io/">Home</a>
+      <span class="sep">›</span>
+      <a href="https://codecraftsystems.github.io/#services">Services</a>
+      <span class="sep">›</span>
+      <span>Laravel API Development</span>
+    </nav> -->
+
+    <div class="service-num-label">SERVICE 01 / 06</div>
+
+    <div class="service-badge"><span class="badge-dot"></span> Available for new projects</div>
+
+    <h1 class="service-title">
+      LARAVEL<br>
+      <span class="accent">API</span><br>
+      <span class="outline">DEVELOPMENT</span>
+    </h1>
+
+    <p class="service-desc">Robust, scalable RESTful APIs using Laravel MVC. Authentication, authorization, rate limiting, caching — all built to production standards for SaaS, portals & mobile backends.</p>
+
+    <div class="hero-tags">
+      <span class="htag">Laravel 11</span>
+      <span class="htag">REST API</span>
+      <span class="htag">Sanctum</span>
+      <span class="htag">Passport</span>
+      <span class="htag">MySQL</span>
+      <span class="htag">Redis</span>
+      <span class="htag">Queue Jobs</span>
+      <span class="htag">Webhooks</span>
+    </div>
+
+    <div class="hero-cta-row">
+      <a href="https://codecraftsystems.github.io/#contact" class="btn-primary">Get a Free Quote →</a>
+      <a href="#features" class="btn-outline">See What's Included</a>
+    </div>
+
+    <div class="hero-stats-row">
+      <div class="hstat">
+        <div class="hstat-num">6+</div>
+        <div class="hstat-label">Years Laravel</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">30+</div>
+        <div class="hstat-label">APIs Built</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">99.9%</div>
+        <div class="hstat-label">Uptime SLA</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">3</div>
+        <div class="hstat-label">Countries Served</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span class="marquee-item">Laravel 11</span>
+    <span class="marquee-item">REST API</span>
+    <span class="marquee-item">Sanctum Auth</span>
+    <span class="marquee-item">Passport OAuth</span>
+    <span class="marquee-item">Eloquent ORM</span>
+    <span class="marquee-item">Queue Jobs</span>
+    <span class="marquee-item">Redis Cache</span>
+    <span class="marquee-item">Rate Limiting</span>
+    <span class="marquee-item">API Versioning</span>
+    <span class="marquee-item">Webhooks</span>
+    <span class="marquee-item">Microservices</span>
+    <span class="marquee-item">Swagger Docs</span>
+    <span class="marquee-item">Laravel 11</span>
+    <span class="marquee-item">REST API</span>
+    <span class="marquee-item">Sanctum Auth</span>
+    <span class="marquee-item">Passport OAuth</span>
+    <span class="marquee-item">Eloquent ORM</span>
+    <span class="marquee-item">Queue Jobs</span>
+    <span class="marquee-item">Redis Cache</span>
+    <span class="marquee-item">Rate Limiting</span>
+    <span class="marquee-item">API Versioning</span>
+    <span class="marquee-item">Webhooks</span>
+    <span class="marquee-item">Microservices</span>
+    <span class="marquee-item">Swagger Docs</span>
+  </div>
+</div>
+
+<!-- ══════════════════════ WHAT WE BUILD ══════════════════════ -->
+<section id="what">
+  <div class="container">
+    <div class="section-label reveal">Use Cases</div>
+    <h2 class="section-title reveal">WHAT WE<br><span style="color:var(--accent)">BUILD FOR YOU</span></h2>
+    <p class="section-sub reveal">From simple mobile backends to complex enterprise microservices — we've built them all on Laravel.</p>
+
+    <div class="what-grid reveal">
+      <div class="what-card">
+        <div class="what-icon">📱</div>
+        <div class="what-title">Mobile App Backend</div>
+        <p class="what-desc">Complete REST API backends for iOS & Android apps. Token auth, push notifications, file uploads, real-time data sync.</p>
+      </div>
+      <div class="what-card">
+        <div class="what-icon">🏢</div>
+        <div class="what-title">SaaS Platform API</div>
+        <p class="what-desc">Multi-tenant SaaS APIs with subscription billing, role-based access, usage tracking and Stripe integration.</p>
+      </div>
+      <div class="what-card">
+        <div class="what-icon">🔌</div>
+        <div class="what-title">Third-Party Integrations</div>
+        <p class="what-desc">Connect your app to payment gateways, CRMs, email services, shipping APIs and any external platform via webhooks.</p>
+      </div>
+      <div class="what-card">
+        <div class="what-icon">🌐</div>
+        <div class="what-title">B2B / Partner APIs</div>
+        <p class="what-desc">Versioned public APIs with OAuth 2.0, rate limiting, API key management and comprehensive Swagger documentation.</p>
+      </div>
+      <div class="what-card">
+        <div class="what-icon">🛒</div>
+        <div class="what-title">E-commerce Backend</div>
+        <p class="what-desc">Product catalogues, inventory management, order processing, payment flows and delivery tracking APIs.</p>
+      </div>
+      <div class="what-card">
+        <div class="what-icon">📊</div>
+        <div class="what-title">Data & Reporting API</div>
+        <p class="what-desc">Heavy-lifting data APIs with background jobs, query optimization, Redis caching and paginated exports.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ TECH STACK ══════════════════════ -->
+<section id="stack">
+  <div class="container">
+    <div class="stack-layout">
+      <div class="stack-left">
+        <div class="section-label reveal">Technology</div>
+        <h2 class="section-title reveal">OUR LARAVEL<br><span style="color:var(--accent)">TECH STACK</span></h2>
+        <p class="section-sub reveal" style="margin-bottom:36px;">Every tool chosen for a reason — performance, security and maintainability.</p>
+
+        <div class="stack-items reveal" id="stackItems">
+          <div class="stack-item">
+            <div class="stack-icon-wrap">⚙️</div>
+            <div class="stack-info">
+              <div class="stack-name">Laravel 11 / PHP 8.3</div>
+              <div class="stack-bar"><div class="stack-bar-fill" data-width="98%"></div></div>
+            </div>
+            <div class="stack-pct">98%</div>
+          </div>
+          <div class="stack-item">
+            <div class="stack-icon-wrap">🗄️</div>
+            <div class="stack-info">
+              <div class="stack-name">MySQL + Eloquent ORM</div>
+              <div class="stack-bar"><div class="stack-bar-fill" data-width="96%"></div></div>
+            </div>
+            <div class="stack-pct">96%</div>
+          </div>
+          <div class="stack-item">
+            <div class="stack-icon-wrap">⚡</div>
+            <div class="stack-info">
+              <div class="stack-name">Redis — Cache & Queues</div>
+              <div class="stack-bar"><div class="stack-bar-fill" data-width="90%"></div></div>
+            </div>
+            <div class="stack-pct">90%</div>
+          </div>
+          <div class="stack-item">
+            <div class="stack-icon-wrap">🔐</div>
+            <div class="stack-info">
+              <div class="stack-name">Sanctum / Passport Auth</div>
+              <div class="stack-bar"><div class="stack-bar-fill" data-width="95%"></div></div>
+            </div>
+            <div class="stack-pct">95%</div>
+          </div>
+          <div class="stack-item">
+            <div class="stack-icon-wrap">📦</div>
+            <div class="stack-info">
+              <div class="stack-name">Laravel Horizon + Jobs</div>
+              <div class="stack-bar"><div class="stack-bar-fill" data-width="85%"></div></div>
+            </div>
+            <div class="stack-pct">85%</div>
+          </div>
+          <div class="stack-item">
+            <div class="stack-icon-wrap">📝</div>
+            <div class="stack-info">
+              <div class="stack-name">Swagger / OpenAPI Docs</div>
+              <div class="stack-bar"><div class="stack-bar-fill" data-width="88%"></div></div>
+            </div>
+            <div class="stack-pct">88%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code preview -->
+      <div class="stack-right reveal">
+        <div class="code-card">
+          <div class="code-topbar">
+            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
+            <span class="code-filename">UserController.php · Laravel</span>
+          </div>
+          <div class="code-body"><span class="ck">class</span> <span class="cf">UserController</span> <span class="ck">extends</span> Controller
+{
+  <span class="cm">// JWT Auth + Rate Limiting + Cache</span>
+  <span class="ck">public function</span> <span class="cf">index</span>(Request <span class="ca">$request</span>)
+  {
+    <span class="ck">return</span> Cache::<span class="cf">remember</span>(
+      <span class="cstr">'users:page:'</span>.<span class="ca">$request</span>->page,
+      <span class="cn">3600</span>,
+      <span class="ck">fn</span>() => UserResource::<span class="cf">collection</span>(
+        User::<span class="cf">with</span>(<span class="cstr">'roles'</span>)
+          -><span class="cf">filter</span>(<span class="ca">$request</span>->all())
+          -><span class="cf">paginate</span>(<span class="cn">15</span>)
+      )
+    );
+  }
+
+  <span class="cm">// Validated + Transactional create</span>
+  <span class="ck">public function</span> <span class="cf">store</span>(StoreUserRequest <span class="ca">$r</span>)
+  {
+    <span class="ck">return</span> DB::<span class="cf">transaction</span>(<span class="ck">function</span>() <span class="ck">use</span>(<span class="ca">$r</span>) {
+      <span class="ca">$user</span> = User::<span class="cf">create</span>(<span class="ca">$r</span>-><span class="cf">validated</span>());
+      <span class="ca">$user</span>-><span class="cf">assignRole</span>(<span class="cstr">'member'</span>);
+      <span class="cf">dispatch</span>(<span class="ck">new</span> <span class="cf">SendWelcomeEmail</span>(<span class="ca">$user</span>));
+      <span class="ck">return</span> <span class="ck">new</span> <span class="cf">UserResource</span>(<span class="ca">$user</span>);
+    });
+  }
+}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FEATURES ══════════════════════ -->
+<section id="features">
+  <div class="container">
+    <div class="section-label reveal">What's Included</div>
+    <h2 class="section-title reveal">EVERY API WE BUILD<br><span style="color:var(--accent)">INCLUDES THESE</span></h2>
+    <p class="section-sub reveal">No shortcuts. Every project ships with these production standards by default.</p>
+
+    <div class="features-grid">
+
+      <div class="feature-card reveal">
+        <div class="feature-num">01</div>
+        <div class="feature-icon">🔐</div>
+        <div class="feature-title">Authentication & Authorization</div>
+        <p class="feature-desc">Laravel Sanctum for SPA/mobile token auth or Passport for full OAuth 2.0. Role-based permissions with Spatie Laravel Permission. Every route protected with fine-grained policies.</p>
+        <div class="feature-tags">
+          <span class="ftag">Sanctum</span><span class="ftag">Passport</span><span class="ftag">Spatie Roles</span><span class="ftag">Policies</span>
+        </div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">02</div>
+        <div class="feature-icon">🛡️</div>
+        <div class="feature-title">Rate Limiting & Throttling</div>
+        <p class="feature-desc">Per-user and per-route rate limiting using Laravel's built-in throttle middleware. Custom rate limit headers, graceful 429 responses and Redis-backed counters for distributed environments.</p>
+        <div class="feature-tags">
+          <span class="ftag">Throttle</span><span class="ftag">Redis</span><span class="ftag">Per-User Limits</span>
+        </div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">03</div>
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Caching Strategy</div>
+        <p class="feature-desc">Multi-layer caching with Redis — query caching, response caching, and cache invalidation on model events. Dramatically reduces DB load and improves response times to under 30ms.</p>
+        <div class="feature-tags">
+          <span class="ftag">Redis</span><span class="ftag">Query Cache</span><span class="ftag">Model Events</span>
+        </div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">04</div>
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Background Jobs & Queues</div>
+        <p class="feature-desc">Async processing with Laravel Horizon. Email dispatch, PDF generation, third-party API calls and heavy operations run in background queues so your API stays fast and responsive.</p>
+        <div class="feature-tags">
+          <span class="ftag">Horizon</span><span class="ftag">Queue Jobs</span><span class="ftag">Async</span><span class="ftag">Retries</span>
+        </div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">05</div>
+        <div class="feature-icon">🔢</div>
+        <div class="feature-title">API Versioning</div>
+        <p class="feature-desc">Clean URL versioning (/api/v1/, /api/v2/) with route groups and version-specific controllers. Backwards-compatible upgrades — no breaking changes for existing clients.</p>
+        <div class="feature-tags">
+          <span class="ftag">v1/v2 Routes</span><span class="ftag">Backward Compat</span>
+        </div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">06</div>
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">Swagger / OpenAPI Docs</div>
+        <p class="feature-desc">Auto-generated interactive API documentation with L5-Swagger. Every endpoint documented with request/response schemas, auth requirements and example payloads. Ready for your frontend team.</p>
+        <div class="feature-tags">
+          <span class="ftag">Swagger UI</span><span class="ftag">OpenAPI 3.0</span><span class="ftag">L5-Swagger</span>
+        </div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">07</div>
+        <div class="feature-icon">🪝</div>
+        <div class="feature-title">Webhooks & Events</div>
+        <p class="feature-desc">Outgoing webhooks with signature verification (HMAC), retry logic and delivery logs. Laravel Events & Listeners for decoupled, event-driven architecture inside your application.</p>
+        <div class="feature-tags">
+          <span class="ftag">HMAC Signature</span><span class="ftag">Retry Logic</span><span class="ftag">Events</span>
+        </div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">08</div>
+        <div class="feature-icon">🧪</div>
+        <div class="feature-title">Testing & Code Quality</div>
+        <p class="feature-desc">Feature tests with PHPUnit covering all critical endpoints. Pest PHP for elegant test syntax. Code style enforced with Laravel Pint. CI-ready test suite you can run on every deployment.</p>
+        <div class="feature-tags">
+          <span class="ftag">PHPUnit</span><span class="ftag">Pest PHP</span><span class="ftag">Laravel Pint</span><span class="ftag">CI/CD</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ PROCESS ══════════════════════ -->
+<section id="process">
+  <div class="container">
+    <div class="section-label reveal">How It Works</div>
+    <h2 class="section-title reveal">OUR DELIVERY<br><span style="color:var(--accent)">PROCESS</span></h2>
+    <p class="section-sub reveal">Clear steps, no surprises. From kickoff call to production deployment.</p>
+
+    <div class="process-steps reveal">
+      <div class="process-step">
+        <div class="pstep-circle">
+          📋
+          <div class="pstep-num">1</div>
+        </div>
+        <div class="pstep-title">Discovery & Scope</div>
+        <p class="pstep-desc">Free 30-min call to understand your project. We produce a detailed scope doc, API blueprint and timeline estimate.</p>
+      </div>
+      <div class="process-step">
+        <div class="pstep-circle">
+          🏗️
+          <div class="pstep-num">2</div>
+        </div>
+        <div class="pstep-title">Architecture & Setup</div>
+        <p class="pstep-desc">Database schema design, project scaffolding, auth setup and CI/CD pipeline configured before writing a single endpoint.</p>
+      </div>
+      <div class="process-step">
+        <div class="pstep-circle">
+          ⚡
+          <div class="pstep-num">3</div>
+        </div>
+        <div class="pstep-title">Agile Development</div>
+        <p class="pstep-desc">Weekly sprints with demos. Each sprint delivers tested, documented endpoints you can integrate immediately.</p>
+      </div>
+      <div class="process-step">
+        <div class="pstep-circle">
+          🚀
+          <div class="pstep-num">4</div>
+        </div>
+        <div class="pstep-title">Deploy & Handover</div>
+        <p class="pstep-desc">Production deployment on your server or Oracle Cloud. Full Swagger docs, codebase walkthrough and 30-day support included.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ PRICING ══════════════════════ -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-label reveal">Investment</div>
+    <h2 class="section-title reveal">TRANSPARENT<br><span style="color:var(--accent)">PRICING</span></h2>
+    <p class="section-sub reveal">Fixed-price packages for defined scopes. Custom quote available for complex projects.</p>
+
+    <div class="pricing-grid reveal">
+
+      <!-- Starter -->
+      <div class="pricing-card">
+        <div class="plan-name">Starter API</div>
+        <div class="plan-price">$500 <span>/ project</span></div>
+        <div class="plan-note">Ideal for MVPs & prototypes</div>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Up to 15 API endpoints</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Sanctum authentication</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> MySQL database design</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Basic rate limiting</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Postman collection</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> 14-day bug support</div>
+          <div class="plan-feature"><span class="plan-feature-icon">–</span> Redis caching</div>
+          <div class="plan-feature"><span class="plan-feature-icon">–</span> Queue jobs</div>
+          <div class="plan-feature"><span class="plan-feature-icon">–</span> Swagger docs</div>
+        </div>
+        <a href="https://codecraftsystems.github.io/#contact" class="plan-btn ghost">Get Started →</a>
+      </div>
+
+      <!-- Professional (Popular) -->
+      <div class="pricing-card popular">
+        <div class="plan-name">Professional API</div>
+        <div class="plan-price">$1,500 <span>/ project</span></div>
+        <div class="plan-note">Best for SaaS & production apps</div>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Up to 40 API endpoints</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Sanctum + Passport OAuth</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Redis cache + rate limiting</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Queue jobs + Horizon</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Swagger / OpenAPI docs</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> API versioning (v1/v2)</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> PHPUnit test suite</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> 30-day bug support</div>
+          <div class="plan-feature"><span class="plan-feature-icon">–</span> Server deployment</div>
+        </div>
+        <a href="https://codecraftsystems.github.io/#contact" class="plan-btn solid">Hire Us Now →</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pricing-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price">Custom <span>/ quote</span></div>
+        <div class="plan-note">For complex, large-scale systems</div>
+        <div class="plan-divider"></div>
+        <div class="plan-features">
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Unlimited endpoints</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Microservices architecture</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Multi-tenant SaaS setup</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Oracle Cloud deployment</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> CI/CD pipeline setup</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Performance optimization</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Monthly retainer option</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> Dedicated support SLA</div>
+          <div class="plan-feature included"><span class="plan-feature-icon">✓</span> NDA available</div>
+        </div>
+        <a href="https://codecraftsystems.github.io/#contact" class="plan-btn ghost">Contact for Quote →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FAQ ══════════════════════ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-label reveal">Questions</div>
+    <h2 class="section-title reveal">FREQUENTLY<br><span style="color:var(--accent)">ASKED</span></h2>
+
+    <div class="faq-layout reveal">
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Which Laravel version do you use?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">We default to Laravel 11 with PHP 8.3. If your existing project runs on an older version (Laravel 9 or 10), we can work with that too and handle the upgrade path if needed.</div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Will I get API documentation?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Yes. Professional and Enterprise plans include full Swagger / OpenAPI 3.0 documentation with an interactive UI hosted at /api/docs. Starter projects include a Postman collection with all endpoints, sample requests and responses.</div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Can you work with my existing Vue.js or mobile frontend?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Absolutely. We specialize in building Laravel APIs that integrate seamlessly with Vue.js SPAs, Nuxt.js apps and React Native / Flutter mobile apps. CORS, token refresh flows and response formats are all handled correctly.</div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-q-text">How do you handle data security?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Security is built-in, not bolted on. Every API includes: HTTPS enforcement, input validation & sanitization, SQL injection prevention via Eloquent, CORS configuration, rate limiting, encrypted tokens, and proper HTTP status codes. We can also sign an NDA for sensitive projects.</div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Do you offer ongoing maintenance?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Yes. We offer monthly retainer packages starting from $300/month that cover bug fixes, minor feature additions, Laravel version upgrades and server monitoring. Long-term partnership is how we prefer to work.</div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span class="faq-q-text">What is your typical delivery timeline?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Starter APIs: 1–2 weeks. Professional packages: 3–5 weeks. Enterprise projects: 6–12 weeks depending on scope. We work in weekly sprints and share progress every Friday. Timelines are confirmed in the project scope document before work begins.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Highlight box -->
+      <div class="faq-highlight">
+        <div class="faq-hl-title">READY TO START YOUR <span>API?</span></div>
+        <p class="faq-hl-desc">Free 30-minute discovery call. We'll scope your project, estimate the timeline and answer all technical questions — no commitment required.</p>
+        <div class="faq-hl-items">
+          <span class="faq-hl-item">Laravel + Vue.js specialist</span>
+          <span class="faq-hl-item">6+ years production experience</span>
+          <span class="faq-hl-item">UK / USA / AU clients served</span>
+          <span class="faq-hl-item">NDA available on request</span>
+          <span class="faq-hl-item">24-hour response guarantee</span>
+        </div>
+        <a href="https://codecraftsystems.github.io/#contact" class="faq-hl-btn">Book Free Discovery Call →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ OTHER SERVICES ══════════════════════ -->
+<section id="other-services">
+  <div class="container">
+    <div class="section-label reveal">Explore More</div>
+    <h2 class="section-title reveal">OTHER<br><span style="color:var(--accent)">SERVICES</span></h2>
+    <p class="section-sub reveal">We cover the full product stack — from frontend to cloud deployment.</p>
+
+    <div class="other-grid reveal">
+      <a href="service-vuejs-frontend.html" class="other-card">
+        <div class="other-icon">🖥️</div>
+        <div class="other-num">02</div>
+        <div class="other-title">Vue.js / Quasar Frontend Development</div>
+        <div class="other-arrow">→</div>
+      </a>
+      <a href="service-realtime.html" class="other-card">
+        <div class="other-icon">💬</div>
+        <div class="other-num">03</div>
+        <div class="other-title">Real-Time Applications & Chat Systems</div>
+        <div class="other-arrow">→</div>
+      </a>
+      <a href="service-payments.html" class="other-card">
+        <div class="other-icon">💳</div>
+        <div class="other-num">04</div>
+        <div class="other-title">Payment Gateway Integration</div>
+        <div class="other-arrow">→</div>
+      </a>
+      <a href="service-cloud-devops.html" class="other-card">
+        <div class="other-icon">☁️</div>
+        <div class="other-num">05</div>
+        <div class="other-title">Cloud Deployment & DevOps</div>
+        <div class="other-arrow">→</div>
+      </a>
+      <a href="service-ai-iot.html" class="other-card">
+        <div class="other-icon">🤖</div>
+        <div class="other-num">06</div>
+        <div class="other-title">AI & IoT Integration</div>
+        <div class="other-arrow">→</div>
+      </a>
+      <a href="https://codecraftsystems.github.io/#contact" class="other-card" style="border-color:rgba(255,77,0,0.2);background:rgba(255,77,0,0.03)">
+        <div class="other-icon">🤝</div>
+        <div class="other-num">—</div>
+        <div class="other-title">Custom Project? Let's Talk</div>
+        <div class="other-arrow" style="color:var(--accent)">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ CTA BAND ══════════════════════ -->
+<div id="cta-band">
+  <div class="cta-band-inner reveal">
+    <h2 class="cta-band-title">LET'S BUILD YOUR<br><span>LARAVEL API</span></h2>
+    <p class="cta-band-sub">Tell us about your project and we'll get back within 24 hours with a scope document and timeline estimate.</p>
+    <div class="cta-band-btns">
+      <a href="https://codecraftsystems.github.io/#contact" class="btn-primary">Start Your Project →</a>
+      <a href="mailto:sonusahani086@gmail.com" class="btn-outline">✉️ Email Directly</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Code<span>Craft</span></div>
+    <p class="footer-copy">© <span id="year"></span> CodeCraft Studio · Sonu Sahani · All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+      <li><a href="https://codecraftsystems.github.io/#services">Services</a></li>
+      <li><a href="https://codecraftsystems.github.io/blog">Blog</a></li>
+      <li><a href="https://codecraftsystems.github.io/#contact">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ── Custom cursor ── */
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  (function tick(){
+    cursor.style.transform=`translate(${mx-6}px,${my-6}px)`;
+    rx+=(mx-rx-20)*0.12; ry+=(my-ry-20)*0.12;
+    ring.style.transform=`translate(${rx}px,${ry}px)`;
+    requestAnimationFrame(tick);
+  })();
+
+  /* ── Navbar scroll ── */
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+    /* Progress bar */
+    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+  });
+
+  /* ── Mobile menu ── */
+  function openMobile()  { document.getElementById('mobileMenu').classList.add('open'); }
+  function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+  /* ── Scroll reveal ── */
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+
+  /* ── Animate stack bars when visible ── */
+  const stackSection = document.getElementById('stackItems');
+  const barObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.stack-bar-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width;
+        });
+        barObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.2 });
+  if (stackSection) barObserver.observe(stackSection);
+
+  /* ── FAQ accordion ── */
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  /* ── Smooth anchor scroll ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior:'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
