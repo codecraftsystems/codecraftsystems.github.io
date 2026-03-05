@@ -1,0 +1,11 @@
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Submit Developer Profile</title><meta name='description' content='Create or update your Laravel/Vue.js developer profile.'>
+<link rel='stylesheet' href='/assets/developers.css'><script src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'></script><script src='/assets/dev-config.js'></script><script src='/assets/dev-directory.js'></script></head>
+<body><header class='top'><div class='container'><a class='brand' href='/'><span>CodeCraft</span> Systems</a><nav class='nav'><a href='/developers/'>Developers</a><a href='/auth/'>Login</a></nav></div></header>
+<main class='container'><section class='panel'><h1>Submit / Update Profile</h1><p id='authState' class='help'></p><button id='logoutBtn' class='btn secondary' type='button'>Logout</button><div id='formWrap'><form id='profileForm'>
+<div class='two'><input id='name' class='input' required placeholder='Name'><input id='title' class='input' placeholder='Title'></div>
+<input id='skills' class='input' placeholder='Skills (comma separated)'><div class='two'><input id='experience_years' class='input' type='number' min='0' placeholder='Experience years'><input id='profile_image' class='input' placeholder='Profile image URL'></div>
+<div class='two'><input id='github_url' class='input' placeholder='GitHub URL'><input id='linkedin_url' class='input' placeholder='LinkedIn URL'></div>
+<input id='portfolio_url' class='input' placeholder='Portfolio URL'><textarea id='bio' class='textarea' rows='5' placeholder='Bio'></textarea><label><input id='open_to_work' type='checkbox'> Open to work</label>
+<button class='btn' type='submit'>Save Profile</button><p id='saved' class='badge ok hidden'>Saved successfully</p></form></div></section></main>
+<script>DevDirectory.submitPage();</script></body></html>
