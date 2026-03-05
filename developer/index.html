@@ -65,7 +65,8 @@
         document.querySelector('meta[name="description"]').setAttribute('content', desc);
         document.getElementById('canonical').setAttribute('href', `https://codecraftsystems.github.io/developer/${data.slug}`);
         if (forceCleanPath || location.search.includes('slug=')) {
-          history.replaceState({}, '', `/developer/${data.slug}`);
+          const basePath = location.pathname.includes('/developer/') ? location.pathname.split('/developer/')[0] : '';
+          history.replaceState({}, '', `${basePath}/developer/${data.slug}`);
         }
 
         document.getElementById('name').textContent = data.name;
