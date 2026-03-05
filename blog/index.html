@@ -666,7 +666,25 @@
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
   /* ── RESPONSIVE ── */
-  @media (max-width: 1024px) {
+  
+  .breadcrumb, .bc {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    z-index: 2;
+    padding: 6px 0;
+  }
+
+  @media (max-width: 768px) {
+    .breadcrumb, .bc {
+      font-size: 0.64rem;
+      gap: 5px;
+      padding: 4px 0;
+    }
+  }
+
+@media (max-width: 1024px) {
     .blog-layout { grid-template-columns: 1fr; }
     .sidebar { display: grid; grid-template-columns: repeat(2,1fr); }
   }

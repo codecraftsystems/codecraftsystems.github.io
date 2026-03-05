@@ -254,6 +254,24 @@ footer { background:var(--dark); border-top:1px solid var(--border); padding:cla
 ════════════════════════════════ */
 
 /* 1100px: sidebar stacks below content */
+
+  .breadcrumb, .bc {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    z-index: 2;
+    padding: 6px 0;
+  }
+
+  @media (max-width: 768px) {
+    .breadcrumb, .bc {
+      font-size: 0.64rem;
+      gap: 5px;
+      padding: 4px 0;
+    }
+  }
+
 @media(max-width:1100px) {
   .page-layout { grid-template-columns:minmax(0,1fr); gap:32px; }
   .article-sidebar { position:static; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }

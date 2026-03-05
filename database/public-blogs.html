@@ -3,8 +3,29 @@
 <head>
   <title>Blogs API</title>
   <meta charset="UTF-8">
+
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 28px auto; padding: 0 16px; line-height: 1.5; }
+    .breadcrumb { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:0.78rem; color:#5b6370; margin:0 0 18px; position:relative; top:auto; left:auto; right:auto; padding:6px 0; }
+    .breadcrumb a { color:#5b6370; text-decoration:none; }
+    .breadcrumb a:hover { color:#1f6feb; }
+    .sep { color:#8b949e; }
+    @media (max-width: 768px) {
+      .breadcrumb { font-size:0.68rem; gap:6px; padding:4px 0; }
+    }
+  </style>
+
 </head>
 <body>
+
+<nav class="breadcrumb" aria-label="breadcrumb">
+  <a href="https://codecraftsystems.github.io/">Home</a><span class="sep">›</span>
+  <a href="https://codecraftsystems.github.io/database/blog.html">Database</a><span class="sep">›</span>
+  <span>Public Blogs API</span>
+</nav>
+
+<pre id="responseOutput">Loading…</pre>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="db.js"></script>
@@ -35,7 +56,7 @@ async function getBlogs() {
     error: error ? error.message : null
   };
 
-  document.body.innerHTML = `<pre>${JSON.stringify(response, null, 2)}</pre>`;
+  document.getElementById('responseOutput').textContent = JSON.stringify(response, null, 2);
 }
 
 getBlogs();

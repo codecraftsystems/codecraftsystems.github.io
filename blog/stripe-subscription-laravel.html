@@ -326,6 +326,24 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* ══════════════════════════════════
    RESPONSIVE — ALL DEVICES
 ══════════════════════════════════ */
+
+  .breadcrumb, .bc {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    z-index: 2;
+    padding: 6px 0;
+  }
+
+  @media (max-width: 768px) {
+    .breadcrumb, .bc {
+      font-size: 0.64rem;
+      gap: 5px;
+      padding: 4px 0;
+    }
+  }
+
 @media(max-width:1080px){
   .wrap{grid-template-columns:minmax(0,1fr);padding:24px 18px 56px}
   .sb{position:static;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
