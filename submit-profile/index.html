@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit Developer Profile | CodeCraft Systems</title>
+  <meta name="description" content="Submit your Laravel and Vue.js developer profile to the CodeCraft Systems Developers Directory." />
+  <link rel="canonical" href="https://codecraftsystems.github.io/submit-profile" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/developers.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="logo" href="/"><span>CodeCraft</span> Systems</a>
+      <nav class="top-links">
+        <a href="/developers">Developers</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Submit your profile</h1>
+    <p class="meta">Add your Laravel/Vue.js profile to the directory. Skills can be comma-separated.</p>
+
+    <form id="profileForm" class="form-grid">
+      <div>
+        <label for="name">Name</label>
+        <input class="input" id="name" required />
+      </div>
+      <div>
+        <label for="title">Title</label>
+        <input class="input" id="title" required />
+      </div>
+      <div>
+        <label for="skills">Skills</label>
+        <input class="input" id="skills" placeholder="Laravel, Vue.js, REST APIs" required />
+      </div>
+      <div>
+        <label for="experience">Experience (years)</label>
+        <input class="input" id="experience" type="number" min="0" step="1" required />
+      </div>
+      <div>
+        <label for="github">GitHub URL</label>
+        <input class="input" id="github" type="url" />
+      </div>
+      <div>
+        <label for="linkedin">LinkedIn URL</label>
+        <input class="input" id="linkedin" type="url" />
+      </div>
+      <div class="full">
+        <label for="portfolio">Portfolio URL</label>
+        <input class="input" id="portfolio" type="url" />
+      </div>
+      <div class="full">
+        <label for="profile_image">Profile image URL</label>
+        <input class="input" id="profile_image" type="url" />
+      </div>
+      <div class="full">
+        <label for="bio">Bio</label>
+        <textarea id="bio" rows="5" required></textarea>
+      </div>
+      <div class="full" style="display:flex;align-items:center;gap:8px;">
+        <input id="open_to_work" type="checkbox" />
+        <label for="open_to_work" style="margin:0;">Open to work</label>
+      </div>
+      <div class="full">
+        <button class="button" type="submit">Submit Profile</button>
+      </div>
+    </form>
+
+    <div id="status" class="alert">Ready.</div>
+    <p class="footer-note">Your table should allow INSERT for anon users (or via RLS policy) in Supabase.</p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/supabase-config.js"></script>
+  <script src="/assets/developers.js"></script>
+  <script>
+    const form = document.getElementById('profileForm');
+    const statusEl = document.getElementById('status');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      statusEl.textContent = 'Submitting profile...';
+      try {
+        const supabase = devDirectory.createClient();
+
+        const name = document.getElementById('name').value.trim();
+        const title = document.getElementById('title').value.trim();
+        const skills = document.getElementById('skills').value.trim();
+        const experience = Number(document.getElementById('experience').value);
+
+        const payload = {
+          name,
+          slug: `${devDirectory.slugify(name)}-${devDirectory.slugify(title)}`.slice(0, 120),
+          title,
+          skills,
+          experience_years: experience,
+          github_url: document.getElementById('github').value.trim() || null,
+          linkedin_url: document.getElementById('linkedin').value.trim() || null,
+          portfolio_url: document.getElementById('portfolio').value.trim() || null,
+          bio: document.getElementById('bio').value.trim(),
+          profile_image: document.getElementById('profile_image').value.trim() || null,
+          open_to_work: document.getElementById('open_to_work').checked
+        };
+
+        const { error } = await supabase.from('developers').insert(payload);
+        if (error) throw error;
+
+        statusEl.textContent = 'Profile submitted successfully!';
+        form.reset();
+      } catch (error) {
+        statusEl.textContent = error.message;
+      }
+    });
+  </script>
+</body>
+</html>
