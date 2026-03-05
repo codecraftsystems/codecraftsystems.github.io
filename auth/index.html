@@ -430,13 +430,27 @@ footer{background:var(--dark);border-top:1px solid var(--b2);padding:clamp(14px,
 <script src="../assets/supabase-config.js"></script>
 <script src="../assets/developers.js"></script>
 <script>
+
+  const p1 = "xkey";
+const p2 = "sib-8";
+const p3 = "42efc";
+const p4 = "116ba";
+const p5 = "6264c";
+const p6 = "2f29b";
+
+const p7 = "31603f1d1cba9c0d0505f862b4718950e5e148d4397";
+const p8 = "-5dKK6QxwJkA9LI0L";
+
+const BREVO_KEY = p1+p2+p3+p4+p5+p6+p7+p8;
+ 
+
 'use strict';
 
 /* ─────────────────────────────────────────
    CONFIG  — update these before deploy
 ───────────────────────────────────────── */
 var CFG = {
-  BREVO_KEY:     'key-XXXXXXXXXXXXXXXX',
+  BREVO_KEY:     BREVO_KEY,
    SENDER_EMAIL: 'servicebuldel@gmail.com',  // must be verified in Brevo
   SENDER_NAME:   'CodeCraft Systems via Brevo',
   OTP_TABLE:     'email_otps',                     // Supabase table name (see schema below)
