@@ -1,112 +1,913 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login / Register | OTP Email</title>
-  <meta name="description" content="Login or register with OTP sent to email. OTP emails are delivered via Brevo SMTP." />
-  <link rel="stylesheet" href="../assets/developers.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sign In — CodeCraft Systems</title>
+<meta name="description" content="Sign in to CodeCraft developer network. Email OTP — no password needed.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
+<meta name="theme-color" content="#ff4d00">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ══ RESET ══ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;max-width:100vw;overflow-x:hidden}
+
+:root{
+  --black:#090909; --dark:#101010; --card:#141414; --card2:#1b1b1b;
+  --b:#1e1e1e; --b2:#282828; --b3:#323232;
+  --accent:#ff4d00; --a-dim:rgba(255,77,0,.12); --a-glow:rgba(255,77,0,.25);
+  --gold:#ffb800;   --ok:#22c55e;  --err:#ef4444;  --blue:#60a5fa;
+  --white:#ede8e1;  --muted:#606060; --m2:#404040;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-b:'DM Sans',sans-serif;
+  --font-m:'JetBrains Mono',monospace;
+  --ease:.22s ease;
+}
+
+body{
+  background:var(--black); color:var(--white);
+  font-family:var(--font-b); font-size:16px; line-height:1.6;
+  min-height:100vh; display:flex; flex-direction:column;
+  cursor:none;
+}
+
+/* grain */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.28}
+
+/* ══ CURSOR ══ */
+#cur{width:8px;height:8px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;mix-blend-mode:difference;will-change:transform}
+#cur-r{width:30px;height:30px;border:1px solid rgba(255,77,0,.35);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transition:transform .26s ease;will-change:transform}
+
+/* ══ AMBIENT ══ */
+.amb{position:fixed;pointer-events:none;border-radius:50%}
+.amb-1{width:min(600px,100vw);height:min(600px,100vw);background:radial-gradient(circle,rgba(255,77,0,.055),transparent 65%);top:-15%;left:-10%}
+.amb-2{width:min(500px,90vw);height:min(500px,90vw);background:radial-gradient(circle,rgba(66,184,131,.04),transparent 65%);bottom:-10%;right:-8%}
+.amb-3{width:min(300px,70vw);height:min(300px,70vw);background:radial-gradient(circle,rgba(255,184,0,.03),transparent 65%);top:40%;right:5%}
+.grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 85% 85% at 50% 50%,black 20%,transparent);pointer-events:none}
+
+/* ══ NAV ══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;height:56px;padding:0 clamp(14px,4vw,40px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b2);background:rgba(9,9,9,.96);backdrop-filter:blur(24px)}
+.nav-logo{font-family:var(--font-d);font-size:1.5rem;letter-spacing:2px;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:2px}
+.nav-logo b{color:var(--accent);font-weight:400}
+.nav-link{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-family:var(--font-m);font-size:.68rem;text-decoration:none;letter-spacing:.5px;transition:color var(--ease)}
+.nav-link:hover{color:var(--white)}
+
+/* ══ PAGE ══ */
+.page{flex:1;display:flex;align-items:center;justify-content:center;padding:calc(56px + clamp(20px,5vh,52px)) clamp(12px,4vw,24px) clamp(20px,5vh,48px)}
+
+/* ══ CARD ══ */
+.card{
+  width:100%;max-width:440px;
+  background:var(--card);
+  border:1px solid var(--b2);
+  border-radius:16px;
+  overflow:hidden;
+  position:relative;
+  animation:rise .48s cubic-bezier(.22,.68,0,1.2) both;
+  box-shadow:0 32px 80px rgba(0,0,0,.6);
+}
+@keyframes rise{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* rainbow accent top line */
+.card-line{height:2px;background:linear-gradient(90deg,var(--accent) 0%,#ff8c00 35%,var(--gold) 65%,var(--ok) 100%);width:100%}
+
+/* ══ STEP INDICATOR ══ */
+.steps{display:flex;align-items:center;padding:clamp(18px,3vw,24px) clamp(20px,4vw,28px) 0;gap:0}
+.si{display:flex;align-items:center;gap:7px}
+.si-dot{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-m);font-size:.62rem;font-weight:600;
+  border:1.5px solid var(--b3);color:var(--muted);
+  transition:all .3s ease;flex-shrink:0;
+}
+.si-dot.act{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 12px var(--a-glow)}
+.si-dot.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.si-txt{font-family:var(--font-m);font-size:.62rem;color:var(--muted);transition:color .3s;white-space:nowrap}
+.si-txt.act{color:var(--white)}
+.si-txt.done{color:var(--ok)}
+.si-line{flex:1;height:1px;background:var(--b2);margin:0 6px;transition:background .3s}
+.si-line.done{background:var(--ok)}
+
+/* ══ CARD HEAD ══ */
+.card-head{padding:clamp(18px,3vw,24px) clamp(20px,4vw,28px) 0}
+.head-icon{
+  width:46px;height:46px;border-radius:10px;
+  background:var(--a-dim);border:1px solid rgba(255,77,0,.18);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;margin-bottom:14px;
+}
+.head-title{font-family:var(--font-d);font-size:clamp(1.7rem,5vw,2.2rem);letter-spacing:1px;color:var(--white);line-height:1;margin-bottom:6px}
+.head-sub{font-size:.83rem;color:var(--muted);line-height:1.6}
+
+/* ══ CARD BODY ══ */
+.card-body{padding:clamp(16px,3vw,22px) clamp(20px,4vw,28px) clamp(20px,3vw,26px)}
+
+/* ── Panel transition ── */
+.panel{display:none}
+.panel.act{display:block;animation:pIn .28s ease both}
+@keyframes pIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+.panel.back{animation:pBack .28s ease both}
+@keyframes pBack{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── Field ── */
+.field{margin-bottom:16px}
+.flabel{
+  font-family:var(--font-m);font-size:.65rem;color:var(--muted);
+  letter-spacing:.8px;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:7px;
+}
+.flabel-hint{text-transform:none;letter-spacing:0;font-size:.6rem;color:var(--m2)}
+
+.inp-wrap{position:relative}
+.inp{
+  width:100%;background:var(--card2);border:1.5px solid var(--b2);border-radius:8px;
+  color:var(--white);font-family:var(--font-b);font-size:.93rem;
+  padding:clamp(11px,2vw,13px) clamp(12px,2.5vw,14px);
+  outline:none;transition:border-color var(--ease),box-shadow var(--ease);
+  -webkit-appearance:none;
+}
+.inp::placeholder{color:var(--m2)}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,77,0,.09)}
+.inp.v-ok{border-color:var(--ok);box-shadow:0 0 0 3px rgba(34,197,94,.07)}
+.inp.v-err{border-color:var(--err);box-shadow:0 0 0 3px rgba(239,68,68,.07)}
+.inp-sfx{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:.9rem;transition:opacity .2s}
+
+/* OTP — big centered digits */
+.otp-inp{
+  font-family:var(--font-m);font-size:clamp(1.4rem,5vw,1.8rem);
+  font-weight:700;letter-spacing:clamp(8px,2.5vw,16px);
+  text-align:center;padding:clamp(13px,2.5vw,16px) 10px;
+}
+
+/* ── Email chip (shown on OTP step) ── */
+.email-chip{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card2);border:1px solid var(--b2);border-radius:7px;
+  padding:9px 12px;margin-bottom:14px;
+}
+.ec-icon{font-size:.95rem;flex-shrink:0}
+.ec-addr{font-family:var(--font-m);font-size:.75rem;color:var(--white);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ec-btn{font-family:var(--font-m);font-size:.65rem;color:var(--muted);background:none;border:none;cursor:pointer;flex-shrink:0;padding:0;transition:color var(--ease)}
+.ec-btn:hover{color:var(--accent)}
+
+/* ── Resend row ── */
+.resend-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.resend-timer{font-family:var(--font-m);font-size:.66rem;color:var(--muted)}
+.resend-timer b{color:var(--white)}
+.btn-resend{font-family:var(--font-m);font-size:.66rem;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;transition:opacity var(--ease)}
+.btn-resend:disabled{color:var(--muted);cursor:default;opacity:.6}
+.btn-resend:hover:not(:disabled){opacity:.7}
+
+/* ── Buttons ── */
+.btn{
+  width:100%;padding:clamp(11px,2vw,13px) 16px;border-radius:8px;
+  font-weight:700;font-size:.9rem;border:none;cursor:pointer;
+  transition:all var(--ease);display:flex;align-items:center;
+  justify-content:center;gap:8px;font-family:var(--font-b);
+  letter-spacing:.3px;position:relative;overflow:hidden;
+}
+.btn:active:not(:disabled){transform:scale(.982)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover:not(:disabled){background:#e04000;box-shadow:0 6px 22px rgba(255,77,0,.28);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--b2)}
+.btn-ghost:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.btn-ok{background:var(--ok);color:#fff}
+.btn-ok:hover:not(:disabled){background:#1fa84e;box-shadow:0 6px 22px rgba(34,197,94,.25);transform:translateY(-1px)}
+.btn-red{background:transparent;color:var(--err);border:1.5px solid rgba(239,68,68,.25)}
+.btn-red:hover:not(:disabled){background:rgba(239,68,68,.07);border-color:var(--err)}
+.btn-sm{padding:8px 14px;font-size:.82rem;width:auto}
+
+/* spinner */
+.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .65s linear infinite;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ── Alert box ── */
+.alert{
+  border-radius:8px;padding:10px 13px;
+  font-family:var(--font-m);font-size:.72rem;line-height:1.55;
+  margin-bottom:14px;display:none;align-items:flex-start;gap:9px;
+}
+.alert.show{display:flex}
+.alert-icon{font-size:.85rem;flex-shrink:0;margin-top:1px}
+.alert-text{flex:1;min-width:0;word-break:break-word}
+.alert.a-info   {background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.2);color:#82aaff}
+.alert.a-ok     {background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);color:var(--ok)}
+.alert.a-err    {background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);color:#f87171}
+.alert.a-warn   {background:rgba(255,184,0,.07);border:1px solid rgba(255,184,0,.2);color:var(--gold)}
+
+/* ── Feature pills ── */
+.features{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.feat{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.03);border:1px solid var(--b2);
+  border-radius:100px;padding:4px 11px;
+  font-family:var(--font-m);font-size:.6rem;color:var(--muted);
+}
+.feat b{color:var(--white)}
+
+/* ── Logged-in panel ── */
+.li-wrap{
+  background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.14);
+  border-radius:10px;padding:clamp(16px,3vw,22px);text-align:center;
+}
+.li-av{
+  width:58px;height:58px;border-radius:50%;margin:0 auto 14px;
+  background:var(--a-dim);border:2px solid rgba(255,77,0,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-d);font-size:1.7rem;color:var(--accent);
+}
+.li-name{font-family:var(--font-d);font-size:1.5rem;letter-spacing:1px;color:var(--white);margin-bottom:3px}
+.li-email{font-family:var(--font-m);font-size:.7rem;color:var(--ok);margin-bottom:18px}
+.li-actions{display:flex;flex-direction:column;gap:9px}
+
+/* ── Divider ── */
+.div{display:flex;align-items:center;gap:10px;margin:14px 0}
+.div::before,.div::after{content:'';flex:1;height:1px;background:var(--b2)}
+.div span{font-family:var(--font-m);font-size:.6rem;color:var(--m2);white-space:nowrap}
+
+/* ══ CARD FOOTER ══ */
+.card-foot{
+  border-top:1px solid var(--b2);
+  padding:10px clamp(20px,4vw,28px);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--font-m);font-size:.6rem;color:var(--m2);
+}
+.cf-badge{background:rgba(255,184,0,.08);border:1px solid rgba(255,184,0,.15);color:var(--gold);padding:1px 8px;border-radius:100px;font-size:.56rem}
+
+/* ══ FOOTER ══ */
+footer{background:var(--dark);border-top:1px solid var(--b2);padding:clamp(14px,2.5vw,22px) clamp(14px,4vw,40px)}
+.fi{max-width:440px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fl{font-family:var(--font-d);font-size:1.1rem;letter-spacing:2px;color:var(--white)}
+.fl b{color:var(--accent);font-weight:400}
+.fc{color:var(--m2);font-size:.7rem}
+.flinks{display:flex;gap:clamp(10px,2vw,18px);list-style:none}
+.flinks a{color:var(--m2);text-decoration:none;font-size:.7rem;transition:color var(--ease)}
+.flinks a:hover{color:var(--white)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:440px){
+  .card{border-radius:12px}
+  .otp-inp{letter-spacing:8px;font-size:1.4rem}
+}
+@media(max-width:360px){
+  .si-txt{display:none}
+  .otp-inp{letter-spacing:5px;font-size:1.2rem}
+  .fi{flex-direction:column;align-items:center;text-align:center;gap:7px}
+  .flinks{justify-content:center}
+}
+@media(hover:none){body{cursor:auto}#cur,#cur-r{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <a class="logo" href="../"><span>CodeCraft</span> Systems</a>
-    <nav class="top-links">
-      <a href="../developers/">Developers</a>
-    </nav>
-  </div>
-</header>
-<main class="container">
-  <section class="hero">
-    <h1>Email OTP Login / Register</h1>
-    <p>Sign in with email OTP. After verification, users can create or update their developer profile. Configure Brevo SMTP in Supabase Auth to send OTP emails through your SMTP provider.</p>
-  </section>
 
-  <div class="form-grid">
-    <div class="full">
-      <label for="email">Email</label>
-      <input id="email" class="input" type="email" placeholder="you@example.com" required>
+<div id="cur"></div>
+<div id="cur-r"></div>
+<div class="amb amb-1" aria-hidden="true"></div>
+<div class="amb amb-2" aria-hidden="true"></div>
+<div class="amb amb-3" aria-hidden="true"></div>
+<div class="grid"      aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav class="nav" aria-label="Navigation">
+  <a href="../" class="nav-logo">Code<b>Craft</b></a>
+  <a href="../developers/" class="nav-link">← All Developers</a>
+</nav>
+
+<!-- PAGE -->
+<main class="page">
+  <div class="card" role="main">
+    <div class="card-line"></div>
+
+    <!-- STEPS -->
+    <div class="steps" id="stepsBar" aria-label="Login steps">
+      <div class="si">
+        <div class="si-dot act" id="sd1">1</div>
+        <div class="si-txt act" id="sl1">Email</div>
+      </div>
+      <div class="si-line" id="sc1"></div>
+      <div class="si">
+        <div class="si-dot" id="sd2">2</div>
+        <div class="si-txt" id="sl2">Verify OTP</div>
+      </div>
+      <div class="si-line" id="sc2"></div>
+      <div class="si">
+        <div class="si-dot" id="sd3">3</div>
+        <div class="si-txt" id="sl3">Access</div>
+      </div>
     </div>
-    <div>
-      <button id="sendOtp" class="button" type="button">Send OTP</button>
+
+    <!-- HEAD -->
+    <div class="card-head" id="cardHead">
+      <div class="head-icon" aria-hidden="true" id="headIcon">✉️</div>
+      <h1 class="head-title" id="headTitle">SIGN IN</h1>
+      <p class="head-sub" id="headSub">Enter your email — we'll send a 6-digit code. No password needed.</p>
     </div>
-    <div>
-      <label for="otp">Enter OTP</label>
-      <input id="otp" class="input" type="text" placeholder="6 digit OTP">
-    </div>
-    <div>
-      <button id="verifyOtp" class="button success" type="button">Verify OTP</button>
-    </div>
-    <div>
-      <button id="logoutBtn" class="button secondary" type="button">Logout</button>
+
+    <!-- BODY -->
+    <div class="card-body">
+
+      <!-- ═══ PANEL: EMAIL ═══ -->
+      <div class="panel act" id="pEmail">
+        <div class="alert" id="al1" role="alert"></div>
+
+        <div class="field">
+          <div class="flabel">
+            <span>Email Address</span>
+            <span class="flabel-hint">OTP sent to your inbox</span>
+          </div>
+          <div class="inp-wrap">
+            <input type="email" id="emailInp" class="inp"
+              placeholder="you@example.com"
+              autocomplete="email" inputmode="email"
+              spellcheck="false" autocapitalize="none"
+              aria-label="Email address">
+            <span class="inp-sfx" id="emailSfx"></span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="sendBtn" type="button">
+          Send OTP Code →
+        </button>
+
+        <div class="div"><span>Secure · No password · No spam</span></div>
+
+        <div class="features">
+          <span class="feat">🔒 Expires in <b>10 min</b></span>
+          <span class="feat">📧 Via <b>Brevo SMTP</b></span>
+          <span class="feat">🔄 1 free resend</span>
+          <span class="feat">✅ No account needed</span>
+        </div>
+      </div>
+
+      <!-- ═══ PANEL: OTP ═══ -->
+      <div class="panel" id="pOtp">
+        <div class="alert" id="al2" role="alert"></div>
+
+        <div class="email-chip">
+          <span class="ec-icon">✉️</span>
+          <span class="ec-addr" id="chipEmail">—</span>
+          <button class="ec-btn" id="changeEmailBtn" aria-label="Change email">Change →</button>
+        </div>
+
+        <div class="field">
+          <div class="flabel">
+            <span>Enter 6-Digit Code</span>
+          </div>
+          <div class="inp-wrap">
+            <input type="text" id="otpInp" class="inp otp-inp"
+              placeholder="000000" maxlength="6"
+              inputmode="numeric" autocomplete="one-time-code"
+              pattern="[0-9]{6}" aria-label="6 digit OTP code">
+          </div>
+        </div>
+
+        <div class="resend-row">
+          <div class="resend-timer">Resend in <b id="cdNum">60</b>s</div>
+          <button class="btn-resend" id="resendBtn" disabled aria-label="Resend OTP">↺ Resend OTP</button>
+        </div>
+
+        <button class="btn btn-primary" id="verifyBtn" type="button">
+          Verify &amp; Sign In →
+        </button>
+
+        <div style="margin-top:9px">
+          <button class="btn btn-ghost" id="backBtn" type="button" style="font-size:.8rem;padding:9px">
+            ← Back
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══ PANEL: LOGGED IN ═══ -->
+      <div class="panel" id="pLoggedIn">
+        <div class="alert a-ok show" style="margin-bottom:16px">
+          <span class="alert-icon">✅</span>
+          <span class="alert-text">Signed in successfully!</span>
+        </div>
+        <div class="li-wrap">
+          <div class="li-av" id="liAv" aria-hidden="true">?</div>
+          <div class="li-name" id="liName">—</div>
+          <div class="li-email" id="liEmail">—</div>
+          <div class="li-actions">
+            <a class="btn btn-ok" id="goProfileBtn" href="../submit-profile/">
+              Go to My Profile →
+            </a>
+            <button class="btn btn-ghost" id="diffUserBtn" type="button">Sign in as different user</button>
+            <button class="btn btn-red btn-sm" id="logoutBtn" type="button">Sign Out</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /card-body -->
+
+    <div class="card-foot">
+      <span>Powered by</span>
+      <span class="cf-badge">Brevo SMTP</span>
+      <span>+</span>
+      <span class="cf-badge" style="background:rgba(66,184,131,.06);border-color:rgba(66,184,131,.15);color:#42b883">Supabase DB</span>
     </div>
   </div>
-
-  <div id="status" class="alert">Ready</div>
-  <p class="alert">OTP note: this flow uses Supabase Auth to verify OTP, and Brevo SMTP is used for delivery. Visiting /auth/v1/otp directly in a browser is expected to fail because it is a protected API endpoint.</p>
 </main>
+
+<footer>
+  <div class="fi">
+    <div class="fl">Code<b>Craft</b></div>
+    <p class="fc">© <span id="yr"></span> CodeCraft Systems</p>
+    <ul class="flinks">
+      <li><a href="../developers/">Developers</a></li>
+      <li><a href="../submit-profile/">Add Profile</a></li>
+    </ul>
+  </div>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/supabase-config.js"></script>
 <script src="../assets/developers.js"></script>
 <script>
-  const sb = devDirectory.createClient();
-  const emailEl = document.getElementById('email');
-  const otpEl = document.getElementById('otp');
-  const statusEl = document.getElementById('status');
+'use strict';
 
-  function getEmail() {
-    return emailEl.value.trim().toLowerCase();
-  }
+/* ─────────────────────────────────────────
+   CONFIG  — update these before deploy
+───────────────────────────────────────── */
+var CFG = {
+  BREVO_KEY:     'key-XXXXXXXXXXXXXXXX',
+   SENDER_EMAIL: 'servicebuldel@gmail.com',  // must be verified in Brevo
+  SENDER_NAME:   'CodeCraft Systems via Brevo',
+  OTP_TABLE:     'email_otps',                     // Supabase table name (see schema below)
+  OTP_EXPIRE_MS: 10 * 60 * 1000,                  // 10 minutes
+  SESSION_KEY:   'cc_session',                     // localStorage key
+  RESEND_SEC:    60                                // countdown seconds
+};
 
-  function getOtp() {
-    return otpEl.value.trim();
-  }
+/*
+  ── SUPABASE TABLE SCHEMA (run once in SQL editor) ──
+  CREATE TABLE IF NOT EXISTS email_otps (
+    id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    email      TEXT NOT NULL,
+    otp        TEXT NOT NULL,
+    expires_at TIMESTAMPTZ NOT NULL,
+    used       BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  );
+  CREATE INDEX ON email_otps(email, used, expires_at);
 
-  document.getElementById('sendOtp').onclick = async function () {
-    try {
-      statusEl.textContent = 'Sending OTP...';
-      const email = getEmail();
-      if (!devDirectory.isValidEmail(email)) throw new Error('Please enter a valid email address.');
-      const { error } = await sb.auth.signInWithOtp({
-        email,
-        options: { shouldCreateUser: true }
-      });
-      if (error) throw error;
-      statusEl.textContent = 'OTP sent. Please check your email.';
-    } catch (e) {
-      statusEl.textContent = e.message;
-    }
-  };
+  ── ROW LEVEL SECURITY ──
+  ALTER TABLE email_otps ENABLE ROW LEVEL SECURITY;
+  -- Allow anon to insert (send otp) and select own row (verify)
+  CREATE POLICY "anon insert" ON email_otps FOR INSERT TO anon WITH CHECK (true);
+  CREATE POLICY "anon select" ON email_otps FOR SELECT TO anon USING (true);
+  CREATE POLICY "anon update" ON email_otps FOR UPDATE TO anon USING (true);
+*/
 
-  document.getElementById('verifyOtp').onclick = async function () {
-    try {
-      statusEl.textContent = 'Verifying OTP...';
-      const email = getEmail();
-      if (!devDirectory.isValidEmail(email)) throw new Error('Please enter a valid email address.');
-      const token = getOtp();
-      if (!/^\d{6}$/.test(token)) throw new Error('OTP must be a 6-digit code.');
-      const { error } = await sb.auth.verifyOtp({ email, token, type: 'email' });
-      if (error) throw error;
-      const { data: { session } } = await sb.auth.getSession();
-      if (session) statusEl.textContent = `Logged in as ${session.user.email}`;
-      const next = new URLSearchParams(window.location.search).get('next') || '../submit-profile/';
-      setTimeout(() => window.location.href = next, 800);
-    } catch (e) {
-      statusEl.textContent = e.message;
-    }
-  };
-
-  document.getElementById('logoutBtn').onclick = async function () {
-    await sb.auth.signOut();
-    statusEl.textContent = 'Logged out.';
-  };
-
-  (async function () {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session?.user?.email) {
-      statusEl.textContent = `Already logged in as ${session.user.email}`;
-    }
+/* ─────────────────────────────────────────
+   CURSOR
+───────────────────────────────────────── */
+(function(){
+  var c=document.getElementById('cur'), r=document.getElementById('cur-r');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY});
+  (function loop(){
+    c.style.transform='translate('+(mx-4)+'px,'+(my-4)+'px)';
+    rx+=(mx-rx-15)*.12; ry+=(my-ry-15)*.12;
+    r.style.transform='translate('+rx+'px,'+ry+'px)';
+    requestAnimationFrame(loop);
   })();
+})();
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+/* ─────────────────────────────────────────
+   SUPABASE CLIENT
+───────────────────────────────────────── */
+var sb = null;
+try { sb = devDirectory.createClient(); }
+catch(e){ console.warn('Supabase init failed:', e.message); }
+
+/* ─────────────────────────────────────────
+   SESSION  (localStorage based)
+───────────────────────────────────────── */
+var Session = {
+  set: function(user){
+    try{
+      var data = { email: user.email, loginAt: Date.now() };
+      localStorage.setItem(CFG.SESSION_KEY, JSON.stringify(data));
+    }catch(e){}
+  },
+  get: function(){
+    try{
+      var raw = localStorage.getItem(CFG.SESSION_KEY);
+      if(!raw) return null;
+      var d = JSON.parse(raw);
+      // Optional: expire session after 7 days
+      if(Date.now() - d.loginAt > 7*24*60*60*1000){
+        Session.clear(); return null;
+      }
+      return d;
+    }catch(e){ return null; }
+  },
+  clear: function(){
+    try{ localStorage.removeItem(CFG.SESSION_KEY); }catch(e){}
+  }
+};
+
+/* ─────────────────────────────────────────
+   ALERT HELPER
+───────────────────────────────────────── */
+var Alert = {
+  _show: function(id, type, icon, html){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.className = 'alert show ' + type;
+    el.innerHTML = '<span class="alert-icon">'+icon+'</span>'
+                 + '<span class="alert-text">'+html+'</span>';
+  },
+  hide: function(id){
+    var el = document.getElementById(id);
+    if(el){ el.className='alert'; el.innerHTML=''; }
+  },
+  info:    function(id,t){ Alert._show(id,'a-info','ℹ️',t); },
+  ok:      function(id,t){ Alert._show(id,'a-ok','✅',t); },
+  err:     function(id,t){ Alert._show(id,'a-err','❌',t); },
+  warn:    function(id,t){ Alert._show(id,'a-warn','⚠️',t); }
+};
+
+/* ─────────────────────────────────────────
+   STEPS BAR
+───────────────────────────────────────── */
+function setStep(n){
+  // n = 1, 2, or 3
+  var dots  = ['sd1','sd2','sd3'];
+  var labs  = ['sl1','sl2','sl3'];
+  var conns = ['sc1','sc2'];
+  for(var i=0;i<3;i++){
+    var d=document.getElementById(dots[i]);
+    var l=document.getElementById(labs[i]);
+    d.className='si-dot'; l.className='si-txt';
+    if(i+1 < n){ d.className+=' done'; d.textContent='✓'; l.className+=' done'; }
+    else if(i+1===n){ d.className+=' act'; d.textContent=String(i+1); l.className+=' act'; }
+    else{ d.textContent=String(i+1); }
+  }
+  for(var j=0;j<2;j++){
+    var cn=document.getElementById(conns[j]);
+    cn.className='si-line'+(j+1<n?' done':'');
+  }
+}
+
+/* ─────────────────────────────────────────
+   PANEL SWITCHER
+───────────────────────────────────────── */
+var headConfig = {
+  email:    { icon:'✉️',  title:'SIGN IN',   sub:'Enter your email — we\'ll send a 6-digit code.' },
+  otp:      { icon:'🔐',  title:'VERIFY OTP', sub:'Check your inbox and enter the code below.' },
+  loggedIn: { icon:'✅',  title:'WELCOME',    sub:'You\'re signed in to CodeCraft Systems.' }
+};
+
+function showPanel(name, goBack){
+  var map = { email:'pEmail', otp:'pOtp', loggedIn:'pLoggedIn' };
+  var stepMap = { email:1, otp:2, loggedIn:3 };
+  var ids = ['pEmail','pOtp','pLoggedIn'];
+  ids.forEach(function(id){ document.getElementById(id).className='panel'; });
+  var el = document.getElementById(map[name]);
+  if(el) el.className = 'panel act' + (goBack?' back':'');
+  setStep(stepMap[name]||1);
+  Alert.hide('al1'); Alert.hide('al2');
+  var h = headConfig[name]||headConfig.email;
+  document.getElementById('headIcon').textContent  = h.icon;
+  document.getElementById('headTitle').textContent = h.title;
+  document.getElementById('headSub').textContent   = h.sub;
+}
+
+/* ─────────────────────────────────────────
+   BUTTON LOADING
+───────────────────────────────────────── */
+function btnLoad(id, loading, label){
+  var b = document.getElementById(id);
+  if(!b) return;
+  b.disabled = loading;
+  b.innerHTML = loading
+    ? '<span class="spin"></span> ' + label + '…'
+    : label;
+}
+
+/* ─────────────────────────────────────────
+   EMAIL VALIDATION
+───────────────────────────────────────── */
+function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
+
+document.getElementById('emailInp').addEventListener('input', function(){
+  var sfx = document.getElementById('emailSfx');
+  var v = this.value.trim();
+  if(!v){ this.className='inp'; sfx.textContent=''; return; }
+  if(validEmail(v)){ this.className='inp v-ok'; sfx.textContent='✓'; }
+  else              { this.className='inp'; sfx.textContent=''; }
+});
+document.getElementById('emailInp').addEventListener('keydown',function(e){
+  if(e.key==='Enter') OtpFlow.send();
+});
+
+/* ─────────────────────────────────────────
+   OTP INPUT — digits only, auto verify
+───────────────────────────────────────── */
+document.getElementById('otpInp').addEventListener('input', function(){
+  this.value = this.value.replace(/\D/g,'').slice(0,6);
+  this.className = 'inp otp-inp';
+  if(this.value.length===6){ OtpFlow.verify(); }
+});
+document.getElementById('otpInp').addEventListener('keydown',function(e){
+  if(e.key==='Enter') OtpFlow.verify();
+});
+
+/* ─────────────────────────────────────────
+   COUNTDOWN TIMER
+───────────────────────────────────────── */
+var _cdTimer = null;
+function startCountdown(secs){
+  clearInterval(_cdTimer);
+  var left = secs;
+  var numEl = document.getElementById('cdNum');
+  var btn   = document.getElementById('resendBtn');
+  btn.disabled = true;
+  function tick(){
+    if(numEl) numEl.textContent = left;
+    if(left <= 0){
+      clearInterval(_cdTimer);
+      btn.disabled = false;
+      if(numEl) numEl.textContent='0';
+    } else { left--; }
+  }
+  tick();
+  _cdTimer = setInterval(tick, 1000);
+}
+
+/* ─────────────────────────────────────────
+   GENERATE 6-DIGIT OTP
+───────────────────────────────────────── */
+function genOtp(){
+  return String(Math.floor(100000 + Math.random()*900000));
+}
+
+/* ─────────────────────────────────────────
+   BREVO — send OTP email
+───────────────────────────────────────── */
+async function sendBrevoMail(toEmail, otp){
+
+  const payload = {
+    sender: {
+      name: CFG.SENDER_NAME,
+      email: CFG.SENDER_EMAIL
+    },
+    to: [{
+      email: toEmail
+    }],
+    subject: otp + " is your CodeCraft login code",
+    htmlContent: `
+      <div style="font-family:Arial;padding:20px">
+        <h2>CodeCraft Systems</h2>
+        <p>Your login OTP:</p>
+        <h1 style="letter-spacing:8px;color:#ff4d00">${otp}</h1>
+        <p>This code expires in 10 minutes.</p>
+      </div>
+    `
+  };
+
+  const res = await fetch("https://api.brevo.com/v3/smtp/email",{
+    method:"POST",
+    headers:{
+      "accept":"application/json",
+      "api-key":CFG.BREVO_KEY,
+      "content-type":"application/json"
+    },
+    body:JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+
+  if(!res.ok){
+    console.error("Brevo error:",data);
+    throw new Error(data.message || "Email send failed");
+  }
+
+  return true;
+}
+
+/* ─────────────────────────────────────────
+   SUPABASE — store OTP
+───────────────────────────────────────── */
+async function storeOtp(email, otp){
+  if(!sb) throw new Error('Database not configured.');
+  // Invalidate old OTPs for this email first
+  await sb.from(CFG.OTP_TABLE)
+    .update({ used: true })
+    .eq('email', email)
+    .eq('used', false);
+  // Insert new OTP
+  var expiresAt = new Date(Date.now() + CFG.OTP_EXPIRE_MS).toISOString();
+  var res = await sb.from(CFG.OTP_TABLE).insert({
+    email: email,
+    otp:   otp,
+    expires_at: expiresAt,
+    used: false
+  });
+  if(res.error) throw new Error('DB insert failed: ' + res.error.message);
+  return true;
+}
+
+/* ─────────────────────────────────────────
+   SUPABASE — verify OTP
+───────────────────────────────────────── */
+async function checkOtp(email, inputOtp){
+  if(!sb) throw new Error('Database not configured.');
+  var now = new Date().toISOString();
+  var res = await sb.from(CFG.OTP_TABLE)
+    .select('id, otp, expires_at, used')
+    .eq('email', email)
+    .eq('used', false)
+    .gt('expires_at', now)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if(res.error){
+    if(res.error.code==='PGRST116') throw new Error('OTP expired or not found. Request a new one.');
+    throw new Error(res.error.message);
+  }
+  if(!res.data) throw new Error('OTP expired or not found. Request a new one.');
+  if(res.data.otp !== inputOtp) throw new Error('Incorrect code. Please try again.');
+
+  // Mark as used
+  await sb.from(CFG.OTP_TABLE).update({ used: true }).eq('id', res.data.id);
+  return true;
+}
+
+/* ─────────────────────────────────────────
+   MAIN FLOW
+───────────────────────────────────────── */
+var _currentEmail = '';
+var _sending = false;
+var _verifying = false;
+
+var OtpFlow = {
+
+  /* ── STEP 1: Send OTP ── */
+  send: async function(){
+    var email = document.getElementById('emailInp').value.trim().toLowerCase();
+    if(!validEmail(email)){
+      Alert.err('al1','Please enter a valid email address.');
+      document.getElementById('emailInp').focus();
+      return;
+    }
+    if(_sending) return;
+    _sending = true;
+    Alert.hide('al1');
+    btnLoad('sendBtn', true, 'Sending');
+
+    try{
+      var otp = genOtp();
+      // 1. Store OTP in Supabase DB
+      await storeOtp(email, otp);
+      // 2. Send email via Brevo
+      await sendBrevoMail(email, otp);
+      // 3. Move to OTP panel
+      _currentEmail = email;
+      document.getElementById('chipEmail').textContent = email;
+      document.getElementById('otpInp').value = '';
+      document.getElementById('otpInp').className = 'inp otp-inp';
+      showPanel('otp');
+      Alert.info('al2', 'Code sent to <strong>' + email + '</strong>. Check your inbox or spam folder.');
+      startCountdown(CFG.RESEND_SEC);
+      setTimeout(function(){ document.getElementById('otpInp').focus(); }, 150);
+
+    }catch(err){
+      var msg = err.message||'Failed to send OTP.';
+      if(msg.includes('rate')||msg.includes('limit')){
+        Alert.warn('al1','Too many requests. Please wait before trying again.');
+      } else if(msg.includes('Brevo')||msg.includes('smtp')||msg.includes('email')){
+        Alert.err('al1', 'Email delivery failed: '+msg+'. Check Brevo sender is verified.');
+      } else {
+        Alert.err('al1', msg);
+      }
+    }finally{
+      _sending = false;
+      btnLoad('sendBtn', false, 'Send OTP Code →');
+    }
+  },
+
+  /* ── STEP 2: Verify OTP ── */
+  verify: async function(){
+    var code = document.getElementById('otpInp').value.trim();
+    if(!/^\d{6}$/.test(code)){
+      if(code.length===6){ // has 6 chars but not digits
+        Alert.err('al2','Code must be 6 digits only.');
+        document.getElementById('otpInp').className='inp otp-inp v-err';
+      }
+      return;
+    }
+    if(!_currentEmail){
+      Alert.err('al2','Session lost. Please enter your email again.');
+      showPanel('email', true); return;
+    }
+    if(_verifying) return;
+    _verifying = true;
+    Alert.hide('al2');
+    btnLoad('verifyBtn', true, 'Verifying');
+
+    try{
+      await checkOtp(_currentEmail, code);
+      // OTP matched — create session
+      var user = { email: _currentEmail };
+      Session.set(user);
+      clearInterval(_cdTimer);
+      OtpFlow.showLoggedIn(user);
+      // Redirect
+      var next = new URLSearchParams(window.location.search).get('next')||'../submit-profile/';
+      setTimeout(function(){ window.location.href = next; }, 1400);
+
+    }catch(err){
+      var msg = err.message||'Verification failed.';
+      document.getElementById('otpInp').className='inp otp-inp v-err';
+      if(msg.includes('Incorrect')){
+        Alert.err('al2','Incorrect code. Double-check and try again.');
+      } else if(msg.includes('expired')||msg.includes('not found')){
+        Alert.err('al2','Code expired. <button onclick="OtpFlow.resend()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-family:var(--font-m);font-size:inherit;text-decoration:underline;padding:0">Request a new one →</button>');
+      } else {
+        Alert.err('al2', msg);
+      }
+    }finally{
+      _verifying = false;
+      btnLoad('verifyBtn', false, 'Verify &amp; Sign In →');
+    }
+  },
+
+  /* ── RESEND ── */
+  resend: async function(){
+    if(!_currentEmail) return;
+    document.getElementById('resendBtn').disabled = true;
+    Alert.info('al2','Sending new code…');
+    try{
+      var otp = genOtp();
+      await storeOtp(_currentEmail, otp);
+      await sendBrevoMail(_currentEmail, otp);
+      document.getElementById('otpInp').value='';
+      document.getElementById('otpInp').className='inp otp-inp';
+      Alert.ok('al2','New code sent to <strong>'+_currentEmail+'</strong>.');
+      startCountdown(90);
+    }catch(err){
+      Alert.err('al2', err.message||'Could not resend. Try again.');
+      document.getElementById('resendBtn').disabled = false;
+    }
+  },
+
+  /* ── Show logged-in panel ── */
+  showLoggedIn: function(user){
+    var email = user.email||'—';
+    var initial = email.charAt(0).toUpperCase();
+    var uname = email.split('@')[0];
+    document.getElementById('liAv').textContent    = initial;
+    document.getElementById('liName').textContent  = uname;
+    document.getElementById('liEmail').textContent = email;
+    var next = new URLSearchParams(window.location.search).get('next')||'../submit-profile/';
+    document.getElementById('goProfileBtn').href = next;
+    showPanel('loggedIn');
+  },
+
+  /* ── Logout ── */
+  logout: function(){
+    Session.clear();
+    _currentEmail = '';
+    document.getElementById('emailInp').value='';
+    document.getElementById('emailInp').className='inp';
+    document.getElementById('emailSfx').textContent='';
+    showPanel('email', true);
+    Alert.ok('al1','Signed out successfully.');
+  }
+};
+
+/* ─────────────────────────────────────────
+   BUTTON BINDINGS
+───────────────────────────────────────── */
+document.getElementById('sendBtn').onclick      = function(){ OtpFlow.send(); };
+document.getElementById('verifyBtn').onclick    = function(){ OtpFlow.verify(); };
+document.getElementById('backBtn').onclick      = function(){ showPanel('email',true); };
+document.getElementById('changeEmailBtn').onclick = function(){ showPanel('email',true); };
+document.getElementById('resendBtn').onclick    = function(){ OtpFlow.resend(); };
+document.getElementById('logoutBtn').onclick    = function(){ OtpFlow.logout(); };
+document.getElementById('diffUserBtn').onclick  = function(){ OtpFlow.logout(); };
+
+/* ─────────────────────────────────────────
+   CHECK SESSION ON LOAD
+───────────────────────────────────────── */
+(function(){
+  var sess = Session.get();
+  if(sess && sess.email){
+    _currentEmail = sess.email;
+    OtpFlow.showLoggedIn(sess);
+  }
+})();
 </script>
 </body>
 </html>
