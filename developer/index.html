@@ -52,6 +52,7 @@
     (async function () {
       const slug = findSlug();
       const statusEl = document.getElementById('status');
+      const forceCleanPath = new URLSearchParams(location.search).get('clean') === '1';
       if (!slug) return statusEl.textContent = 'Missing slug.';
       try {
         const sb = devDirectory.createClient();
@@ -63,6 +64,9 @@
         const desc = `${data.name}, ${data.title || 'Developer'} with ${data.experience_years || 0} years. Skills: ${data.skills || ''}`.slice(0, 155);
         document.querySelector('meta[name="description"]').setAttribute('content', desc);
         document.getElementById('canonical').setAttribute('href', `https://codecraftsystems.github.io/developer/${data.slug}`);
+        if (forceCleanPath || location.search.includes('slug=')) {
+          history.replaceState({}, '', `/developer/${data.slug}`);
+        }
 
         document.getElementById('name').textContent = data.name;
         document.getElementById('title').textContent = data.title || 'Laravel + Vue.js Developer';
