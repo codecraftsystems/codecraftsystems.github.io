@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create / Update Profile | Developers Directory</title>
+  <meta name="description" content="Logged-in developers can create or update their Laravel / Vue.js profile." />
+  <link rel="stylesheet" href="../assets/developers.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="logo" href="../"><span>CodeCraft</span> Systems</a>
+      <nav class="top-links">
+        <a href="../developers/">Developers</a>
+        <a href="../auth/?next=/submit-profile/">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Create / Update Developer Profile</h1>
+      <p>Login required via OTP email. A logged-in user can keep one profile and update it anytime.</p>
+    </section>
+
+    <form id="profileForm" class="form-grid">
+      <div><label for="name">Name</label><input class="input" id="name" required /></div>
+      <div><label for="title">Title</label><input class="input" id="title" required /></div>
+      <div><label for="skills">Skills</label><input class="input" id="skills" placeholder="Laravel, Vue.js, Nuxt" required /></div>
+      <div><label for="experience">Experience</label><input class="input" id="experience" type="number" min="0" step="1" required /></div>
+      <div><label for="github">GitHub</label><input class="input" id="github" type="url" /></div>
+      <div><label for="linkedin">LinkedIn</label><input class="input" id="linkedin" type="url" /></div>
+      <div class="full"><label for="portfolio">Portfolio</label><input class="input" id="portfolio" type="url" /></div>
+      <div class="full"><label for="profile_image">Profile image URL</label><input class="input" id="profile_image" type="url" /></div>
+      <div class="full"><label for="bio">Bio</label><textarea id="bio" rows="4" required></textarea></div>
+      <div class="full" style="display:flex;align-items:center;gap:8px;">
+        <input id="open_to_work" type="checkbox" />
+        <label for="open_to_work" style="margin:0;">Open to work</label>
+      </div>
+      <div class="full"><button class="button" type="submit">Save Profile</button></div>
+    </form>
+
+    <div id="status" class="alert">Checking login...</div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/developers.js"></script>
+  <script>
+    const sb = devDirectory.createClient();
+    const form = document.getElementById('profileForm');
+    const statusEl = document.getElementById('status');
+    let currentUser = null;
+
+    function requireText(id, label, minLen = 2) {
+      const value = document.getElementById(id).value.trim();
+      if (value.length < minLen) throw new Error(`${label} must be at least ${minLen} characters.`);
+      return value;
+    }
+
+    function readUrlField(id, label) {
+      const value = document.getElementById(id).value.trim();
+      if (!value) return null;
+      if (!devDirectory.isValidHttpUrl(value)) throw new Error(`${label} must be a valid http/https URL.`);
+      return value;
+    }
+
+    async function ensureAuth() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = '../auth/?next=/submit-profile/';
+        return false;
+      }
+      currentUser = session.user;
+      statusEl.textContent = `Logged in as ${currentUser.email}`;
+      return true;
+    }
+
+    async function loadExisting() {
+      if (!currentUser) return;
+      const { data } = await sb
+        .from('developers')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
+      if (!data) return;
+      ['name','title','skills','github','linkedin','portfolio','bio','profile_image'].forEach((id) => {
+        const map = {
+          github: 'github_url', linkedin: 'linkedin_url', portfolio: 'portfolio_url', profile_image: 'profile_image'
+        };
+        document.getElementById(id).value = data[map[id] || id] || '';
+      });
+      document.getElementById('experience').value = data.experience_years || 0;
+      document.getElementById('open_to_work').checked = !!data.open_to_work;
+      statusEl.textContent = 'Existing profile loaded. You can update it.';
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!currentUser) return;
+      try {
+        statusEl.textContent = 'Saving profile...';
+        const name = requireText('name', 'Name', 2);
+        const title = requireText('title', 'Title', 2);
+        const skills = requireText('skills', 'Skills', 2);
+        const bio = requireText('bio', 'Bio', 20);
+        const experience = Number(document.getElementById('experience').value);
+        if (!Number.isInteger(experience) || experience < 0 || experience > 80) throw new Error('Experience must be a valid number between 0 and 80.');
+        const payload = {
+          user_id: currentUser.id,
+          email: currentUser.email,
+          name,
+          slug: `${devDirectory.slugify(name)}-${devDirectory.slugify(title)}`.replace(/^-+|-+$/g, '') || devDirectory.slugify(name),
+          title,
+          skills,
+          experience_years: experience,
+          github_url: readUrlField('github', 'GitHub'),
+          linkedin_url: readUrlField('linkedin', 'LinkedIn'),
+          portfolio_url: readUrlField('portfolio', 'Portfolio'),
+          bio,
+          profile_image: readUrlField('profile_image', 'Profile image'),
+          open_to_work: document.getElementById('open_to_work').checked
+        };
+
+        const { error } = await sb.from('developers').upsert(payload, { onConflict: 'user_id' });
+        if (error) throw error;
+        statusEl.textContent = 'Profile saved successfully.';
+      } catch (e) {
+        statusEl.textContent = e.message;
+      }
+    });
+
+    (async function(){ if (await ensureAuth()) loadExisting(); })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.02, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Developer Directory — Laravel & Vue.js Talent | CodeCraft Studio</title>
+<meta name="description" content="Discover skilled Laravel and Vue.js developers. Browse profiles, check availability, filter by skills and experience. Hire top talent or find your next opportunity.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://codecraftsystems.github.io/developers/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Developer Directory — Laravel & Vue.js Talent">
+<meta property="og:description" content="Browse skilled Laravel and Vue.js developers. Hire talent or get discovered.">
+<meta property="og:url" content="https://codecraftsystems.github.io/developers/">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
+<meta name="theme-color" content="#ff4d00">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══ RESET ══ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{max-width:100vw;overflow-x:hidden}
+img,svg{max-width:100%;display:block}
+
+:root{
+  --black:#0a0a0a;--dark:#111111;--card:#161616;--card2:#1c1c1c;
+  --border:#252525;--border2:#2e2e2e;
+  --accent:#ff4d00;--accent2:#ffb800;
+  --vue:#42b883;--laravel:#ff2d20;--white:#f0ebe4;
+  --muted:#777;--muted2:#555;
+  --font-d:'Bebas Neue',sans-serif;
+  --font-b:'DM Sans',sans-serif;
+  --font-m:'JetBrains Mono',monospace;
+  --nav-h:62px;
+  --r:8px;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:var(--font-b);font-size:16px;line-height:1.6;cursor:none}
+
+/* noise overlay */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.35}
+
+/* ══ CURSOR ══ */
+.cur{width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transition:transform .12s ease;mix-blend-mode:difference}
+.cur-r{width:36px;height:36px;border:1.5px solid rgba(255,77,0,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transition:all .28s ease}
+
+/* ══ NAV ══ */
+.nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;padding:0 clamp(14px,4vw,40px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:all .3s}
+.nav.up{background:rgba(10,10,10,.96);border-color:var(--border);backdrop-filter:blur(20px)}
+.nav-logo{font-family:var(--font-d);font-size:clamp(1.25rem,3vw,1.7rem);letter-spacing:2px;color:var(--white);text-decoration:none;flex-shrink:0}
+.nav-logo em{font-style:normal;color:var(--accent)}
+.nav-links{display:flex;gap:clamp(16px,2.5vw,32px);list-style:none;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:500;letter-spacing:.8px;text-transform:uppercase;transition:color .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--white)}
+.nav-links .btn-nav{background:var(--accent);color:var(--white)!important;padding:7px 18px;border-radius:2px;font-weight:600!important}
+.nav-links .btn-nav:hover{background:#d94000}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:4px}
+.ham span{width:24px;height:2px;background:var(--white);border-radius:2px;display:block;transition:all .3s}
+.ham.on span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.ham.on span:nth-child(2){opacity:0}
+.ham.on span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mob-menu{display:none;position:fixed;inset:0;background:rgba(10,10,10,.98);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.mob-menu.on{display:flex}
+.mob-menu a{font-family:var(--font-d);font-size:clamp(1.8rem,7vw,2.8rem);color:var(--white);text-decoration:none;letter-spacing:2px;transition:color .2s}
+.mob-menu a:hover{color:var(--accent)}
+.mob-close{position:absolute;top:20px;right:clamp(16px,4vw,36px);font-size:1.8rem;background:none;border:none;color:var(--white);cursor:pointer}
+
+/* ══ HERO ══ */
+.hero{padding-top:var(--nav-h);background:var(--dark);position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:52px 52px;opacity:.12;mask-image:radial-gradient(ellipse 110% 80% at 50% 0%,black,transparent)}
+.hero-glow-l{position:absolute;width:min(500px,80vw);height:min(500px,80vw);background:radial-gradient(circle,rgba(255,77,0,.07) 0%,transparent 65%);top:-20%;left:-5%;pointer-events:none}
+.hero-glow-r{position:absolute;width:min(400px,70vw);height:min(400px,70vw);background:radial-gradient(circle,rgba(66,184,131,.05) 0%,transparent 65%);top:0%;right:-5%;pointer-events:none}
+
+.hero-inner{max-width:1160px;margin:0 auto;padding:clamp(44px,7vw,80px) clamp(14px,4vw,40px) clamp(36px,5vw,60px);position:relative;z-index:1}
+.hero-kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(255,77,0,.08);border:1px solid rgba(255,77,0,.2);padding:4px 14px;border-radius:100px;font-family:var(--font-m);font-size:.68rem;color:var(--accent);letter-spacing:1px;margin-bottom:18px}
+.kicker-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:blink 1.8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:var(--font-d);font-size:clamp(2.6rem,6.5vw,5.4rem);line-height:.93;letter-spacing:1px;color:var(--white);margin-bottom:18px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero h1 .vue-c{color:var(--vue)}
+.hero-sub{font-size:clamp(.9rem,1.8vw,1.05rem);color:var(--muted);line-height:1.8;max-width:580px;margin-bottom:clamp(24px,4vw,36px)}
+
+/* Live stats row */
+.hero-stats{display:flex;gap:clamp(20px,4vw,48px);flex-wrap:wrap;margin-bottom:clamp(28px,4vw,40px)}
+.hstat{text-align:left}
+.hstat-val{font-family:var(--font-d);font-size:clamp(1.8rem,4vw,3rem);line-height:1;color:var(--white)}
+.hstat-val.v{color:var(--vue)}.hstat-val.o{color:var(--accent)}.hstat-val.y{color:var(--accent2)}
+.hstat-label{font-family:var(--font-m);font-size:.65rem;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-top:3px}
+
+/* ── SEARCH + FILTERS ── */
+.search-bar{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;display:flex;align-items:center;max-width:680px;transition:border-color .2s}
+.search-bar:focus-within{border-color:var(--accent)}
+.search-icon{padding:0 14px;color:var(--muted);font-size:1rem;flex-shrink:0}
+.search-bar input{flex:1;background:none;border:none;outline:none;color:var(--white);font-family:var(--font-b);font-size:.95rem;padding:clamp(11px,2vw,14px) 0;min-width:0}
+.search-bar input::placeholder{color:var(--muted2)}
+.search-clear{padding:0 14px;color:var(--muted);cursor:pointer;background:none;border:none;font-size:1.1rem;display:none;transition:color .2s;flex-shrink:0}
+.search-clear:hover{color:var(--white)}
+
+/* ── FILTER PILLS ── */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:clamp(14px,2.5vw,20px)}
+.fpill{border:1px solid var(--border2);background:rgba(255,255,255,.03);color:var(--muted);padding:6px 14px;border-radius:100px;font-family:var(--font-m);font-size:.7rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+.fpill:hover{border-color:rgba(255,77,0,.35);color:var(--white)}
+.fpill.on{background:rgba(255,77,0,.1);border-color:rgba(255,77,0,.4);color:var(--accent)}
+.fpill.on.vue-f{background:rgba(66,184,131,.1);border-color:rgba(66,184,131,.35);color:var(--vue)}
+.fpill.on.laravel-f{background:rgba(255,45,32,.1);border-color:rgba(255,45,32,.35);color:var(--laravel)}
+.fpill.on.nuxt-f{background:rgba(0,220,130,.1);border-color:rgba(0,220,130,.35);color:#00dc82}
+.fpill.on.work-f{background:rgba(255,184,0,.1);border-color:rgba(255,184,0,.35);color:var(--accent2)}
+
+/* ══ MAIN LAYOUT ══ */
+.main{max-width:1160px;margin:0 auto;padding:clamp(28px,4vw,52px) clamp(14px,4vw,40px) 80px}
+
+/* Toolbar */
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:clamp(20px,3vw,32px)}
+.result-count{font-family:var(--font-m);font-size:.75rem;color:var(--muted)}
+.result-count span{color:var(--white);font-weight:600}
+.sort-sel{background:var(--card);border:1px solid var(--border2);color:var(--muted);padding:7px 12px;border-radius:6px;font-family:var(--font-m);font-size:.72rem;outline:none;cursor:pointer;transition:border-color .2s}
+.sort-sel:hover{border-color:var(--accent);color:var(--white)}
+
+/* Status */
+.status-msg{font-family:var(--font-m);font-size:.82rem;color:var(--muted);padding:clamp(32px,5vw,52px) 20px;text-align:center}
+.status-msg.err{color:#ff5f57}
+
+/* ── GRID ── */
+.dev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:clamp(12px,2vw,18px)}
+
+/* ── CARD ── */
+.dev-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all .3s;display:flex;flex-direction:column;position:relative;animation:cardIn .4s ease both}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.dev-card:hover{border-color:rgba(255,77,0,.3);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.dev-card:hover .card-bar{transform:scaleX(1)}
+
+/* top accent line */
+.card-bar{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--vue));transform:scaleX(0);transform-origin:left;transition:transform .35s}
+
+.card-head{padding:clamp(16px,2.5vw,22px) clamp(16px,2.5vw,22px) 0;display:flex;align-items:flex-start;gap:14px}
+.card-avatar{width:54px;height:54px;border-radius:50%;border:2px solid var(--border2);object-fit:cover;flex-shrink:0;background:var(--card2)}
+.card-avatar-fallback{width:54px;height:54px;border-radius:50%;border:2px solid var(--border2);background:var(--card2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:1.4rem;color:var(--accent)}
+.card-meta{flex:1;min-width:0}
+.card-name{font-weight:700;font-size:.97rem;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-title{font-family:var(--font-m);font-size:.68rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-loc{font-size:.75rem;color:var(--muted2);margin-top:4px;display:flex;align-items:center;gap:5px}
+
+/* open-to-work badge */
+.otw{display:inline-flex;align-items:center;gap:5px;background:rgba(255,184,0,.1);border:1px solid rgba(255,184,0,.25);color:var(--accent2);padding:2px 9px;border-radius:100px;font-family:var(--font-m);font-size:.61rem;margin-top:6px}
+.otw-dot{width:5px;height:5px;border-radius:50%;background:var(--accent2);animation:blink 1.5s infinite}
+
+.card-skills{padding:clamp(12px,2vw,16px) clamp(16px,2.5vw,22px);display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:clamp(12px,2vw,16px)}
+.skill-tag{background:rgba(255,255,255,.04);border:1px solid var(--border);padding:3px 9px;border-radius:100px;font-family:var(--font-m);font-size:.62rem;color:var(--muted);transition:all .2s}
+.skill-tag.laravel-sk{background:rgba(255,45,32,.07);border-color:rgba(255,45,32,.2);color:#ff7a73}
+.skill-tag.vue-sk{background:rgba(66,184,131,.07);border-color:rgba(66,184,131,.2);color:var(--vue)}
+.skill-tag.nuxt-sk{background:rgba(0,220,130,.07);border-color:rgba(0,220,130,.2);color:#00dc82}
+.skill-tag.more{color:var(--muted2);border-color:transparent;background:none;font-size:.6rem}
+
+.card-foot{padding:clamp(12px,2vw,16px) clamp(16px,2.5vw,22px);display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
+.card-exp{font-family:var(--font-m);font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:6px}
+.card-exp strong{color:var(--white);font-size:.82rem}
+.card-btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:var(--white);padding:8px 16px;border-radius:3px;font-weight:600;font-size:.78rem;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.card-btn:hover{background:#d94000;transform:translateX(2px)}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:clamp(48px,7vw,80px) 20px;color:var(--muted)}
+.empty-icon{font-size:2.5rem;margin-bottom:16px;opacity:.5}
+.empty h3{font-family:var(--font-d);font-size:1.5rem;letter-spacing:1px;color:var(--white);margin-bottom:8px}
+.empty p{font-size:.88rem;line-height:1.7}
+
+/* ── LOAD MORE ── */
+.load-more-wrap{text-align:center;margin-top:clamp(28px,4vw,44px)}
+.btn-load{border:1px solid var(--border2);background:none;color:var(--muted);padding:12px 32px;border-radius:3px;font-family:var(--font-m);font-size:.78rem;cursor:pointer;transition:all .2s;letter-spacing:.5px}
+.btn-load:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── SKELETON ── */
+.skel{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;padding:20px}
+.skel-line{height:12px;background:rgba(255,255,255,.06);border-radius:4px;margin-bottom:10px;animation:shimmer 1.4s infinite}
+.skel-circle{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.06);animation:shimmer 1.4s infinite;flex-shrink:0}
+@keyframes shimmer{0%,100%{opacity:.5}50%{opacity:1}}
+.skel-row{display:flex;gap:14px;margin-bottom:14px}
+
+/* ── CTA BANNER ── */
+.cta-banner{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);padding:clamp(18px,3vw,26px) clamp(16px,3vw,24px);margin-bottom:clamp(20px,3vw,32px);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.cta-banner-text h3{font-family:var(--font-d);font-size:clamp(1.1rem,2.5vw,1.5rem);letter-spacing:.5px;color:var(--white);margin-bottom:4px}
+.cta-banner-text p{font-size:.83rem;color:var(--muted);line-height:1.5}
+.cta-banner-actions{display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0}
+.btn-cta{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:3px;font-weight:600;font-size:.82rem;text-decoration:none;transition:all .2s;white-space:nowrap}
+.btn-cta.primary{background:var(--accent);color:var(--white)}
+.btn-cta.primary:hover{background:#d94000}
+.btn-cta.secondary{border:1px solid var(--border2);color:var(--muted);background:none}
+.btn-cta.secondary:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ══ FOOTER ══ */
+footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(22px,3vw,36px) clamp(14px,4vw,40px)}
+.footer-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.footer-logo{font-family:var(--font-d);font-size:1.3rem;letter-spacing:2px;color:var(--white)}
+.footer-logo em{font-style:normal;color:var(--accent)}
+.footer-copy{color:var(--muted);font-size:.76rem}
+.footer-links{display:flex;gap:clamp(12px,2vw,22px);list-style:none;flex-wrap:wrap}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:.76rem;transition:color .2s}
+.footer-links a:hover{color:var(--white)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .ham{display:flex}
+}
+@media(max-width:700px){
+  :root{--nav-h:56px}
+  .hero-inner{padding-top:clamp(28px,5vw,44px)}
+  .hero h1{font-size:clamp(2.2rem,9vw,3.4rem)}
+  .hero-stats{gap:clamp(14px,4vw,28px)}
+  .hstat-val{font-size:clamp(1.5rem,5.5vw,2.2rem)}
+  .filters{gap:6px}
+  .fpill{font-size:.65rem;padding:5px 11px}
+  .toolbar{flex-direction:column;align-items:flex-start;gap:10px}
+  .dev-grid{grid-template-columns:1fr}
+  .cta-banner{flex-direction:column;align-items:flex-start}
+  .cta-banner-actions{width:100%}
+  .btn-cta{font-size:.78rem;padding:8px 16px}
+  footer{padding:18px 14px}
+  .footer-inner{flex-direction:column;align-items:center;text-align:center;gap:8px}
+  .footer-links{justify-content:center}
+  body{cursor:auto}
+  .cur,.cur-r{display:none}
+}
+@media(max-width:430px){
+  :root{--nav-h:52px}
+  .hero h1{font-size:clamp(2rem,10vw,3rem)}
+  .dev-grid{gap:10px}
+  .card-head{gap:11px}
+  .card-avatar,.card-avatar-fallback{width:46px;height:46px}
+}
+@media(max-width:375px){
+  .hero h1{font-size:clamp(1.9rem,10.5vw,2.6rem)}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="c"></div>
+<div class="cur-r" id="cr"></div>
+
+<!-- Mobile menu -->
+<div class="mob-menu" id="mob">
+  <button class="mob-close" onclick="closeMob()">✕</button>
+  <a href="https://codecraftsystems.github.io/" onclick="closeMob()">Home</a>
+  <a href="https://codecraftsystems.github.io/#services" onclick="closeMob()">Services</a>
+  <a href="/developers/" onclick="closeMob()">Developers</a>
+  <a href="/developers-open-to-work/" onclick="closeMob()">Open to Work</a>
+  <a href="/submit-profile/" onclick="closeMob()">Add Profile</a>
+  <a href="https://codecraftsystems.github.io/#contact" onclick="closeMob()">Contact</a>
+</div>
+
+<!-- Nav -->
+<nav class="nav" id="nav">
+  <a href="https://codecraftsystems.github.io/" class="nav-logo">Code<em>Craft</em></a>
+  <ul class="nav-links">
+    <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+    <li><a href="/developers/">Developers</a></li>
+    <li><a href="/developers-open-to-work/">Open to Work</a></li>
+    <li><a href="/submit-profile/" class="btn-nav">Add Profile</a></li>
+  </ul>
+  <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow-l"></div>
+  <div class="hero-glow-r"></div>
+
+  <div class="hero-inner">
+    <div class="hero-kicker"><span class="kicker-dot"></span> Developer Directory</div>
+    <h1>FIND <em>LARAVEL</em> &<br><span class="vue-c">VUE.JS</span> TALENT</h1>
+    <p class="hero-sub">Skilled developers looking for opportunities. Browse profiles, filter by tech stack, and connect directly. Jobless talent ko visibility dena — our mission.</p>
+
+    <div class="hero-stats">
+      <div class="hstat">
+        <div class="hstat-val o" id="stat-total">—</div>
+        <div class="hstat-label">Developers</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val y" id="stat-otw">—</div>
+        <div class="hstat-label">Open to Work</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val v" id="stat-exp">—</div>
+        <div class="hstat-label">Avg. Experience</div>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar" id="searchBar">
+      <span class="search-icon">🔍</span>
+      <input type="search" id="searchInput" placeholder="Search by name, skill, title…" autocomplete="off" />
+      <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Clear">✕</button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters" role="group" aria-label="Filter by skill">
+      <button class="fpill on" data-filter="all" onclick="setFilter('all', this)">All</button>
+      <button class="fpill laravel-f" data-filter="laravel" onclick="setFilter('laravel', this)">Laravel</button>
+      <button class="fpill vue-f" data-filter="vue" onclick="setFilter('vue', this)">Vue.js</button>
+      <button class="fpill nuxt-f" data-filter="nuxt" onclick="setFilter('nuxt', this)">Nuxt.js</button>
+      <button class="fpill" data-filter="quasar" onclick="setFilter('quasar', this)">Quasar</button>
+      <button class="fpill" data-filter="react" onclick="setFilter('react', this)">React</button>
+      <button class="fpill work-f" data-filter="open" onclick="setFilter('open', this)">🟡 Open to Work</button>
+    </div>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="main">
+
+  <!-- CTA banner -->
+  <div class="cta-banner">
+    <div class="cta-banner-text">
+      <h3>ARE YOU A DEVELOPER?</h3>
+      <p>Add your profile for free — get discovered by employers in UK, USA & globally.</p>
+    </div>
+    <div class="cta-banner-actions">
+      <a href="/submit-profile/" class="btn-cta primary">Add Your Profile →</a>
+      <a href="/developers-open-to-work/" class="btn-cta secondary">Hiring? See Available Devs</a>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="result-count" id="resultCount">Loading…</div>
+    <select class="sort-sel" id="sortSel" onchange="applySort()">
+      <option value="otw">Open to Work First</option>
+      <option value="exp">Most Experienced</option>
+      <option value="new">Newest First</option>
+      <option value="name">Name A→Z</option>
+    </select>
+  </div>
+
+  <!-- Grid -->
+  <div id="devGrid" class="dev-grid"></div>
+
+  <!-- Load more -->
+  <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+    <button class="btn-load" id="loadMoreBtn" onclick="loadMore()">Load More Developers</button>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Code<em>Craft</em></div>
+    <p class="footer-copy">© <span id="yr"></span> CodeCraft Studio · Sonu Sahani</p>
+    <ul class="footer-links">
+      <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+      <li><a href="/developers/">Developers</a></li>
+      <li><a href="/submit-profile/">Add Profile</a></li>
+      <li><a href="https://codecraftsystems.github.io/#contact">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/supabase-config.js"></script>
+<script src="../assets/developers.js"></script>
+<script>
+/* ══ CURSOR ══ */
+const c=document.getElementById('c'),cr=document.getElementById('cr');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function t(){c.style.transform=`translate(${mx-5}px,${my-5}px)`;rx+=(mx-rx-18)*.12;ry+=(my-ry-18)*.12;cr.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(t)})();
+
+/* ══ NAV ══ */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('up',scrollY>40));
+function toggleMob(){const m=document.getElementById('mob'),h=document.getElementById('ham');const o=m.classList.toggle('on');h.classList.toggle('on',o)}
+function closeMob(){document.getElementById('mob').classList.remove('on');document.getElementById('ham').classList.remove('on')}
+document.getElementById('yr').textContent=new Date().getFullYear();
+
+/* ══ STATE ══ */
+let allDevs=[],filteredDevs=[],currentFilter='all',currentSort='otw',searchTerm='',pageSize=12,pageShown=12;
+
+/* ══ SKILL TAG COLOR ══ */
+function skillClass(s){
+  const l=s.toLowerCase();
+  if(l.includes('laravel')||l.includes('php'))return 'laravel-sk';
+  if(l.includes('nuxt'))return 'nuxt-sk';
+  if(l.includes('vue'))return 'vue-sk';
+  return '';
+}
+
+/* ══ AVATAR INITIALS ══ */
+function initials(name){return(name||'?').split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase()}
+
+/* ══ ESCAPE HTML ══ */
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+/* ══ IMAGE URL ══ */
+const DEFAULT_IMG='https://avatars.githubusercontent.com/u/49108546?v=4';
+function imgUrl(u){
+  if(!u||u==='null'||u==='undefined')return DEFAULT_IMG;
+  if(u.startsWith('http'))return u;
+  return`https://codecraftsystems.github.io${u.startsWith('/')?u:'/'+u}`;
+}
+
+/* ══ RENDER CARD ══ */
+function renderCard(dev,i){
+  const skills=(dev.skills||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const show=skills.slice(0,4);
+  const more=skills.length>4?`<span class="skill-tag more">+${skills.length-4}</span>`:'';
+  const img=imgUrl(dev.profile_image);
+  const delay=Math.min(i*.06,.4);
+
+  return`<article class="dev-card" style="animation-delay:${delay}s" role="article" itemscope itemtype="https://schema.org/Person">
+    <div class="card-bar"></div>
+    <div class="card-head">
+      <img class="card-avatar" src="${esc(img)}" alt="${esc(dev.name)}" loading="lazy"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+        itemprop="image">
+      <div class="card-avatar-fallback" style="display:none">${initials(dev.name)}</div>
+      <div class="card-meta">
+        <div class="card-name" itemprop="name">${esc(dev.name)}</div>
+        <div class="card-title" itemprop="jobTitle">${esc(dev.title||'Laravel / Vue.js Developer')}</div>
+        ${dev.location?`<div class="card-loc">📍 ${esc(dev.location)}</div>`:''}
+        ${dev.open_to_work?'<div class="otw"><span class="otw-dot"></span>Open to Work</div>':''}
+      </div>
+    </div>
+    <div class="card-skills">
+      ${show.map(s=>`<span class="skill-tag ${skillClass(s)}">${esc(s)}</span>`).join('')}
+      ${more}
+    </div>
+    <div class="card-foot">
+      <div class="card-exp"><strong>${Number(dev.experience_years||0)}</strong> yrs exp</div>
+      <a class="card-btn" href="/developer/${encodeURIComponent(dev.slug||dev.id||'')}" itemprop="url">View Profile →</a>
+    </div>
+  </article>`;
+}
+
+/* ══ SKELETON LOADERS ══ */
+function renderSkeletons(n=6){
+  return Array(n).fill(0).map(()=>`
+    <div class="skel">
+      <div class="skel-row"><div class="skel-circle"></div><div style="flex:1"><div class="skel-line" style="width:60%"></div><div class="skel-line" style="width:40%"></div></div></div>
+      <div class="skel-line" style="width:80%"></div>
+      <div class="skel-line" style="width:90%"></div>
+      <div class="skel-line" style="width:50%;margin-top:8px"></div>
+    </div>`).join('');
+}
+
+/* ══ FILTER & SORT ══ */
+function applyFilters(){
+  let d=[...allDevs];
+  // filter
+  if(currentFilter==='open') d=d.filter(x=>x.open_to_work);
+  else if(currentFilter!=='all') d=d.filter(x=>(x.skills||'').toLowerCase().includes(currentFilter));
+  // search
+  if(searchTerm){
+    const t=searchTerm.toLowerCase();
+    d=d.filter(x=>`${x.name} ${x.title} ${x.skills} ${x.location||''}`.toLowerCase().includes(t));
+  }
+  // sort
+  if(currentSort==='otw') d.sort((a,b)=>(b.open_to_work?1:0)-(a.open_to_work?1:0)||new Date(b.created_at||0)-new Date(a.created_at||0));
+  else if(currentSort==='exp') d.sort((a,b)=>Number(b.experience_years||0)-Number(a.experience_years||0));
+  else if(currentSort==='new') d.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+  else if(currentSort==='name') d.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  filteredDevs=d;
+  pageShown=pageSize;
+  renderGrid();
+}
+
+function renderGrid(){
+  const grid=document.getElementById('devGrid');
+  const count=document.getElementById('resultCount');
+  const lmw=document.getElementById('loadMoreWrap');
+  const shown=filteredDevs.slice(0,pageShown);
+
+  if(!filteredDevs.length){
+    grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div><h3>NO RESULTS</h3><p>Try different keywords or clear filters.</p></div>`;
+    count.innerHTML='<span>0</span> developers';
+    lmw.style.display='none';
+    return;
+  }
+  count.innerHTML=`<span>${filteredDevs.length}</span> developer${filteredDevs.length!==1?'s':''} found`;
+  grid.innerHTML=shown.map((d,i)=>renderCard(d,i)).join('');
+  lmw.style.display=filteredDevs.length>pageShown?'block':'none';
+}
+
+function loadMore(){pageShown+=pageSize;renderGrid()}
+
+/* ══ FILTER CLICK ══ */
+function setFilter(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.fpill').forEach(p=>{
+    p.classList.remove('on');
+    if(p.dataset.filter===f) p.classList.add('on');
+  });
+  applyFilters();
+}
+
+/* ══ SORT ══ */
+function applySort(){currentSort=document.getElementById('sortSel').value;applyFilters()}
+
+/* ══ SEARCH ══ */
+document.getElementById('searchInput').addEventListener('input',function(){
+  searchTerm=this.value.trim();
+  document.getElementById('searchClear').style.display=searchTerm?'block':'none';
+  applyFilters();
+});
+function clearSearch(){searchTerm='';document.getElementById('searchInput').value='';document.getElementById('searchClear').style.display='none';applyFilters()}
+
+/* ══ LOAD DATA - USING DEV DIRECTORY HELPERS ══ */
+async function loadDevs(){
+  const grid=document.getElementById('devGrid');
+  const count=document.getElementById('resultCount');
+  grid.innerHTML=renderSkeletons(6);
+  count.textContent='Loading…';
+  
+  try{
+    // Check if devDirectory is available (from developers.js)
+    if(typeof devDirectory === 'undefined'){
+      throw new Error('Developer helpers not loaded. Please check developers.js');
+    }
+
+    const sb = devDirectory.createClient();
+    if(!sb){
+      throw new Error('Could not create Supabase client');
+    }
+
+    const { data, error } = await sb
+      .from('developers')
+      .select('id,name,slug,title,skills,experience_years,profile_image,open_to_work,location,created_at')
+      .order('open_to_work', { ascending: false })
+      .order('created_at', { ascending: false });
+    
+    if(error) throw error;
+    
+    if(!data || data.length===0){
+      grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📂</div><h3>NO DEVELOPERS FOUND</h3><p>Be the first to add your profile!</p></div>`;
+      count.textContent='0 developers';
+      document.getElementById('stat-total').textContent='0';
+      document.getElementById('stat-otw').textContent='0';
+      document.getElementById('stat-exp').textContent='0yr';
+      return;
+    }
+    
+    allDevs=data;
+    updateStats(data);
+    applyFilters();
+    
+  }catch(e){
+    console.error('Failed to load developers:', e);
+    grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">⚠️</div><h3>CONNECTION ERROR</h3><p>${esc(e.message)}</p><p style="margin-top:12px"><button class="btn-load" onclick="location.reload()">Try Again</button></p></div>`;
+    count.textContent='Error loading';
+    document.getElementById('stat-total').textContent='—';
+    document.getElementById('stat-otw').textContent='—';
+    document.getElementById('stat-exp').textContent='—';
+  }
+}
+
+function updateStats(data){
+  document.getElementById('stat-total').textContent=data.length;
+  document.getElementById('stat-otw').textContent=data.filter(d=>d.open_to_work).length;
+  const avgExp=data.length?Math.round(data.reduce((s,d)=>s+Number(d.experience_years||0),0)/data.length):0;
+  document.getElementById('stat-exp').textContent=avgExp+'yr';
+}
+
+// Initialize
+loadDevs();
+</script>
+</body>
+</html>
