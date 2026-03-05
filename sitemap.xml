@@ -64,6 +64,12 @@
     <priority>0.7</priority>
   </url>
 
+  <url>
+    <loc>https://codecraftsystems.github.io/services/laravel-api-development.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
   <url>
     <loc>https://codecraftsystems.github.io/services/vuejs-quasar-frontend-development.html</loc>
@@ -71,5 +77,34 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <url>
+    <loc>https://codecraftsystems.github.io/services/real-time-applications.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codecraftsystems.github.io/services/payment-gateway-integration.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codecraftsystems.github.io/services/cloud-deployment-devops.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codecraftsystems.github.io/services/ai-iot-integration.html</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 
 </urlset>
