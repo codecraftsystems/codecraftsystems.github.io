@@ -53,7 +53,7 @@
           </div>
           <div class="skills">${devDirectory.escapeHtml(dev.skills || '')}</div>
           <div class="exp">Experience: ${Number(dev.experience_years || 0)} years <span class="pill">Open to work</span></div>
-          <a class="button" href="../developer/?slug=${encodeURIComponent(dev.slug || '')}">View Profile</a>
+          <a class="button" href="/developer/${encodeURIComponent(dev.slug || '')}">View Profile</a>
         </article>
       `).join('');
     } catch (e) {

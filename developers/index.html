@@ -58,7 +58,7 @@
           </div>
           <div class="skills">${devDirectory.escapeHtml(skills || 'Laravel • Vue.js')}</div>
           <div class="exp">Experience: ${Number(dev.experience_years || 0)} years ${dev.open_to_work ? '<span class="pill">Open to work</span>' : ''}</div>
-          <a class="button" href="../developer/?slug=${encodeURIComponent(dev.slug || '')}">View Profile</a>
+          <a class="button" href="/developer/${encodeURIComponent(dev.slug || '')}">View Profile</a>
         </article>
       `;
     }

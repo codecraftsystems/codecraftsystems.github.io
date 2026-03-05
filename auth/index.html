@@ -19,7 +19,7 @@
 <main class="container">
   <section class="hero">
     <h1>Email OTP Login / Register</h1>
-    <p>One page login + register. OTP verification with strict validation. Configure Brevo SMTP in Supabase Auth so verification emails are delivered using Brevo (not default Supabase mailer).</p>
+    <p>Sign in with email OTP. After verification, users can create or update their developer profile. Configure Brevo SMTP in Supabase Auth to send OTP emails through your SMTP provider.</p>
   </section>
 
   <div class="form-grid">
@@ -89,8 +89,8 @@
       if (error) throw error;
       const { data: { session } } = await sb.auth.getSession();
       if (session) statusEl.textContent = `Logged in as ${session.user.email}`;
-      const next = new URLSearchParams(window.location.search).get('next');
-      if (next) setTimeout(() => window.location.href = next, 800);
+      const next = new URLSearchParams(window.location.search).get('next') || '../submit-profile/';
+      setTimeout(() => window.location.href = next, 800);
     } catch (e) {
       statusEl.textContent = e.message;
     }
@@ -100,6 +100,13 @@
     await sb.auth.signOut();
     statusEl.textContent = 'Logged out.';
   };
+
+  (async function () {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.user?.email) {
+      statusEl.textContent = `Already logged in as ${session.user.email}`;
+    }
+  })();
 </script>
 </body>
 </html>
