@@ -234,6 +234,32 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
   .flinks{justify-content:center}
 }
 @media(max-width:375px){.pg-title{font-size:1.7rem}}
+/* Add to your existing CSS */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+ /* Add to your CSS */
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 77, 0, 0.2);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 0.8s linear infinite;
+}
+
+.btn-g .spinner {
+  border-color: rgba(255, 255, 255, 0.2);
+  border-top-color: var(--accent);
+}
+
+@keyframes spin {
+  0% { transform: translateX(-50%) rotate(0deg); }
+  100% { transform: translateX(-50%) rotate(360deg); }
+}
 </style>
 </head>
 <body>
@@ -299,6 +325,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/supabase-config.js"></script>
 <script src="../assets/developers.js"></script>
+<script src="ai-profile-generator.js"></script>
 <script>
 'use strict';
 document.getElementById('yr').textContent = new Date().getFullYear();
@@ -653,7 +680,13 @@ function renderForm(profile){
         <div class="fsec-head"><div class="fstrip so"></div><span class="fsec-title">Basic Information</span><span class="fsec-badge">Required</span></div>
 
 
-        <!-- AI Profile Generator -->
+       
+
+
+        <div class="fsec-body">
+
+
+          <!-- AI Profile Generator - Fixed Button Size -->
 <div style="margin-bottom:15px">
   <label class="flabel">AI Profile Generator</label>
 
@@ -666,13 +699,15 @@ function renderForm(profile){
   <button
     type="button"
     class="btn btn-g"
-    onclick="generateProfileAI()">
-    🤖 Generate Profile with AI
+    id="aiGenerateBtn"
+    onclick="generateProfileAIWithSpinner(this)"
+    style="min-width: 220px; justify-content: center; position: relative;">
+    <span class="btn-text" style="display: inline-flex; align-items: center; gap: 8px;">🤖 Generate Profile with AI</span>
+    <span class="spinner" style="display: none; position: absolute; left: 50%; transform: translateX(-50%);"></span>
   </button>
 </div>
 
 
-        <div class="fsec-body">
           <div class="fg">
             <div class="field">
               <label class="flabel" for="f_name">Full Name <span class="req">*</span></label>
@@ -815,88 +850,7 @@ function renderForm(profile){
 
 
 
-
-/* AI PROFILE GENERATOR */
-
-async function generateProfileAI(){
-
-  const prompt = document.getElementById("ai_prompt").value.trim();
-
-  if(!prompt){
-    toast('te','Prompt Required','Describe your developer profile first.');
-    return;
-  }
-
-  toast('ti','AI Generating','Creating developer profile...');
-
-  const API_KEY = "AIzaSyBmbB132wxf8ZLZffGCrblRi7pVud3lTC0";
-
-  const req = {
-    contents:[{
-      parts:[{
-        text:`Generate developer profile JSON:
-
-{
-"name":"",
-"title":"",
-"location":"",
-"bio":"",
-"skills":[""],
-"experience_years":0
-}
-
-Description:
-${prompt}`
-      }]
-    }]
-  };
-
-  try{
-
-    const res = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key="+API_KEY,
-      {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify(req)
-      }
-    );
-
-    const data = await res.json();
-
-    const txt = data.candidates[0].content.parts[0].text
-      .replace(/```json|```/g,'')
-      .trim();
-
-    const profile = JSON.parse(txt);
-
-    fillAIFields(profile);
-
-    toast('ts','AI Generated','Fields filled automatically');
-
-  }catch(e){
-    console.error(e);
-    toast('te','AI Error','Failed to generate profile');
-  }
-}
-
-
-function fillAIFields(p){
-
-  if(p.name) document.getElementById("f_name").value = p.name;
-  if(p.title) document.getElementById("f_title").value = p.title;
-  if(p.location) document.getElementById("f_loc").value = p.location;
-  if(p.bio) document.getElementById("f_bio").value = p.bio;
-  if(p.experience_years) document.getElementById("f_exp").value = p.experience_years;
-
-  if(p.skills){
-    tags = p.skills;
-    renderTags();
-  }
-
-  preview();
-}
-
+ 
  
 /* boot */
 (async function boot(){
