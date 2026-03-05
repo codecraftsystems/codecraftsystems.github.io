@@ -3,102 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Developers Directory | Laravel & Vue.js Developers</title>
-  <meta name="description" content="Browse Laravel and Vue.js developer profiles with skills, years of experience, and portfolio links." />
-  <link rel="canonical" href="https://codecraftsystems.github.io/developers" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/developers.css" />
+  <title>Developers Directory | Laravel + Vue.js Talent</title>
+  <meta name="description" content="Hire or discover Laravel and Vue.js developers. Skills, profile links, experience, and open-to-work availability." />
+  <link rel="canonical" href="https://codecraftsystems.github.io/developers/" />
+  <link rel="stylesheet" href="../assets/developers.css" />
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a class="logo" href="/"><span>CodeCraft</span> Systems</a>
+      <a class="logo" href="../"><span>CodeCraft</span> Systems</a>
       <nav class="top-links">
-        <a href="/">Home</a>
-        <a href="/submit-profile">Submit Profile</a>
+        <a href="../developers-open-to-work/">Open to Work</a>
+        <a href="../submit-profile/">Create / Update Profile</a>
+        <a href="../auth/">Login</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-      <h1>Developers Directory</h1>
-      <p>Find Laravel and Vue.js professionals ready for freelance, full-time, or contract opportunities.</p>
+      <h1>Laravel + Vue.js Developers Directory</h1>
+      <p>Mission: jobless talent ko visibility dena. Search developers, check availability, and directly connect via links.</p>
       <div class="toolbar">
-        <input id="search" class="input" type="search" placeholder="Search by name, skills, or title" />
+        <input id="search" class="input" type="search" placeholder="Search by name, title, skills" />
         <button id="refresh" class="button secondary" type="button">Refresh</button>
       </div>
     </section>
 
     <div id="status" class="alert">Loading developers...</div>
-    <section id="grid" class="grid" aria-live="polite"></section>
+    <section id="grid" class="grid"></section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/supabase-config.js"></script>
-  <script src="/assets/developers.js"></script>
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/developers.js"></script>
   <script>
     const grid = document.getElementById('grid');
     const statusEl = document.getElementById('status');
     const searchInput = document.getElementById('search');
     const refreshBtn = document.getElementById('refresh');
-    let allDevelopers = [];
+    let all = [];
 
-    function renderCards(list) {
-      if (!list.length) {
-        grid.innerHTML = '';
-        statusEl.textContent = 'No developers found.';
-        return;
-      }
-      statusEl.textContent = `${list.length} developer${list.length > 1 ? 's' : ''} found.`;
-      grid.innerHTML = list.map((dev) => {
-        const image = dev.profile_image || 'https://placehold.co/160x160/1e1e25/ffffff?text=DEV';
-        const skills = (dev.skills || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 4).join(' • ');
-        return `
-          <article class="card">
-            <img src="${devDirectory.escapeHtml(image)}" alt="${devDirectory.escapeHtml(dev.name)} profile" loading="lazy" />
+    function card(dev) {
+      const image = dev.profile_image || 'https://placehold.co/300x300/1b2437/ffffff?text=DEV';
+      const skills = (dev.skills || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 4).join(' • ');
+      return `
+        <article class="card">
+          <div class="card-top">
+            <img loading="lazy" src="${devDirectory.escapeHtml(image)}" alt="${devDirectory.escapeHtml(dev.name)}" />
             <div>
               <h3>${devDirectory.escapeHtml(dev.name)}</h3>
-              <p class="title">${devDirectory.escapeHtml(dev.title || 'Laravel & Vue.js Developer')}</p>
+              <p class="title">${devDirectory.escapeHtml(dev.title || 'Laravel / Vue.js Developer')}</p>
             </div>
-            <div class="skills">${devDirectory.escapeHtml(skills || 'Laravel • Vue.js')}</div>
-            <div class="exp">Experience: ${Number(dev.experience_years || 0)} years</div>
-            <a class="button" href="/developer/${devDirectory.escapeHtml(dev.slug)}">View Profile</a>
-          </article>
-        `;
-      }).join('');
+          </div>
+          <div class="skills">${devDirectory.escapeHtml(skills || 'Laravel • Vue.js')}</div>
+          <div class="exp">Experience: ${Number(dev.experience_years || 0)} years ${dev.open_to_work ? '<span class="pill">Open to work</span>' : ''}</div>
+          <a class="button" href="../developer/${devDirectory.escapeHtml(dev.slug)}">View Profile</a>
+        </article>
+      `;
     }
 
-    function applySearch() {
-      const term = searchInput.value.toLowerCase().trim();
-      if (!term) return renderCards(allDevelopers);
-      const filtered = allDevelopers.filter((dev) => {
-        return [dev.name, dev.title, dev.skills].join(' ').toLowerCase().includes(term);
-      });
-      renderCards(filtered);
+    function render(data) {
+      if (!data.length) {
+        statusEl.textContent = 'No developer profiles found.';
+        grid.innerHTML = '';
+        return;
+      }
+      statusEl.textContent = `${data.length} profiles found`;
+      grid.innerHTML = data.map(card).join('');
     }
 
-    async function loadDevelopers() {
+    function filter() {
+      const term = searchInput.value.trim().toLowerCase();
+      if (!term) return render(all);
+      const filtered = all.filter(d => `${d.name} ${d.title} ${d.skills}`.toLowerCase().includes(term));
+      render(filtered);
+    }
+
+    async function loadData() {
       try {
-        const supabase = devDirectory.createClient();
         statusEl.textContent = 'Loading developers...';
-        const { data, error } = await supabase
+        const sb = devDirectory.createClient();
+        const { data, error } = await sb
           .from('developers')
-          .select('name, slug, title, skills, experience_years, profile_image')
+          .select('name,slug,title,skills,experience_years,profile_image,open_to_work')
+          .order('open_to_work', { ascending: false })
           .order('created_at', { ascending: false });
         if (error) throw error;
-        allDevelopers = data || [];
-        renderCards(allDevelopers);
-      } catch (error) {
-        statusEl.textContent = error.message;
+        all = data || [];
+        render(all);
+      } catch (e) {
+        statusEl.textContent = e.message;
         grid.innerHTML = '';
       }
     }
 
-    searchInput.addEventListener('input', applySearch);
-    refreshBtn.addEventListener('click', loadDevelopers);
-    loadDevelopers();
+    searchInput.addEventListener('input', filter);
+    refreshBtn.addEventListener('click', loadData);
+    loadData();
   </script>
 </body>
 </html>

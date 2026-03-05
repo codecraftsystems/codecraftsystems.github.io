@@ -4,19 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developer Profile | CodeCraft Systems</title>
-  <meta name="description" content="Laravel and Vue.js developer profile." />
-  <link rel="canonical" id="canonical" href="https://codecraftsystems.github.io/developer" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/developers.css" />
+  <meta name="description" content="Developer profile in Laravel + Vue.js network." />
+  <link rel="canonical" id="canonical" href="https://codecraftsystems.github.io/developer/" />
+  <link rel="stylesheet" href="../assets/developers.css" />
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a class="logo" href="/"><span>CodeCraft</span> Systems</a>
+      <a class="logo" href="../"><span>CodeCraft</span> Systems</a>
       <nav class="top-links">
-        <a href="/developers">Developers</a>
-        <a href="/submit-profile">Submit Profile</a>
+        <a href="../developers/">All Developers</a>
+        <a href="../developers-open-to-work/">Open to Work</a>
       </nav>
     </div>
   </header>
@@ -25,94 +23,71 @@
     <h1 id="name">Developer Profile</h1>
     <div id="status" class="alert">Loading profile...</div>
     <article id="profile" class="profile" hidden>
-      <img id="profileImage" class="profile-image" src="" alt="Developer profile image" />
+      <img id="profileImage" class="profile-image" src="" alt="profile image" />
       <div>
         <h2 id="title"></h2>
-        <div class="meta" id="experience"></div>
-        <div id="openToWorkWrap" style="margin-top:8px;"></div>
-        <p id="bio" style="margin-top:12px;"></p>
-        <div class="stack" id="skills"></div>
-        <div class="links" id="links"></div>
+        <p id="meta" class="meta"></p>
+        <div id="badges"></div>
+        <p id="bio"></p>
+        <div id="skills" class="stack"></div>
+        <div id="links" class="links"></div>
       </div>
     </article>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/supabase-config.js"></script>
-  <script src="/assets/developers.js"></script>
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/developers.js"></script>
   <script>
-    function getSlug() {
-      const url = new URL(window.location.href);
-      if (url.searchParams.get('slug')) return devDirectory.slugify(url.searchParams.get('slug'));
-      const parts = window.location.pathname.split('/').filter(Boolean);
-      if (parts[0] === 'developer' && parts[1]) return devDirectory.slugify(parts[1]);
+    function findSlug() {
+      const qp = new URLSearchParams(location.search).get('slug');
+      if (qp) return devDirectory.slugify(qp);
+      const p = location.pathname.split('/').filter(Boolean);
+      if (p[0] === 'developer' && p[1]) return devDirectory.slugify(p[1]);
       return '';
     }
 
-    async function loadProfile() {
+    (async function () {
+      const slug = findSlug();
       const statusEl = document.getElementById('status');
-      const profileEl = document.getElementById('profile');
-      const slug = getSlug();
-      if (!slug) {
-        statusEl.textContent = 'Missing developer slug in URL.';
-        return;
-      }
-
+      if (!slug) return statusEl.textContent = 'Missing slug.';
       try {
-        const supabase = devDirectory.createClient();
-        const { data, error } = await supabase
-          .from('developers')
-          .select('*')
-          .eq('slug', slug)
-          .single();
-
+        const sb = devDirectory.createClient();
+        const { data, error } = await sb.from('developers').select('*').eq('slug', slug).single();
         if (error) throw error;
-        if (!data) {
-          statusEl.textContent = 'Developer not found.';
-          return;
-        }
+        if (!data) return statusEl.textContent = 'Profile not found.';
 
-        document.title = `${data.name} | ${data.title || 'Laravel & Vue.js Developer'}`;
-        const description = `${data.name} - ${data.title || 'Laravel & Vue.js Developer'}. ${data.experience_years || 0}+ years experience. ${data.skills || ''}`;
-        let metaDescription = document.querySelector('meta[name="description"]');
-        if (!metaDescription) {
-          metaDescription = document.createElement('meta');
-          metaDescription.setAttribute('name', 'description');
-          document.head.appendChild(metaDescription);
-        }
-        metaDescription.setAttribute('content', description.substring(0, 155));
-
+        document.title = `${data.name} | ${data.title || 'Laravel + Vue.js Developer'}`;
+        const desc = `${data.name}, ${data.title || 'Developer'} with ${data.experience_years || 0} years. Skills: ${data.skills || ''}`.slice(0, 155);
+        document.querySelector('meta[name="description"]').setAttribute('content', desc);
         document.getElementById('canonical').setAttribute('href', `https://codecraftsystems.github.io/developer/${data.slug}`);
-        document.getElementById('name').textContent = data.name;
-        document.getElementById('title').textContent = data.title || 'Laravel & Vue.js Developer';
-        document.getElementById('experience').textContent = `Experience: ${data.experience_years || 0} years`;
-        document.getElementById('bio').textContent = data.bio || 'No bio added yet.';
-        document.getElementById('profileImage').src = data.profile_image || 'https://placehold.co/360x360/1e1e25/ffffff?text=DEV';
-        document.getElementById('profileImage').alt = `${data.name} profile image`;
 
-        const openToWorkWrap = document.getElementById('openToWorkWrap');
-        openToWorkWrap.innerHTML = data.open_to_work ? '<span class="pill">Open to work</span>' : '';
+        document.getElementById('name').textContent = data.name;
+        document.getElementById('title').textContent = data.title || 'Laravel + Vue.js Developer';
+        document.getElementById('meta').textContent = `Experience: ${Number(data.experience_years || 0)} years`;
+        document.getElementById('bio').textContent = data.bio || '';
+        document.getElementById('profileImage').src = data.profile_image || 'https://placehold.co/300x300/1b2437/ffffff?text=DEV';
+        document.getElementById('profileImage').alt = `${data.name} image`;
+
+        let badges = '';
+        if (data.open_to_work) badges += '<span class="pill">Open to work</span>';
+        if (data.verified) badges += '<span class="badge-danger">Verified</span>';
+        document.getElementById('badges').innerHTML = badges;
 
         const skills = (data.skills || '').split(',').map(s => s.trim()).filter(Boolean);
-        document.getElementById('skills').innerHTML = skills.map(skill => `<span class="chip">${devDirectory.escapeHtml(skill)}</span>`).join('');
+        document.getElementById('skills').innerHTML = skills.map(s => `<span class="chip">${devDirectory.escapeHtml(s)}</span>`).join('');
 
         const links = [
-          { label: 'GitHub', url: data.github_url },
-          { label: 'LinkedIn', url: data.linkedin_url },
-          { label: 'Portfolio', url: data.portfolio_url }
-        ].filter(link => link.url);
-        document.getElementById('links').innerHTML = links
-          .map(link => `<a class="button secondary" target="_blank" rel="noopener" href="${devDirectory.escapeHtml(link.url)}">${link.label}</a>`)
-          .join('');
+          ['GitHub', data.github_url], ['LinkedIn', data.linkedin_url], ['Portfolio', data.portfolio_url]
+        ].filter(i => i[1]);
+        document.getElementById('links').innerHTML = links.map(i => `<a class="button secondary" target="_blank" rel="noopener" href="${devDirectory.escapeHtml(i[1])}">${i[0]}</a>`).join('');
 
         statusEl.hidden = true;
-        profileEl.hidden = false;
-      } catch (error) {
-        statusEl.textContent = error.message;
+        document.getElementById('profile').hidden = false;
+      } catch (e) {
+        statusEl.textContent = e.message;
       }
-    }
-
-    loadProfile();
+    })();
   </script>
 </body>
 </html>

@@ -3,101 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Submit Developer Profile | CodeCraft Systems</title>
-  <meta name="description" content="Submit your Laravel and Vue.js developer profile to the CodeCraft Systems Developers Directory." />
-  <link rel="canonical" href="https://codecraftsystems.github.io/submit-profile" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/developers.css" />
+  <title>Create / Update Profile | Developers Directory</title>
+  <meta name="description" content="Logged-in developers can create or update their Laravel / Vue.js profile." />
+  <link rel="stylesheet" href="../assets/developers.css" />
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-      <a class="logo" href="/"><span>CodeCraft</span> Systems</a>
+      <a class="logo" href="../"><span>CodeCraft</span> Systems</a>
       <nav class="top-links">
-        <a href="/developers">Developers</a>
+        <a href="../developers/">Developers</a>
+        <a href="../auth/?next=/submit-profile/">Login</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
-    <h1>Submit your profile</h1>
-    <p class="meta">Add your Laravel/Vue.js profile to the directory. Skills can be comma-separated.</p>
+    <section class="hero">
+      <h1>Create / Update Developer Profile</h1>
+      <p>Login required via OTP email. A logged-in user can keep one profile and update it anytime.</p>
+    </section>
 
     <form id="profileForm" class="form-grid">
-      <div>
-        <label for="name">Name</label>
-        <input class="input" id="name" required />
-      </div>
-      <div>
-        <label for="title">Title</label>
-        <input class="input" id="title" required />
-      </div>
-      <div>
-        <label for="skills">Skills</label>
-        <input class="input" id="skills" placeholder="Laravel, Vue.js, REST APIs" required />
-      </div>
-      <div>
-        <label for="experience">Experience (years)</label>
-        <input class="input" id="experience" type="number" min="0" step="1" required />
-      </div>
-      <div>
-        <label for="github">GitHub URL</label>
-        <input class="input" id="github" type="url" />
-      </div>
-      <div>
-        <label for="linkedin">LinkedIn URL</label>
-        <input class="input" id="linkedin" type="url" />
-      </div>
-      <div class="full">
-        <label for="portfolio">Portfolio URL</label>
-        <input class="input" id="portfolio" type="url" />
-      </div>
-      <div class="full">
-        <label for="profile_image">Profile image URL</label>
-        <input class="input" id="profile_image" type="url" />
-      </div>
-      <div class="full">
-        <label for="bio">Bio</label>
-        <textarea id="bio" rows="5" required></textarea>
-      </div>
+      <div><label for="name">Name</label><input class="input" id="name" required /></div>
+      <div><label for="title">Title</label><input class="input" id="title" required /></div>
+      <div><label for="skills">Skills</label><input class="input" id="skills" placeholder="Laravel, Vue.js, Nuxt" required /></div>
+      <div><label for="experience">Experience</label><input class="input" id="experience" type="number" min="0" step="1" required /></div>
+      <div><label for="github">GitHub</label><input class="input" id="github" type="url" /></div>
+      <div><label for="linkedin">LinkedIn</label><input class="input" id="linkedin" type="url" /></div>
+      <div class="full"><label for="portfolio">Portfolio</label><input class="input" id="portfolio" type="url" /></div>
+      <div class="full"><label for="profile_image">Profile image URL</label><input class="input" id="profile_image" type="url" /></div>
+      <div class="full"><label for="bio">Bio</label><textarea id="bio" rows="4" required></textarea></div>
       <div class="full" style="display:flex;align-items:center;gap:8px;">
         <input id="open_to_work" type="checkbox" />
         <label for="open_to_work" style="margin:0;">Open to work</label>
       </div>
-      <div class="full">
-        <button class="button" type="submit">Submit Profile</button>
-      </div>
+      <div class="full"><button class="button" type="submit">Save Profile</button></div>
     </form>
 
-    <div id="status" class="alert">Ready.</div>
-    <p class="footer-note">Your table should allow INSERT for anon users (or via RLS policy) in Supabase.</p>
+    <div id="status" class="alert">Checking login...</div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/assets/supabase-config.js"></script>
-  <script src="/assets/developers.js"></script>
+  <script src="../assets/supabase-config.js"></script>
+  <script src="../assets/developers.js"></script>
   <script>
+    const sb = devDirectory.createClient();
     const form = document.getElementById('profileForm');
     const statusEl = document.getElementById('status');
+    let currentUser = null;
+
+    async function ensureAuth() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = '../auth/?next=/submit-profile/';
+        return false;
+      }
+      currentUser = session.user;
+      statusEl.textContent = `Logged in as ${currentUser.email}`;
+      return true;
+    }
+
+    async function loadExisting() {
+      if (!currentUser) return;
+      const { data } = await sb
+        .from('developers')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
+      if (!data) return;
+      ['name','title','skills','github','linkedin','portfolio','bio','profile_image'].forEach((id) => {
+        const map = {
+          github: 'github_url', linkedin: 'linkedin_url', portfolio: 'portfolio_url', profile_image: 'profile_image'
+        };
+        document.getElementById(id).value = data[map[id] || id] || '';
+      });
+      document.getElementById('experience').value = data.experience_years || 0;
+      document.getElementById('open_to_work').checked = !!data.open_to_work;
+      statusEl.textContent = 'Existing profile loaded. You can update it.';
+    }
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      statusEl.textContent = 'Submitting profile...';
+      if (!currentUser) return;
       try {
-        const supabase = devDirectory.createClient();
-
+        statusEl.textContent = 'Saving profile...';
         const name = document.getElementById('name').value.trim();
         const title = document.getElementById('title').value.trim();
-        const skills = document.getElementById('skills').value.trim();
-        const experience = Number(document.getElementById('experience').value);
-
         const payload = {
+          user_id: currentUser.id,
+          email: currentUser.email,
           name,
-          slug: `${devDirectory.slugify(name)}-${devDirectory.slugify(title)}`.slice(0, 120),
+          slug: `${devDirectory.slugify(name)}-${devDirectory.slugify(title)}`,
           title,
-          skills,
-          experience_years: experience,
+          skills: document.getElementById('skills').value.trim(),
+          experience_years: Number(document.getElementById('experience').value),
           github_url: document.getElementById('github').value.trim() || null,
           linkedin_url: document.getElementById('linkedin').value.trim() || null,
           portfolio_url: document.getElementById('portfolio').value.trim() || null,
@@ -106,15 +106,15 @@
           open_to_work: document.getElementById('open_to_work').checked
         };
 
-        const { error } = await supabase.from('developers').insert(payload);
+        const { error } = await sb.from('developers').upsert(payload, { onConflict: 'user_id' });
         if (error) throw error;
-
-        statusEl.textContent = 'Profile submitted successfully!';
-        form.reset();
-      } catch (error) {
-        statusEl.textContent = error.message;
+        statusEl.textContent = 'Profile saved successfully.';
+      } catch (e) {
+        statusEl.textContent = e.message;
       }
     });
+
+    (async function(){ if (await ensureAuth()) loadExisting(); })();
   </script>
 </body>
 </html>

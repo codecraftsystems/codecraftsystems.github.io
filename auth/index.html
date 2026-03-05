@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Register | OTP Email</title>
+  <meta name="description" content="Login or register with OTP sent to email. Powered by Supabase Auth SMTP (Brevo compatible)." />
+  <link rel="stylesheet" href="../assets/developers.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="logo" href="../"><span>CodeCraft</span> Systems</a>
+    <nav class="top-links">
+      <a href="../developers/">Developers</a>
+    </nav>
+  </div>
+</header>
+<main class="container">
+  <section class="hero">
+    <h1>Email OTP Login / Register</h1>
+    <p>One page login + register. Supabase Auth will send OTP email. Brevo SMTP can be configured in Supabase for free-tier email delivery.</p>
+  </section>
+
+  <div class="form-grid">
+    <div class="full">
+      <label for="email">Email</label>
+      <input id="email" class="input" type="email" placeholder="you@example.com" required>
+    </div>
+    <div>
+      <button id="sendOtp" class="button" type="button">Send OTP</button>
+    </div>
+    <div>
+      <label for="otp">Enter OTP</label>
+      <input id="otp" class="input" type="text" placeholder="6 digit OTP">
+    </div>
+    <div>
+      <button id="verifyOtp" class="button success" type="button">Verify OTP</button>
+    </div>
+    <div>
+      <button id="logoutBtn" class="button secondary" type="button">Logout</button>
+    </div>
+  </div>
+
+  <div id="status" class="alert">Ready</div>
+  <p class="alert">Brevo setup: Supabase Dashboard → Auth → SMTP settings → use Brevo SMTP credentials. Then OTP emails will come via Brevo.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/supabase-config.js"></script>
+<script src="../assets/developers.js"></script>
+<script>
+  const sb = devDirectory.createClient();
+  const emailEl = document.getElementById('email');
+  const otpEl = document.getElementById('otp');
+  const statusEl = document.getElementById('status');
+
+  document.getElementById('sendOtp').onclick = async function () {
+    try {
+      statusEl.textContent = 'Sending OTP...';
+      const email = emailEl.value.trim();
+      const { error } = await sb.auth.signInWithOtp({
+        email,
+        options: { shouldCreateUser: true }
+      });
+      if (error) throw error;
+      statusEl.textContent = 'OTP sent. Please check your email.';
+    } catch (e) {
+      statusEl.textContent = e.message;
+    }
+  };
+
+  document.getElementById('verifyOtp').onclick = async function () {
+    try {
+      statusEl.textContent = 'Verifying OTP...';
+      const email = emailEl.value.trim();
+      const token = otpEl.value.trim();
+      const { error } = await sb.auth.verifyOtp({ email, token, type: 'email' });
+      if (error) throw error;
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) statusEl.textContent = `Logged in as ${session.user.email}`;
+      const next = new URLSearchParams(window.location.search).get('next');
+      if (next) setTimeout(() => window.location.href = next, 800);
+    } catch (e) {
+      statusEl.textContent = e.message;
+    }
+  };
+
+  document.getElementById('logoutBtn').onclick = async function () {
+    await sb.auth.signOut();
+    statusEl.textContent = 'Logged out.';
+  };
+</script>
+</body>
+</html>
