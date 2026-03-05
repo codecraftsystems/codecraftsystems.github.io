@@ -588,6 +588,21 @@
     color: var(--muted);
   }
 
+  .service-link {
+    display: inline-flex;
+    margin-top: 16px;
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+  .service-link:hover {
+    color: var(--white);
+    border-color: var(--accent);
+  }
+
   /* ABOUT */
   #about { background: var(--black); }
   .about-grid {
@@ -1084,6 +1099,7 @@ input, select, textarea {
           <span class="tag">Sanctum</span>
           <span class="tag">MySQL</span>
         </div>
+        <a class="service-link" href="https://codecraftsystems.github.io/services/laravel-api-development.html">View details →</a>
       </div>
 
       <div class="service-card">
@@ -1097,6 +1113,7 @@ input, select, textarea {
           <span class="tag">Nuxt.js</span>
           <span class="tag">Vuex</span>
         </div>
+        <a class="service-link" href="https://codecraftsystems.github.io/services/vuejs-quasar-frontend-development.html">View details →</a>
       </div>
 
       <div class="service-card">
