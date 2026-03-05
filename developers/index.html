@@ -45,12 +45,12 @@
     let all = [];
 
     function card(dev) {
-      const image = dev.profile_image || 'https://placehold.co/300x300/1b2437/ffffff?text=DEV';
+      const image = devDirectory.normalizeImageUrl(dev.profile_image);
       const skills = (dev.skills || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 4).join(' • ');
       return `
         <article class="card">
           <div class="card-top">
-            <img loading="lazy" src="${devDirectory.escapeHtml(image)}" alt="${devDirectory.escapeHtml(dev.name)}" />
+            <img loading="lazy" src="${devDirectory.escapeHtml(image)}" alt="${devDirectory.escapeHtml(dev.name)}" onerror="this.onerror=null;this.src=devDirectory.DEFAULT_PROFILE_IMAGE;" />
             <div>
               <h3>${devDirectory.escapeHtml(dev.name)}</h3>
               <p class="title">${devDirectory.escapeHtml(dev.title || 'Laravel / Vue.js Developer')}</p>
@@ -58,7 +58,7 @@
           </div>
           <div class="skills">${devDirectory.escapeHtml(skills || 'Laravel • Vue.js')}</div>
           <div class="exp">Experience: ${Number(dev.experience_years || 0)} years ${dev.open_to_work ? '<span class="pill">Open to work</span>' : ''}</div>
-          <a class="button" href="../developer/${devDirectory.escapeHtml(dev.slug)}">View Profile</a>
+          <a class="button" href="../developer/?slug=${encodeURIComponent(dev.slug || '')}">View Profile</a>
         </article>
       `;
     }

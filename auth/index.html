@@ -19,7 +19,7 @@
 <main class="container">
   <section class="hero">
     <h1>Email OTP Login / Register</h1>
-    <p>One page login + register. Supabase Auth will send OTP email. Brevo SMTP can be configured in Supabase for free-tier email delivery.</p>
+    <p>One page login + register. OTP verification with strict validation. Configure Brevo SMTP in Supabase Auth so verification emails are delivered using Brevo (not default Supabase mailer).</p>
   </section>
 
   <div class="form-grid">
@@ -43,7 +43,7 @@
   </div>
 
   <div id="status" class="alert">Ready</div>
-  <p class="alert">Brevo setup: Supabase Dashboard → Auth → SMTP settings → use Brevo SMTP credentials. Then OTP emails will come via Brevo.</p>
+  <p class="alert">Brevo SMTP setup: Supabase Dashboard → Auth → SMTP settings → enable custom SMTP and add Brevo credentials. This sends OTP emails via Brevo SMTP.</p>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/supabase-config.js"></script>
@@ -54,10 +54,19 @@
   const otpEl = document.getElementById('otp');
   const statusEl = document.getElementById('status');
 
+  function getEmail() {
+    return emailEl.value.trim().toLowerCase();
+  }
+
+  function getOtp() {
+    return otpEl.value.trim();
+  }
+
   document.getElementById('sendOtp').onclick = async function () {
     try {
       statusEl.textContent = 'Sending OTP...';
-      const email = emailEl.value.trim();
+      const email = getEmail();
+      if (!devDirectory.isValidEmail(email)) throw new Error('Please enter a valid email address.');
       const { error } = await sb.auth.signInWithOtp({
         email,
         options: { shouldCreateUser: true }
@@ -72,8 +81,10 @@
   document.getElementById('verifyOtp').onclick = async function () {
     try {
       statusEl.textContent = 'Verifying OTP...';
-      const email = emailEl.value.trim();
-      const token = otpEl.value.trim();
+      const email = getEmail();
+      if (!devDirectory.isValidEmail(email)) throw new Error('Please enter a valid email address.');
+      const token = getOtp();
+      if (!/^\d{6}$/.test(token)) throw new Error('OTP must be a 6-digit code.');
       const { error } = await sb.auth.verifyOtp({ email, token, type: 'email' });
       if (error) throw error;
       const { data: { session } } = await sb.auth.getSession();

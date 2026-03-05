@@ -1,6 +1,7 @@
 (function () {
   const SUPABASE_URL = window.SUPABASE_URL || 'https://xpqsntlvukcwihhoyxqo.supabase.co';
   const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || 'sb_publishable_VT_3gtH3o331GhQ27KR76w_k5o7ZtZq';
+  const DEFAULT_PROFILE_IMAGE = 'https://images.unsplash.com/photo-1518773553398-650c184e0bb3?auto=format&fit=crop&w=800&q=80';
   
 
   function createClient() {
@@ -38,5 +39,33 @@
     return prefix + clean;
   }
 
-  window.devDirectory = { createClient, slugify, escapeHtml, asset };
+  function isValidHttpUrl(value) {
+    if (!value) return false;
+    try {
+      const parsed = new URL(value);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function normalizeImageUrl(value) {
+    const trimmed = String(value || '').trim();
+    return isValidHttpUrl(trimmed) ? trimmed : DEFAULT_PROFILE_IMAGE;
+  }
+
+  function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(String(value || '').trim());
+  }
+
+  window.devDirectory = {
+    createClient,
+    slugify,
+    escapeHtml,
+    asset,
+    isValidHttpUrl,
+    normalizeImageUrl,
+    isValidEmail,
+    DEFAULT_PROFILE_IMAGE
+  };
 })();

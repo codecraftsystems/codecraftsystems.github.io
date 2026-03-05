@@ -42,6 +42,8 @@
     function findSlug() {
       const qp = new URLSearchParams(location.search).get('slug');
       if (qp) return devDirectory.slugify(qp);
+      const hashSlug = location.hash.replace(/^#/, '').trim();
+      if (hashSlug) return devDirectory.slugify(hashSlug);
       const p = location.pathname.split('/').filter(Boolean);
       if (p[0] === 'developer' && p[1]) return devDirectory.slugify(p[1]);
       return '';
@@ -66,8 +68,12 @@
         document.getElementById('title').textContent = data.title || 'Laravel + Vue.js Developer';
         document.getElementById('meta').textContent = `Experience: ${Number(data.experience_years || 0)} years`;
         document.getElementById('bio').textContent = data.bio || '';
-        document.getElementById('profileImage').src = data.profile_image || 'https://placehold.co/300x300/1b2437/ffffff?text=DEV';
+        document.getElementById('profileImage').src = devDirectory.normalizeImageUrl(data.profile_image);
         document.getElementById('profileImage').alt = `${data.name} image`;
+        document.getElementById('profileImage').onerror = function () {
+          this.onerror = null;
+          this.src = devDirectory.DEFAULT_PROFILE_IMAGE;
+        };
 
         let badges = '';
         if (data.open_to_work) badges += '<span class="pill">Open to work</span>';

@@ -53,6 +53,19 @@
     const statusEl = document.getElementById('status');
     let currentUser = null;
 
+    function requireText(id, label, minLen = 2) {
+      const value = document.getElementById(id).value.trim();
+      if (value.length < minLen) throw new Error(`${label} must be at least ${minLen} characters.`);
+      return value;
+    }
+
+    function readUrlField(id, label) {
+      const value = document.getElementById(id).value.trim();
+      if (!value) return null;
+      if (!devDirectory.isValidHttpUrl(value)) throw new Error(`${label} must be a valid http/https URL.`);
+      return value;
+    }
+
     async function ensureAuth() {
       const { data: { session } } = await sb.auth.getSession();
       if (!session) {
@@ -88,21 +101,25 @@
       if (!currentUser) return;
       try {
         statusEl.textContent = 'Saving profile...';
-        const name = document.getElementById('name').value.trim();
-        const title = document.getElementById('title').value.trim();
+        const name = requireText('name', 'Name', 2);
+        const title = requireText('title', 'Title', 2);
+        const skills = requireText('skills', 'Skills', 2);
+        const bio = requireText('bio', 'Bio', 20);
+        const experience = Number(document.getElementById('experience').value);
+        if (!Number.isInteger(experience) || experience < 0 || experience > 80) throw new Error('Experience must be a valid number between 0 and 80.');
         const payload = {
           user_id: currentUser.id,
           email: currentUser.email,
           name,
-          slug: `${devDirectory.slugify(name)}-${devDirectory.slugify(title)}`,
+          slug: `${devDirectory.slugify(name)}-${devDirectory.slugify(title)}`.replace(/^-+|-+$/g, '') || devDirectory.slugify(name),
           title,
-          skills: document.getElementById('skills').value.trim(),
-          experience_years: Number(document.getElementById('experience').value),
-          github_url: document.getElementById('github').value.trim() || null,
-          linkedin_url: document.getElementById('linkedin').value.trim() || null,
-          portfolio_url: document.getElementById('portfolio').value.trim() || null,
-          bio: document.getElementById('bio').value.trim(),
-          profile_image: document.getElementById('profile_image').value.trim() || null,
+          skills,
+          experience_years: experience,
+          github_url: readUrlField('github', 'GitHub'),
+          linkedin_url: readUrlField('linkedin', 'LinkedIn'),
+          portfolio_url: readUrlField('portfolio', 'Portfolio'),
+          bio,
+          profile_image: readUrlField('profile_image', 'Profile image'),
           open_to_work: document.getElementById('open_to_work').checked
         };
 
