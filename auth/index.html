@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login / Register | OTP Email</title>
-  <meta name="description" content="Login or register with OTP sent to email. Powered by Supabase Auth SMTP (Brevo compatible)." />
+  <meta name="description" content="Login or register with OTP sent to email. OTP emails are delivered via Brevo SMTP." />
   <link rel="stylesheet" href="../assets/developers.css" />
 </head>
 <body>
@@ -43,7 +43,7 @@
   </div>
 
   <div id="status" class="alert">Ready</div>
-  <p class="alert">Brevo SMTP setup: Supabase Dashboard → Auth → SMTP settings → enable custom SMTP and add Brevo credentials. This sends OTP emails via Brevo SMTP.</p>
+  <p class="alert">OTP note: this flow uses Supabase Auth to verify OTP, and Brevo SMTP is used for delivery. Visiting /auth/v1/otp directly in a browser is expected to fail because it is a protected API endpoint.</p>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/supabase-config.js"></script>
