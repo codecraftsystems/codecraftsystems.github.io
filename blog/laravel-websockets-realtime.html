@@ -531,6 +531,24 @@ body::before {
 ════════════════════════════════════════════════ */
 
 /* ── 1080px: sidebar collapses below content ── */
+
+  .breadcrumb, .bc {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    z-index: 2;
+    padding: 6px 0;
+  }
+
+  @media (max-width: 768px) {
+    .breadcrumb, .bc {
+      font-size: 0.64rem;
+      gap: 5px;
+      padding: 4px 0;
+    }
+  }
+
 @media(max-width:1080px){
   .page-wrap {
     grid-template-columns: minmax(0,1fr);
