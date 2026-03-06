@@ -263,6 +263,16 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
   border-top-color: var(--accent);
 }
 
+.job-list-wrap{margin-top:14px;border:1px solid var(--border);background:var(--card);border-radius:8px;padding:12px}
+.job-list-title{font-family:var(--font-m);font-size:.7rem;color:var(--a2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+.job-list{display:flex;flex-direction:column;gap:8px}
+.job-item{border:1px solid var(--border2);border-radius:7px;padding:10px;background:var(--card2)}
+.job-role{font-size:.83rem;font-weight:700;color:var(--white);margin-bottom:3px}
+.job-company{font-size:.72rem;color:var(--muted);margin-bottom:6px}
+.job-link{font-family:var(--font-m);font-size:.66rem;color:var(--a2);text-decoration:none;word-break:break-all}
+.job-link:hover{text-decoration:underline}
+.job-empty{font-size:.72rem;color:var(--muted)}
+
 @keyframes spin {
   0% { transform: translateX(-50%) rotate(0deg); }
   100% { transform: translateX(-50%) rotate(360deg); }
@@ -759,9 +769,22 @@ function renderForm(profile){
       <span class="btn-text" style="display: inline-flex; align-items: center; gap: 8px;">📄 Upload Resume & Auto Fill</span>
       <span class="spinner" style="display: none; position: absolute; left: 50%; transform: translateX(-50%);"></span>
     </button>
+    <button
+      type="button"
+      class="btn btn-g"
+      id="findJobBtn"
+      onclick="findJobsWithAI(this)"
+      style="min-width: 220px; justify-content: center; position: relative;">
+      <span class="btn-text" style="display: inline-flex; align-items: center; gap: 8px;">💼 Find Jobs with AI</span>
+      <span class="spinner" style="display: none; position: absolute; left: 50%; transform: translateX(-50%);"></span>
+    </button>
     <input id="resumeUpload" type="file" accept=".pdf,.doc,.docx,.txt,.md" style="display:none" onchange="handleResumeUpload(this)">
   </div>
   <p class="fhint" style="margin-top:8px">Upload your resume (PDF/DOC/DOCX/TXT). AI will extract profile details and auto-fill fields.</p>
+  <div class="job-list-wrap" id="jobListWrap" style="display:none">
+    <div class="job-list-title">AI Job Matches (Top 5)</div>
+    <div class="job-list" id="jobList"></div>
+  </div>
 </div>
 
 
