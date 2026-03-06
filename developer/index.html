@@ -13,6 +13,7 @@
 <meta property="og:title" id="ogTitle" content="Developer Profile | CodeCraft Systems">
 <meta property="og:description" id="ogDesc" content="View developer skills, experience and availability.">
 <meta property="og:image" id="ogImg" content="">
+<meta property="og:url" id="ogUrl" content="https://codecraftsystems.github.io/developer/">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
@@ -548,6 +549,7 @@ footer{
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/supabase-config.js"></script>
 <script src="../assets/developers.js"></script>
@@ -619,12 +621,105 @@ function updateSEO(d){
   const title=d.title||'Laravel / Vue.js Developer';
   const exp=d.experience_years||0;
   const otw=d.open_to_work?'Open to work. ':'';
+  const slug=esc(d.slug||'');
+  const canonical=`https://codecraftsystems.github.io/developer/${slug}`;
   document.getElementById('pageTitle').textContent=`${name} — ${title} | CodeCraft Systems`;
   document.getElementById('pageMeta').setAttribute('content',`${name}, ${title} with ${exp} years experience. ${otw}View skills and contact.`);
-  document.getElementById('pageCanonical').setAttribute('href',`https://codecraftsystems.github.io/developer/?slug=${esc(d.slug||'')}`);
+  document.getElementById('pageCanonical').setAttribute('href',canonical);
   document.getElementById('ogTitle').setAttribute('content',`${name} — ${title}`);
   document.getElementById('ogDesc').setAttribute('content',`${name}: ${(d.skills||'').split(',').slice(0,4).join(', ')}`);
+  document.getElementById('ogUrl').setAttribute('content',canonical);
   if(d.profile_image)document.getElementById('ogImg').setAttribute('content',imgUrl(d.profile_image));
+}
+
+function slugify(text){
+  return String(text)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'');
+}
+ function downloadATSResume(d){
+
+  d = d || window.__currentDeveloper || {};
+
+  const skills = (d.skills||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const exp = Array.isArray(d.experience)?d.experience:[];
+  const certs = Array.isArray(d.certifications)?d.certifications:[];
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  let y = 20;
+
+  doc.setFontSize(18);
+  doc.text((d.name||'Developer').toUpperCase(),20,y);
+
+  y+=10;
+  doc.setFontSize(12);
+  doc.text(d.title||'Developer',20,y);
+
+  y+=8;
+  doc.text(
+    [d.location,d.email||d.contact_email,d.github_url,d.linkedin_url,d.portfolio_url]
+      .filter(Boolean)
+      .join(' | '),
+    20,y
+  );
+
+  y+=15;
+  doc.setFontSize(14);
+  doc.text("PROFESSIONAL SUMMARY",20,y);
+
+  y+=8;
+  doc.setFontSize(11);
+  doc.text(doc.splitTextToSize(d.bio||'',170),20,y);
+
+  y+=20;
+  doc.setFontSize(14);
+  doc.text("CORE SKILLS",20,y);
+
+  y+=8;
+  doc.setFontSize(11);
+  doc.text(skills.join(', '),20,y);
+
+  y+=15;
+  doc.setFontSize(14);
+  doc.text("PROFESSIONAL EXPERIENCE",20,y);
+
+  y+=8;
+  doc.setFontSize(11);
+
+  if(exp.length){
+    exp.forEach(e=>{
+      doc.text(`${e.role||'Developer'} — ${e.company||''}`,20,y);
+      y+=6;
+      doc.text(`${e.period||''}`,20,y);
+      y+=6;
+      doc.text(doc.splitTextToSize(e.description||'',170),20,y);
+      y+=10;
+    });
+  } else {
+    doc.text("No work experience listed.",20,y);
+  }
+
+  y+=5;
+  doc.setFontSize(14);
+  doc.text("CERTIFICATIONS",20,y);
+
+  y+=8;
+  doc.setFontSize(11);
+
+  if(certs.length){
+    certs.forEach(c=>{
+      doc.text(`${c.name||c.title||''} — ${c.issuer||''} (${c.year||''})`,20,y);
+      y+=7;
+    });
+  } else {
+    doc.text("No certifications listed.",20,y);
+  }
+
+  doc.save(`${slugify(d.name||'developer')}-ats-resume.pdf`);
 }
 
 /* ══ BUILD HTML ══ */
@@ -700,7 +795,7 @@ function buildProfile(d,others){
       <div class="rel-title">More Developers</div>
       <div class="rel-grid">
         ${others.slice(0,4).map(o=>`
-          <a class="rel-card" href="?slug=${encodeURIComponent(o.slug||o.id||'')}">
+          <a class="rel-card" href="../developer/?slug=${encodeURIComponent(o.slug||o.id||'')}">
             <div class="rel-name">${esc(o.name)}</div>
             <div class="rel-role">${esc(o.title||'Developer')}</div>
             ${o.open_to_work?'<div class="rel-otw">🟡 Open to Work</div>':''}
@@ -757,6 +852,7 @@ function buildProfile(d,others){
             <a class="btn-primary" href="${esc(contactHref)}" ${email?'':'target="_blank" rel="noopener"'}>
               ${d.open_to_work?'✉ Hire Me — I\'m Available':'✉ Get In Touch'}
             </a>
+            <button class="btn-ghost" type="button" onclick="downloadATSResume()">⬇ Download ATS Resume</button>
             <a class="btn-ghost" href="../developers/">← All Developers</a>
           </div>
         </div>
@@ -963,6 +1059,7 @@ function tplNoSlug(){
   }
 
   updateSEO(dev);
+  window.__currentDeveloper = dev;
   root.innerHTML = buildProfile(dev, others);
 
   var io = new IntersectionObserver(function(entries){
