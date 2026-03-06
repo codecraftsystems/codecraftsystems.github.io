@@ -520,7 +520,7 @@ function preview(){
   if(pa){
     if(isHttp(img)){
       pa.className='prev-av hi';
-      pa.innerHTML='<img src="'+esc(img)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.className=\'prev-av\';this.parentElement.innerHTML=\''+esc(initials(name)||'?')+'\'">';
+      pa.innerHTML='<img src="'+esc(img)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="var p=this.parentElement;if(!p)return;p.className=\'prev-av\';p.textContent=\''+esc(initials(name)||'?')+'\'">';
     } else {pa.className='prev-av';pa.innerHTML=esc(initials(name)||'?');}
   }
   const pn=document.getElementById('prevName');if(pn)pn.textContent=name||'Your Name';
@@ -876,7 +876,7 @@ function renderForm(profile){
             <div class="full">
               <div class="av-strip">
                 <div class="av-strip-c" id="avC">
-                  <img src="" alt="avatar" onerror="this.style.display='none';document.querySelector('.avfb').style.display='block'">
+                  <img src="" alt="avatar" onerror="this.style.display='none';if(this.nextElementSibling)this.nextElementSibling.style.display='block'">
                   <span class="avfb">?</span>
                 </div>
                 <div>
