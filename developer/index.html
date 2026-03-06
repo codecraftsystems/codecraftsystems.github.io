@@ -549,6 +549,7 @@ footer{
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/supabase-config.js"></script>
 <script src="../assets/developers.js"></script>
@@ -631,47 +632,94 @@ function updateSEO(d){
   if(d.profile_image)document.getElementById('ogImg').setAttribute('content',imgUrl(d.profile_image));
 }
 
-function downloadATSResume(d){
-  d=d||window.__currentDeveloper||{};
-  const skills=(d.skills||'').split(',').map(s=>s.trim()).filter(Boolean);
-  const exp=Array.isArray(d.experience)?d.experience:[];
-  const certs=Array.isArray(d.certifications)?d.certifications:[];
-  const lines=[
-    (d.name||'Developer').toUpperCase(),
-    d.title||'Developer',
-    [d.location||'',d.email||d.contact_email||'',d.github_url||'',d.linkedin_url||'',d.portfolio_url||''].filter(Boolean).join(' | '),
-    '',
-    'PROFESSIONAL SUMMARY',
-    d.bio||'Experienced developer profile from CodeCraft Systems talent network.',
-    '',
-    'CORE SKILLS',
-    skills.join(', ')||'N/A',
-    '',
-    'PROFESSIONAL EXPERIENCE',
-    ...(exp.length?exp.map(e=>[
-      `${e.role||'Developer'} — ${e.company||'Company'}`,
-      `${e.period||''}`,
-      `${e.description||''}`,
-      ''
-    ].join('\n')):['No work experience listed.','']),
-    'CERTIFICATIONS',
-    ...(certs.length?certs.map(c=>`${c.name||c.title||'Certificate'}${c.issuer||c.provider?` — ${c.issuer||c.provider}`:''}${c.year?` (${c.year})`:''}`):['No certifications listed.']),
-    '',
-    'ATS KEYWORDS',
-    [d.title||'',...skills,'Laravel','Vue.js','REST API','Full Stack Developer','Nuxt.js','TypeScript','MySQL'].filter(Boolean).join(', '),
-    '',
-    'SEO PROFILE SLUG',
-    d.slug ? `https://codecraftsystems.github.io/developer/${d.slug}` : 'N/A'
-  ];
+function slugify(text){
+  return String(text)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'');
+}
+ function downloadATSResume(d){
 
-  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`${slugify(d.name||'developer')}-ats-resume.txt`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href),500);
+  d = d || window.__currentDeveloper || {};
+
+  const skills = (d.skills||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const exp = Array.isArray(d.experience)?d.experience:[];
+  const certs = Array.isArray(d.certifications)?d.certifications:[];
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  let y = 20;
+
+  doc.setFontSize(18);
+  doc.text((d.name||'Developer').toUpperCase(),20,y);
+
+  y+=10;
+  doc.setFontSize(12);
+  doc.text(d.title||'Developer',20,y);
+
+  y+=8;
+  doc.text(
+    [d.location,d.email||d.contact_email,d.github_url,d.linkedin_url,d.portfolio_url]
+      .filter(Boolean)
+      .join(' | '),
+    20,y
+  );
+
+  y+=15;
+  doc.setFontSize(14);
+  doc.text("PROFESSIONAL SUMMARY",20,y);
+
+  y+=8;
+  doc.setFontSize(11);
+  doc.text(doc.splitTextToSize(d.bio||'',170),20,y);
+
+  y+=20;
+  doc.setFontSize(14);
+  doc.text("CORE SKILLS",20,y);
+
+  y+=8;
+  doc.setFontSize(11);
+  doc.text(skills.join(', '),20,y);
+
+  y+=15;
+  doc.setFontSize(14);
+  doc.text("PROFESSIONAL EXPERIENCE",20,y);
+
+  y+=8;
+  doc.setFontSize(11);
+
+  if(exp.length){
+    exp.forEach(e=>{
+      doc.text(`${e.role||'Developer'} — ${e.company||''}`,20,y);
+      y+=6;
+      doc.text(`${e.period||''}`,20,y);
+      y+=6;
+      doc.text(doc.splitTextToSize(e.description||'',170),20,y);
+      y+=10;
+    });
+  } else {
+    doc.text("No work experience listed.",20,y);
+  }
+
+  y+=5;
+  doc.setFontSize(14);
+  doc.text("CERTIFICATIONS",20,y);
+
+  y+=8;
+  doc.setFontSize(11);
+
+  if(certs.length){
+    certs.forEach(c=>{
+      doc.text(`${c.name||c.title||''} — ${c.issuer||''} (${c.year||''})`,20,y);
+      y+=7;
+    });
+  } else {
+    doc.text("No certifications listed.",20,y);
+  }
+
+  doc.save(`${slugify(d.name||'developer')}-ats-resume.pdf`);
 }
 
 /* ══ BUILD HTML ══ */
