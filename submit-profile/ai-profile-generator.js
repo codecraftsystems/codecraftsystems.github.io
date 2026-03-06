@@ -514,6 +514,10 @@ AI_PROFILE_GENERATOR.sanitizeAndVerifyJobs = async function(jobs, profilePayload
     verified.push(normalized);
   }
 
+  if (!verified.length) {
+    return this.buildFallbackJobs(profilePayload).slice(0, 5);
+  }
+
   return verified.slice(0, 5);
 };
 
@@ -566,6 +570,75 @@ AI_PROFILE_GENERATOR.buildFallbackJobUrl = function(job) {
   return `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(job.location || 'Remote')}&f_TPR=r2592000`;
 };
 
+AI_PROFILE_GENERATOR.slugifyKeywords = function(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-{2,}/g, '-');
+};
+
+AI_PROFILE_GENERATOR.buildRemoteOkUrl = function(title) {
+  const slug = this.slugifyKeywords(title || 'developer') || 'developer';
+  return `https://remoteok.com/remote-${slug}-jobs`;
+};
+
+AI_PROFILE_GENERATOR.buildFallbackJobs = function(profilePayload) {
+  const role = String(profilePayload?.title || 'Developer').trim() || 'Developer';
+  const location = String(profilePayload?.location || 'Remote').trim() || 'Remote';
+  const baseDate = new Date().toISOString();
+  const query = encodeURIComponent(`${role} ${location}`.trim());
+
+  return [
+    {
+      title: `${role} (LinkedIn Search)`,
+      company: 'LinkedIn Jobs',
+      location,
+      summary: 'Fresh results from LinkedIn jobs search based on your profile.',
+      source: 'LinkedIn',
+      posted_at: baseDate,
+      url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(location)}&f_TPR=r2592000`
+    },
+    {
+      title: `${role} (Indeed Search)`,
+      company: 'Indeed',
+      location,
+      summary: 'Indeed job search query tailored to your title and location.',
+      source: 'Indeed',
+      posted_at: baseDate,
+      url: `https://www.indeed.com/jobs?q=${query}`
+    },
+    {
+      title: `${role} (Wellfound Search)`,
+      company: 'Wellfound',
+      location,
+      summary: 'Startup-focused roles matching your profile on Wellfound.',
+      source: 'Wellfound',
+      posted_at: baseDate,
+      url: `https://wellfound.com/jobs?query=${query}`
+    },
+    {
+      title: `${role} (RemoteOK Search)`,
+      company: 'RemoteOK',
+      location: 'Remote',
+      summary: 'RemoteOK search using a cleaned keyword slug to avoid broken URLs.',
+      source: 'RemoteOK',
+      posted_at: baseDate,
+      url: this.buildRemoteOkUrl(role)
+    },
+    {
+      title: `${role} (Google Jobs Search)`,
+      company: 'Google Jobs',
+      location,
+      summary: 'Google jobs search covering multiple job boards in one result page.',
+      source: 'Google',
+      posted_at: baseDate,
+      url: `https://www.google.com/search?q=${encodeURIComponent(`${role} jobs in ${location}`)}`
+    }
+  ];
+};
+
 AI_PROFILE_GENERATOR.getJobSearchHelpHtml = function(profilePayload) {
   const title = this.escapeHtml(profilePayload?.title || 'Developer');
   const location = this.escapeHtml(profilePayload?.location || 'Remote');
@@ -574,7 +647,7 @@ AI_PROFILE_GENERATOR.getJobSearchHelpHtml = function(profilePayload) {
     { label: 'LinkedIn Jobs (last 30 days)', url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(profilePayload?.location || 'Remote')}&f_TPR=r2592000` },
     { label: 'Indeed Jobs', url: `https://www.indeed.com/jobs?q=${query}` },
     { label: 'Wellfound Startup Jobs', url: `https://wellfound.com/jobs?query=${query}` },
-    { label: 'RemoteOK', url: `https://remoteok.com/remote-${encodeURIComponent((profilePayload?.title || 'developer').toLowerCase().replace(/\s+/g, '-'))}-jobs` },
+    { label: 'RemoteOK', url: this.buildRemoteOkUrl(profilePayload?.title || 'developer') },
     { label: 'Google Jobs Search', url: `https://www.google.com/search?q=${encodeURIComponent(`${profilePayload?.title || 'developer'} jobs in ${profilePayload?.location || 'remote'}`)}` }
   ];
 
