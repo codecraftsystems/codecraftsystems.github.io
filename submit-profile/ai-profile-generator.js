@@ -369,7 +369,7 @@ AI_PROFILE_GENERATOR.findJobs = async function(button) {
   const bio = document.getElementById('f_bio')?.value.trim() || '';
   const skills = (window.tags || []).slice(0, 12);
 
-  if (!name || !title || !skills.length) {
+  if (!name || !title) {
     this.showToast('te', 'Profile Incomplete', 'Please fill name, title and at least one skill before finding jobs.');
     return false;
   }
