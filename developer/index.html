@@ -13,6 +13,7 @@
 <meta property="og:title" id="ogTitle" content="Developer Profile | CodeCraft Systems">
 <meta property="og:description" id="ogDesc" content="View developer skills, experience and availability.">
 <meta property="og:image" id="ogImg" content="">
+<meta property="og:url" id="ogUrl" content="https://codecraftsystems.github.io/developer/">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
@@ -619,12 +620,58 @@ function updateSEO(d){
   const title=d.title||'Laravel / Vue.js Developer';
   const exp=d.experience_years||0;
   const otw=d.open_to_work?'Open to work. ':'';
+  const slug=esc(d.slug||'');
+  const canonical=`https://codecraftsystems.github.io/developer/${slug}`;
   document.getElementById('pageTitle').textContent=`${name} — ${title} | CodeCraft Systems`;
   document.getElementById('pageMeta').setAttribute('content',`${name}, ${title} with ${exp} years experience. ${otw}View skills and contact.`);
-  document.getElementById('pageCanonical').setAttribute('href',`https://codecraftsystems.github.io/developer/?slug=${esc(d.slug||'')}`);
+  document.getElementById('pageCanonical').setAttribute('href',canonical);
   document.getElementById('ogTitle').setAttribute('content',`${name} — ${title}`);
   document.getElementById('ogDesc').setAttribute('content',`${name}: ${(d.skills||'').split(',').slice(0,4).join(', ')}`);
+  document.getElementById('ogUrl').setAttribute('content',canonical);
   if(d.profile_image)document.getElementById('ogImg').setAttribute('content',imgUrl(d.profile_image));
+}
+
+function downloadATSResume(d){
+  d=d||window.__currentDeveloper||{};
+  const skills=(d.skills||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const exp=Array.isArray(d.experience)?d.experience:[];
+  const certs=Array.isArray(d.certifications)?d.certifications:[];
+  const lines=[
+    (d.name||'Developer').toUpperCase(),
+    d.title||'Developer',
+    [d.location||'',d.email||d.contact_email||'',d.github_url||'',d.linkedin_url||'',d.portfolio_url||''].filter(Boolean).join(' | '),
+    '',
+    'PROFESSIONAL SUMMARY',
+    d.bio||'Experienced developer profile from CodeCraft Systems talent network.',
+    '',
+    'CORE SKILLS',
+    skills.join(', ')||'N/A',
+    '',
+    'PROFESSIONAL EXPERIENCE',
+    ...(exp.length?exp.map(e=>[
+      `${e.role||'Developer'} — ${e.company||'Company'}`,
+      `${e.period||''}`,
+      `${e.description||''}`,
+      ''
+    ].join('\n')):['No work experience listed.','']),
+    'CERTIFICATIONS',
+    ...(certs.length?certs.map(c=>`${c.name||c.title||'Certificate'}${c.issuer||c.provider?` — ${c.issuer||c.provider}`:''}${c.year?` (${c.year})`:''}`):['No certifications listed.']),
+    '',
+    'ATS KEYWORDS',
+    [d.title||'',...skills,'Laravel','Vue.js','REST API','Full Stack Developer','Nuxt.js','TypeScript','MySQL'].filter(Boolean).join(', '),
+    '',
+    'SEO PROFILE SLUG',
+    d.slug ? `https://codecraftsystems.github.io/developer/${d.slug}` : 'N/A'
+  ];
+
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`${slugify(d.name||'developer')}-ats-resume.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),500);
 }
 
 /* ══ BUILD HTML ══ */
@@ -700,7 +747,7 @@ function buildProfile(d,others){
       <div class="rel-title">More Developers</div>
       <div class="rel-grid">
         ${others.slice(0,4).map(o=>`
-          <a class="rel-card" href="?slug=${encodeURIComponent(o.slug||o.id||'')}">
+          <a class="rel-card" href="../developer/?slug=${encodeURIComponent(o.slug||o.id||'')}">
             <div class="rel-name">${esc(o.name)}</div>
             <div class="rel-role">${esc(o.title||'Developer')}</div>
             ${o.open_to_work?'<div class="rel-otw">🟡 Open to Work</div>':''}
@@ -757,6 +804,7 @@ function buildProfile(d,others){
             <a class="btn-primary" href="${esc(contactHref)}" ${email?'':'target="_blank" rel="noopener"'}>
               ${d.open_to_work?'✉ Hire Me — I\'m Available':'✉ Get In Touch'}
             </a>
+            <button class="btn-ghost" type="button" onclick="downloadATSResume()">⬇ Download ATS Resume</button>
             <a class="btn-ghost" href="../developers/">← All Developers</a>
           </div>
         </div>
@@ -963,6 +1011,7 @@ function tplNoSlug(){
   }
 
   updateSEO(dev);
+  window.__currentDeveloper = dev;
   root.innerHTML = buildProfile(dev, others);
 
   var io = new IntersectionObserver(function(entries){

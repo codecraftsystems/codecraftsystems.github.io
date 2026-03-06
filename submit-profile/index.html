@@ -158,6 +158,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .sz-title{font-family:var(--font-d);font-size:1.15rem;letter-spacing:1px;color:var(--white)}
 .sz-note{font-size:.73rem;color:var(--muted);margin-top:2px}
 .sz-btns{display:flex;gap:8px;flex-wrap:wrap}
+.pc-wrap{margin-top:10px}
+.pc-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.pc-lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.pc-val{font-family:var(--font-m);font-size:.75rem;color:var(--accent)}
+.pc-track{height:8px;background:var(--card2);border:1px solid var(--border);border-radius:999px;overflow:hidden}
+.pc-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--a2));transition:width .25s ease}
+.pc-note{margin-top:6px;font-size:.68rem;color:var(--muted)}
 
 .btn{display:inline-flex;align-items:center;gap:7px;padding:clamp(9px,1.8vw,11px) clamp(16px,3vw,24px);border-radius:3px;font-weight:700;font-size:.82rem;cursor:pointer;font-family:var(--font-b);transition:all .22s;white-space:nowrap;border:none;text-decoration:none}
 .btn-p{background:var(--accent);color:var(--white)}
@@ -518,6 +525,37 @@ function preview(){
   }
   const an=document.getElementById('avName');if(an)an.textContent=name||'Your name will appear here';
   const tr=document.getElementById('otwRow');if(tr)tr.classList.toggle('on',otw);
+  updateProfileCompletion();
+}
+
+function calcProfileCompletion(){
+  const checks=[
+    !!document.getElementById('f_name')?.value.trim(),
+    !!document.getElementById('f_title')?.value.trim(),
+    (document.getElementById('f_bio')?.value.trim().length||0)>=20,
+    tags.length>0,
+    !!document.getElementById('f_loc')?.value.trim(),
+    !!document.getElementById('f_exp')?.value,
+    !!document.getElementById('f_github')?.value.trim(),
+    !!document.getElementById('f_linkedin')?.value.trim(),
+    !!document.getElementById('f_portfolio')?.value.trim(),
+    !!document.getElementById('f_image')?.value.trim(),
+    exps.length>0
+  ];
+  const done=checks.filter(Boolean).length;
+  return Math.round((done/checks.length)*100);
+}
+
+function updateProfileCompletion(){
+  const score=calcProfileCompletion();
+  const fill=document.getElementById('pcFill');
+  const val=document.getElementById('pcVal');
+  const note=document.getElementById('pcNote');
+  if(fill)fill.style.width=score+'%';
+  if(val)val.textContent=score+'%';
+  if(note)note.textContent=score===100
+    ?'✅ Full profile completed. You can now save and generate ATS resume from your public profile.'
+    :'Complete all sections to unlock 100% profile strength and ATS resume export.';
 }
 
 /* char counters */
@@ -559,6 +597,7 @@ function vUrl(id,label){
 /* save */
 async function doSave(e){
   e.preventDefault();
+  const wasEdit=!!EP;
   const name=vReq('f_name','Name',2);
   const title=vReq('f_title','Title',2);
   const bio=vReq('f_bio','Bio',20);
@@ -598,7 +637,7 @@ async function doSave(e){
       if(error)throw error;
     }
     EP=payload;
-    toast('ts','Saved!',EP?'Profile updated successfully.':'Profile is now live!');
+    toast('ts','Saved!',wasEdit?'Profile updated successfully.':'Profile is now live!');
     document.getElementById('nvView').href='../developer/?slug='+encodeURIComponent(slug);
     document.getElementById('nvView').style.display='';
     document.querySelectorAll('.snode').forEach(n=>{n.classList.add('done');n.querySelector('.snode-c').textContent='✓';});
@@ -672,6 +711,11 @@ function renderForm(profile){
       <div class="slug-row" style="margin-top:8px">
         <span class="slug-txt">codecraftsystems.github.io/developer/?slug=<span class="slug-hi" id="slugVal">your-name-title</span></span>
       </div>
+      <div class="pc-wrap">
+        <div class="pc-row"><span class="pc-lbl">Profile Completion</span><span class="pc-val" id="pcVal">0%</span></div>
+        <div class="pc-track"><div class="pc-fill" id="pcFill"></div></div>
+        <div class="pc-note" id="pcNote">Complete all sections to unlock 100% profile strength and ATS resume export.</div>
+      </div>
     </div>
 
     <form id="pForm" onsubmit="doSave(event)" novalidate>
@@ -696,15 +740,28 @@ function renderForm(profile){
     placeholder="Example: Senior Laravel developer with 6 years experience building SaaS apps with Vue.js, Nuxt.js and PostgreSQL."
     style="min-height:80px;margin-bottom:8px"></textarea>
 
-  <button
-    type="button"
-    class="btn btn-g"
-    id="aiGenerateBtn"
-    onclick="generateProfileAIWithSpinner(this)"
-    style="min-width: 220px; justify-content: center; position: relative;">
-    <span class="btn-text" style="display: inline-flex; align-items: center; gap: 8px;">🤖 Generate Profile with AI</span>
-    <span class="spinner" style="display: none; position: absolute; left: 50%; transform: translateX(-50%);"></span>
-  </button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button
+      type="button"
+      class="btn btn-g"
+      id="aiGenerateBtn"
+      onclick="generateProfileAIWithSpinner(this)"
+      style="min-width: 220px; justify-content: center; position: relative;">
+      <span class="btn-text" style="display: inline-flex; align-items: center; gap: 8px;">🤖 Generate Profile with AI</span>
+      <span class="spinner" style="display: none; position: absolute; left: 50%; transform: translateX(-50%);"></span>
+    </button>
+    <button
+      type="button"
+      class="btn btn-g"
+      id="resumeAutoFillBtn"
+      onclick="triggerResumeUpload()"
+      style="min-width: 220px; justify-content: center; position: relative;">
+      <span class="btn-text" style="display: inline-flex; align-items: center; gap: 8px;">📄 Upload Resume & Auto Fill</span>
+      <span class="spinner" style="display: none; position: absolute; left: 50%; transform: translateX(-50%);"></span>
+    </button>
+    <input id="resumeUpload" type="file" accept=".pdf,.doc,.docx,.txt,.md" style="display:none" onchange="handleResumeUpload(this)">
+  </div>
+  <p class="fhint" style="margin-top:8px">Upload your resume (PDF/DOC/DOCX/TXT). AI will extract profile details and auto-fill fields.</p>
 </div>
 
 
@@ -846,6 +903,11 @@ function renderForm(profile){
   ['f_name','f_title','f_image','f_loc'].forEach(id=>{
     document.getElementById(id)?.addEventListener('input',preview);
   });
+  ['f_bio','f_exp','f_github','f_linkedin','f_portfolio'].forEach(id=>{
+    document.getElementById(id)?.addEventListener('input',updateProfileCompletion);
+  });
+  document.getElementById('f_otw')?.addEventListener('change',updateProfileCompletion);
+  updateProfileCompletion();
 }
 
 

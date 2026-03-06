@@ -126,7 +126,11 @@ Extract or generate a complete developer profile with these EXACT fields:
       "period": "Start Year — End Year",
       "description": "Key responsibilities, technologies used, and achievements"
     }
-  ]
+  ],
+  "certifications": [
+    {"name":"Certification Name","issuer":"Provider","year":"2025"}
+  ],
+  "seo_focus_keywords": ["laravel developer","vue.js developer","full stack developer"]
 }
 
 EXTRACTION RULES:
@@ -229,6 +233,11 @@ Example Output for "Laravel developer with 5 years experience in Surat, currentl
       if (typeof renderExps === 'function') renderExps();
     }
 
+    // Optional certifications mapped into global profile object for ATS export
+    if (Array.isArray(p.certifications) && window.EP) {
+      window.EP.certifications = p.certifications;
+    }
+
     // URLs
     if (p.github_url) this.setValue("f_github", p.github_url);
     if (p.linkedin_url) this.setValue("f_linkedin", p.linkedin_url);
@@ -268,6 +277,77 @@ Example Output for "Laravel developer with 5 years experience in Surat, currentl
       console.log(`${type}: ${title} - ${message}`);
     }
   }
+};
+
+
+// Generate profile from uploaded resume file
+AI_PROFILE_GENERATOR.generateFromResumeFile = async function(file, button) {
+  if (!file) {
+    this.showToast("te", "Resume Required", "Please choose a resume file first.");
+    return false;
+  }
+
+  this.resetButton(button);
+  if (button) {
+    const btnText = button.querySelector('.btn-text');
+    const spinner = button.querySelector('.spinner');
+    if (btnText) btnText.style.opacity = '0';
+    if (spinner) spinner.style.display = 'inline-block';
+    button.disabled = true;
+  }
+
+  try {
+    const b64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = String(reader.result || '');
+        resolve(result.split(',')[1] || '');
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    const req = {
+      contents: [{
+        parts: [
+          { text: this.buildPrompt('Extract a complete developer profile from the attached resume file. Prioritize real data from the resume.') },
+          { inlineData: { mimeType: file.type || 'application/octet-stream', data: b64 } }
+        ]
+      }]
+    };
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${this.API_KEY}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(req) }
+    );
+
+    const data = await res.json();
+    const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Invalid AI response');
+
+    const profile = JSON.parse(jsonMatch[0]);
+    this.fillFields(profile);
+    this.showToast('ts', 'Resume Imported', 'Your fields were auto-filled from resume with AI.');
+    this.resetButton(button);
+    return true;
+  } catch (e) {
+    console.error(e);
+    this.showToast('te', 'Resume Parse Failed', 'Could not extract details. Try a clearer resume or use AI prompt text.');
+    this.resetButton(button);
+    return false;
+  }
+};
+
+window.triggerResumeUpload = function() {
+  document.getElementById('resumeUpload')?.click();
+};
+
+window.handleResumeUpload = async function(input) {
+  const file = input?.files?.[0];
+  const button = document.getElementById('resumeAutoFillBtn');
+  await AI_PROFILE_GENERATOR.generateFromResumeFile(file, button);
+  if (input) input.value = '';
 };
 
 // Make it available globally
