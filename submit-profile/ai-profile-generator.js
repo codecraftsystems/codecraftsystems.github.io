@@ -52,7 +52,7 @@ const AI_PROFILE_GENERATOR = {
   },
 
   buildPrompt(userPrompt) {
-    return `You are an expert developer profile generator. Return ONLY valid JSON. No markdown, no explanations.\n\nExtract or generate a complete developer profile with these EXACT fields:\n{\n  "name":"", "title":"", "location":"", "bio":"",\n  "skills":[], "experience_years":0,\n  "github_url":"", "linkedin_url":"", "portfolio_url":"",\n  "experience":[{"role":"","company":"","period":"","description":""}],\n  "certifications":[{"name":"","issuer":"","year":""}],\n  "seo_focus_keywords":["laravel developer","vue.js developer","full stack developer"]\n}\n\nDescription from user: "${userPrompt}"`;
+    return `You are an expert developer profile generator for hiring marketplaces. Return ONLY valid JSON. No markdown, no explanations.\n\nExtract or generate a complete developer profile with these EXACT fields:\n{\n  "name":"", "title":"", "location":"", "bio":"",\n  "skills":[], "experience_years":0,\n  "github_url":"", "linkedin_url":"", "portfolio_url":"",\n  "experience":[{"role":"","company":"","period":"","description":""}],\n  "certifications":[{"name":"","issuer":"","year":""}],\n  "seo_focus_keywords":["laravel developer","vue.js developer","full stack developer"]\n}\n\nRules for quality:\n- Write a professional bio of 80-140 words, clear and recruiter-friendly.\n- Mention strengths, achievements, tech stack, and preferred role type.\n- Make the bio naturally SEO-friendly using role and stack keywords without keyword stuffing.\n- Keep skills practical and specific (frameworks, tools, cloud, testing).\n\nDescription from user: "${userPrompt}"`;
   },
 
   async generate(prompt, button) {
