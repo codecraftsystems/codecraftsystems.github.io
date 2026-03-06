@@ -648,79 +648,88 @@ function slugify(text){
   const certs = Array.isArray(d.certifications)?d.certifications:[];
 
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const doc = new jsPDF({ unit:'pt', format:'a4' });
 
-  let y = 20;
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const marginX = 42;
+  const maxW = pageW - marginX * 2;
+  const lineH = 15;
+  const sectionGap = 12;
+  let y = 48;
 
-  doc.setFontSize(18);
-  doc.text((d.name||'Developer').toUpperCase(),20,y);
+  const ensureSpace = (needed=22)=>{
+    if(y + needed > pageH - 42){
+      doc.addPage();
+      y = 48;
+    }
+  };
 
-  y+=10;
+  const writeLines = (text, size=11)=>{
+    const value = String(text||'').trim() || '—';
+    doc.setFontSize(size);
+    const lines = doc.splitTextToSize(value, maxW);
+    ensureSpace(lines.length * lineH + 8);
+    doc.text(lines, marginX, y);
+    y += lines.length * lineH;
+  };
+
+  const heading = (label)=>{
+    y += sectionGap;
+    ensureSpace(24);
+    doc.setFontSize(13);
+    doc.setFont(undefined, 'bold');
+    doc.text(label, marginX, y);
+    y += 8;
+    doc.setDrawColor(220);
+    doc.line(marginX, y, pageW - marginX, y);
+    y += 14;
+    doc.setFont(undefined, 'normal');
+  };
+
+  doc.setFont(undefined, 'bold');
+  doc.setFontSize(20);
+  doc.text((d.name||'Developer').toUpperCase(), marginX, y);
+  y += 22;
+
   doc.setFontSize(12);
-  doc.text(d.title||'Developer',20,y);
+  doc.text(d.title||'Developer', marginX, y);
+  y += 18;
 
-  y+=8;
-  doc.text(
-    [d.location,d.email||d.contact_email,d.github_url,d.linkedin_url,d.portfolio_url]
-      .filter(Boolean)
-      .join(' | '),
-    20,y
-  );
+  doc.setFont(undefined, 'normal');
+  writeLines([d.location,d.email||d.contact_email,d.github_url,d.linkedin_url,d.portfolio_url].filter(Boolean).join('  |  '), 10);
 
-  y+=15;
-  doc.setFontSize(14);
-  doc.text("PROFESSIONAL SUMMARY",20,y);
+  heading('PROFESSIONAL SUMMARY');
+  writeLines(d.bio||'No professional summary provided.', 11);
 
-  y+=8;
-  doc.setFontSize(11);
-  doc.text(doc.splitTextToSize(d.bio||'',170),20,y);
+  heading('CORE SKILLS');
+  writeLines(skills.length ? skills.join(', ') : 'No skills listed.', 11);
 
-  y+=20;
-  doc.setFontSize(14);
-  doc.text("CORE SKILLS",20,y);
-
-  y+=8;
-  doc.setFontSize(11);
-  doc.text(skills.join(', '),20,y);
-
-  y+=15;
-  doc.setFontSize(14);
-  doc.text("PROFESSIONAL EXPERIENCE",20,y);
-
-  y+=8;
-  doc.setFontSize(11);
-
+  heading('PROFESSIONAL EXPERIENCE');
   if(exp.length){
-    exp.forEach(e=>{
-      doc.text(`${e.role||'Developer'} — ${e.company||''}`,20,y);
-      y+=6;
-      doc.text(`${e.period||''}`,20,y);
-      y+=6;
-      doc.text(doc.splitTextToSize(e.description||'',170),20,y);
-      y+=10;
+    exp.forEach((e)=>{
+      ensureSpace(40);
+      doc.setFont(undefined, 'bold');
+      writeLines(`${e.role||'Developer'} — ${e.company||'Company'}`, 11);
+      doc.setFont(undefined, 'normal');
+      writeLines(`${e.period||''}`, 10);
+      writeLines(e.description||'No description provided.', 11);
+      y += 4;
     });
   } else {
-    doc.text("No work experience listed.",20,y);
+    writeLines('No work experience listed.', 11);
   }
 
-  y+=5;
-  doc.setFontSize(14);
-  doc.text("CERTIFICATIONS",20,y);
-
-  y+=8;
-  doc.setFontSize(11);
-
+  heading('CERTIFICATIONS');
   if(certs.length){
-    certs.forEach(c=>{
-      doc.text(`${c.name||c.title||''} — ${c.issuer||''} (${c.year||''})`,20,y);
-      y+=7;
-    });
+    certs.forEach((c)=>writeLines(`${c.name||c.title||'Certification'} — ${c.issuer||'Issuer'} (${c.year||'N/A'})`, 11));
   } else {
-    doc.text("No certifications listed.",20,y);
+    writeLines('No certifications listed.', 11);
   }
 
   doc.save(`${slugify(d.name||'developer')}-ats-resume.pdf`);
 }
+
 
 /* ══ BUILD HTML ══ */
 function buildProfile(d,others){

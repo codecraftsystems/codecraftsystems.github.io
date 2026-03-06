@@ -1,0 +1,6 @@
+{
+  "action": "resume_autofill",
+  "model": "gemini-2.5-flash-lite",
+  "temperature": 0.2,
+  "promptTemplate": "Extract a complete developer profile from the attached resume file. Prioritize real data from the resume and return ONLY valid JSON with the same schema as profile generation (name, title, location, bio, skills, experience_years, github_url, linkedin_url, portfolio_url, experience[], certifications[], seo_focus_keywords[])."
+}

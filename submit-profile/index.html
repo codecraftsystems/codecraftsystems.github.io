@@ -359,6 +359,10 @@ function closeMob(){document.getElementById('mob').classList.remove('on')}
 
 /* state */
 let SB=null,CU=null,EP=null,tags=[],exps=[];
+window.__setProfileTags=function(nextTags){tags=Array.isArray(nextTags)?nextTags:[];window.tags=tags;renderTags();updateProfileCompletion();};
+window.__setProfileExperiences=function(nextExps){exps=Array.isArray(nextExps)?nextExps:[];window.exps=exps;renderExps();updateProfileCompletion();};
+window.tags=tags;
+window.exps=exps;
 
 function getSession(){
   try{
