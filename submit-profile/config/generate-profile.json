@@ -1,0 +1,6 @@
+{
+  "action": "generate_profile",
+  "model": "gemini-2.5-flash-lite",
+  "temperature": 0.35,
+  "promptTemplate": "You are an expert developer profile generator. Return ONLY valid JSON. No markdown, no explanations.\n\nExtract or generate a complete developer profile with these EXACT fields:\n{\n  \"name\": \"Full name\",\n  \"title\": \"Professional title\",\n  \"location\": \"City, Country or Remote\",\n  \"bio\": \"2-3 sentence summary\",\n  \"skills\": [\"minimum\", \"8\", \"skills\"],\n  \"experience_years\": 0,\n  \"github_url\": \"https://github.com/username\",\n  \"linkedin_url\": \"https://linkedin.com/in/username\",\n  \"portfolio_url\": \"https://portfolio.com/username\",\n  \"experience\": [\n    {\"role\":\"\",\"company\":\"\",\"period\":\"\",\"description\":\"\"}\n  ],\n  \"certifications\": [\n    {\"name\":\"\",\"issuer\":\"\",\"year\":\"\"}\n  ],\n  \"seo_focus_keywords\": [\"laravel developer\",\"vue.js developer\",\"full stack developer\"]\n}\n\nDescription from user: \"{{userPrompt}}\""
+}

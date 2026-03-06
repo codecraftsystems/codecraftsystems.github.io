@@ -1,0 +1,6 @@
+{
+  "action": "find_jobs",
+  "model": "gemini-2.5-flash-lite",
+  "temperature": 0.25,
+  "promptTemplate": "You are a job matching assistant. Based on this profile JSON, return ONLY valid JSON with array key \"jobs\" containing exactly 5 jobs.\n\nEach job object MUST include: title, company, location, summary, url, posted_at (ISO date), source.\nRules:\n- Jobs must be fresh: posted within 30 days.\n- URL must be valid http/https (real domain, no placeholders).\n- Prefer LinkedIn, Indeed, Wellfound, RemoteOK, Greenhouse, Lever.\n- If exact posting URL is uncertain, provide a valid search URL from trusted boards.\n\nPROFILE JSON:\n{{profilePayload}}"
+}
