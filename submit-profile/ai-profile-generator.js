@@ -458,7 +458,7 @@ ${JSON.stringify(profilePayload)}` }]
     const parsed = JSON.parse(jsonMatch[0]);
       const rawJobs = Array.isArray(parsed.jobs) ? parsed.jobs.slice(0, 8) : [];
     const jobs = await this.sanitizeAndVerifyJobs(rawJobs, profilePayload);
-    this.renderJobs(jobs);
+    this.renderJobs(jobs, false, profilePayload);
 
     if (!jobs.length) {
       this.showToast('te', 'No Jobs Found', 'AI did not return job matches. Try again.');
@@ -471,7 +471,7 @@ ${JSON.stringify(profilePayload)}` }]
     return true;
   } catch (e) {
     console.error(e);
-    this.renderJobs([], true);
+    this.renderJobs([], true, profilePayload);
     this.showToast('te', 'Job Match Failed', 'Could not find jobs now. Please try again.');
     this.resetButton(button);
     return false;
@@ -566,6 +566,30 @@ AI_PROFILE_GENERATOR.buildFallbackJobUrl = function(job) {
   return `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(job.location || 'Remote')}&f_TPR=r2592000`;
 };
 
+AI_PROFILE_GENERATOR.getJobSearchHelpHtml = function(profilePayload) {
+  const title = this.escapeHtml(profilePayload?.title || 'Developer');
+  const location = this.escapeHtml(profilePayload?.location || 'Remote');
+  const query = encodeURIComponent(`${profilePayload?.title || 'Developer'} ${profilePayload?.location || 'Remote'}`.trim());
+  const links = [
+    { label: 'LinkedIn Jobs (last 30 days)', url: `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(profilePayload?.location || 'Remote')}&f_TPR=r2592000` },
+    { label: 'Indeed Jobs', url: `https://www.indeed.com/jobs?q=${query}` },
+    { label: 'Wellfound Startup Jobs', url: `https://wellfound.com/jobs?query=${query}` },
+    { label: 'RemoteOK', url: `https://remoteok.com/remote-${encodeURIComponent((profilePayload?.title || 'developer').toLowerCase().replace(/\s+/g, '-'))}-jobs` },
+    { label: 'Google Jobs Search', url: `https://www.google.com/search?q=${encodeURIComponent(`${profilePayload?.title || 'developer'} jobs in ${profilePayload?.location || 'remote'}`)}` }
+  ];
+
+  const linkItems = links
+    .map((item) => `<li><a class="job-link" href="${this.safeUrl(item.url)}" target="_blank" rel="noopener">${this.escapeHtml(item.label)}</a></li>`)
+    .join('');
+
+  return `<div class="job-item">
+    <div class="job-role">Need help finding jobs for ${title} (${location})?</div>
+    <div class="job-company">Try these trusted job sources:</div>
+    <ul style="margin:6px 0 8px 18px;padding:0;display:flex;flex-direction:column;gap:6px">${linkItems}</ul>
+    <div class="job-company" style="margin-bottom:0">Quick talent improvement tips: refresh your CV headline with measurable impact, add 2 recent projects with links, practice interview questions, and tailor applications for each role.</div>
+  </div>`;
+};
+
 AI_PROFILE_GENERATOR.verifyJobUrl = async function(value) {
   const url = this.normalizeJobUrl(value);
   if (!url || this.isPlaceholderJobUrl(url)) return false;
@@ -581,7 +605,7 @@ AI_PROFILE_GENERATOR.verifyJobUrl = async function(value) {
   }
 };
 
-AI_PROFILE_GENERATOR.renderJobs = function(jobs, forceEmpty) {
+AI_PROFILE_GENERATOR.renderJobs = function(jobs, forceEmpty, profilePayload) {
   const wrap = document.getElementById('jobListWrap');
   const list = document.getElementById('jobList');
   if (!wrap || !list) return;
@@ -589,7 +613,10 @@ AI_PROFILE_GENERATOR.renderJobs = function(jobs, forceEmpty) {
   wrap.style.display = 'block';
 
   if (!jobs.length) {
-    list.innerHTML = `<div class="job-empty">${forceEmpty ? 'No job results right now. Try changing your profile details and run again.' : 'No jobs found.'}</div>`;
+    const message = forceEmpty
+      ? 'No job results right now. Try changing your profile details and run again.'
+      : 'No jobs found from AI right now.';
+    list.innerHTML = `<div class="job-empty">${message}</div>${this.getJobSearchHelpHtml(profilePayload || {})}`;
     return;
   }
 
@@ -607,7 +634,7 @@ AI_PROFILE_GENERATOR.renderJobs = function(jobs, forceEmpty) {
       <div class="job-company">${summary}</div>
       <a class="job-link" href="${url}" target="_blank" rel="noopener">${url}</a>
     </div>`;
-  }).join('');
+  }).join('') + this.getJobSearchHelpHtml(profilePayload || {});
 };
 
 AI_PROFILE_GENERATOR.getPostedLabel = function(value) {
