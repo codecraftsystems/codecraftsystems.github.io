@@ -397,7 +397,22 @@ AI_PROFILE_GENERATOR.findJobs = async function(button) {
 
   const req = {
     contents: [{
-      parts: [{ text: `You are a job matching assistant. Based on this profile JSON, return ONLY valid JSON with an array key "jobs" containing exactly 5 jobs. Each job object must include title, company, location, summary, and url. The url must be a real-looking job posting URL.
+      parts: [{ text: `You are a job matching assistant. Based on this profile JSON, return ONLY valid JSON with an array key "jobs" containing exactly 5 jobs.
+
+Each job object MUST include:
+- title
+- company
+- location
+- summary
+- url
+- posted_at (ISO date)
+- source
+
+Rules:
+- Jobs must be fresh: posted today to last 30 days.
+- URL must be a real http/https URL (no placeholders, no example domains, no localhost, no fake domains).
+- Prefer well-known boards/sources: LinkedIn, Indeed, Wellfound, RemoteOK, Greenhouse, Lever.
+- If exact posting URLs are uncertain, use a valid search URL on one of these boards using title + location.
 
 PROFILE:
 ${JSON.stringify(profilePayload)}` }]
@@ -416,7 +431,8 @@ ${JSON.stringify(profilePayload)}` }]
     if (!jsonMatch) throw new Error('Invalid AI response');
 
     const parsed = JSON.parse(jsonMatch[0]);
-    const jobs = Array.isArray(parsed.jobs) ? parsed.jobs.slice(0, 5) : [];
+    const rawJobs = Array.isArray(parsed.jobs) ? parsed.jobs.slice(0, 8) : [];
+    const jobs = await this.sanitizeAndVerifyJobs(rawJobs, profilePayload);
     this.renderJobs(jobs);
 
     if (!jobs.length) {
@@ -433,6 +449,108 @@ ${JSON.stringify(profilePayload)}` }]
     this.renderJobs([], true);
     this.showToast('te', 'Job Match Failed', 'Could not find jobs now. Please try again.');
     this.resetButton(button);
+    return false;
+  }
+};
+
+AI_PROFILE_GENERATOR.sanitizeAndVerifyJobs = async function(jobs, profilePayload) {
+  const verified = [];
+
+  for (const job of jobs) {
+    if (verified.length >= 5) break;
+
+    const postedAt = this.normalizePostedDate(job?.posted_at || job?.postedDate || job?.date);
+    if (!this.isRecentDate(postedAt, 30)) continue;
+
+    const normalized = {
+      title: String(job?.title || '').trim(),
+      company: String(job?.company || '').trim(),
+      location: String(job?.location || profilePayload.location || 'Remote').trim(),
+      summary: String(job?.summary || '').trim(),
+      source: String(job?.source || '').trim(),
+      posted_at: postedAt,
+      url: this.normalizeJobUrl(job?.url)
+    };
+
+    if (!normalized.title) continue;
+    if (!normalized.company) normalized.company = 'Hiring Company';
+    if (!normalized.summary) normalized.summary = 'Matched to your profile based on skills and role preferences.';
+
+    if (!normalized.url || this.isPlaceholderJobUrl(normalized.url)) {
+      normalized.url = this.buildFallbackJobUrl(normalized);
+    }
+
+    const reachable = await this.verifyJobUrl(normalized.url);
+    if (!reachable) {
+      normalized.url = this.buildFallbackJobUrl(normalized);
+    }
+
+    verified.push(normalized);
+  }
+
+  return verified.slice(0, 5);
+};
+
+AI_PROFILE_GENERATOR.normalizePostedDate = function(value) {
+  if (!value) return new Date().toISOString();
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return new Date().toISOString();
+  return date.toISOString();
+};
+
+AI_PROFILE_GENERATOR.isRecentDate = function(value, days) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return false;
+  const now = Date.now();
+  const diffMs = now - date.getTime();
+  if (diffMs < 0) return true;
+  return diffMs <= days * 24 * 60 * 60 * 1000;
+};
+
+AI_PROFILE_GENERATOR.normalizeJobUrl = function(value) {
+  const input = String(value || '').trim();
+  if (!input) return '';
+
+  const candidate = /^https?:\/\//i.test(input) ? input : `https://${input.replace(/^\/+/, '')}`;
+
+  try {
+    const parsed = new URL(candidate);
+    if (!/^https?:$/i.test(parsed.protocol)) return '';
+    return parsed.toString();
+  } catch (error) {
+    return '';
+  }
+};
+
+AI_PROFILE_GENERATOR.isPlaceholderJobUrl = function(value) {
+  const lower = String(value || '').toLowerCase();
+  return (
+    !lower ||
+    lower.includes('example.com') ||
+    lower.includes('jobs.example') ||
+    lower.includes('localhost') ||
+    lower.includes('127.0.0.1') ||
+    lower.includes('your-domain') ||
+    lower.includes('placeholder')
+  );
+};
+
+AI_PROFILE_GENERATOR.buildFallbackJobUrl = function(job) {
+  const query = encodeURIComponent(`${job.title || 'developer'} ${job.location || 'remote'}`.trim());
+  return `https://www.linkedin.com/jobs/search/?keywords=${query}&location=${encodeURIComponent(job.location || 'Remote')}&f_TPR=r2592000`;
+};
+
+AI_PROFILE_GENERATOR.verifyJobUrl = async function(value) {
+  const url = this.normalizeJobUrl(value);
+  if (!url || this.isPlaceholderJobUrl(url)) return false;
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+    await fetch(url, { method: 'HEAD', mode: 'no-cors', signal: controller.signal });
+    clearTimeout(timer);
+    return true;
+  } catch (error) {
     return false;
   }
 };
@@ -454,15 +572,26 @@ AI_PROFILE_GENERATOR.renderJobs = function(jobs, forceEmpty) {
     const company = this.escapeHtml(job.company || 'Hiring Company');
     const location = this.escapeHtml(job.location || 'Remote');
     const summary = this.escapeHtml(job.summary || 'Role details generated by AI based on your profile.');
-    const url = this.safeUrl(job.url || 'https://jobs.example.com/role');
+    const url = this.safeUrl(job.url || this.buildFallbackJobUrl(job));
+    const postedLabel = this.getPostedLabel(job.posted_at);
 
     return `<div class="job-item">
       <div class="job-role">${title}</div>
-      <div class="job-company">${company} · ${location}</div>
+      <div class="job-company">${company} · ${location}${postedLabel ? ` · ${postedLabel}` : ''}</div>
       <div class="job-company">${summary}</div>
       <a class="job-link" href="${url}" target="_blank" rel="noopener">${url}</a>
     </div>`;
   }).join('');
+};
+
+AI_PROFILE_GENERATOR.getPostedLabel = function(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const diff = Math.floor((Date.now() - date.getTime()) / (24 * 60 * 60 * 1000));
+  if (diff <= 0) return 'Posted today';
+  if (diff === 1) return 'Posted 1 day ago';
+  return `Posted ${diff} days ago`;
 };
 
 AI_PROFILE_GENERATOR.escapeHtml = function(v) {
@@ -474,9 +603,9 @@ AI_PROFILE_GENERATOR.escapeHtml = function(v) {
 };
 
 AI_PROFILE_GENERATOR.safeUrl = function(url) {
-  const value = String(url || '').trim();
-  if (/^https?:\/\//i.test(value)) return this.escapeHtml(value);
-  return 'https://jobs.example.com';
+  const value = this.normalizeJobUrl(url);
+  if (value && !this.isPlaceholderJobUrl(value)) return this.escapeHtml(value);
+  return this.buildFallbackJobUrl({ title: 'Developer', location: 'Remote' });
 };
 
 window.findJobsWithAI = async function(button) {
