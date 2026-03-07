@@ -28,8 +28,8 @@ img,svg{max-width:100%;display:block}
   --black:#f4f7fb;--dark:#ffffff;--card:#ffffff;--card2:#ffffff;
   --border:#252525;--border2:#2e2e2e;
   --accent:#ff4d00;--accent2:#ffb800;
-  --vue:#42b883;--laravel:#ff2d20;--white:#f0ebe4;
-  --muted:#777;--muted2:#555;
+  --vue:#42b883;--laravel:#ff2d20;--white:#1f2937;
+  --muted:#4b5563;--muted2:#6b7280;
   --font-d:'Bebas Neue',sans-serif;
   --font-b:'DM Sans',sans-serif;
   --font-m:'JetBrains Mono',monospace;
@@ -243,22 +243,22 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(2
 <!-- Mobile menu -->
 <div class="mob-menu" id="mob">
   <button class="mob-close" onclick="closeMob()">✕</button>
-  <a href="https://codecraftsystems.github.io/" onclick="closeMob()">Home</a>
-  <a href="https://codecraftsystems.github.io/#services" onclick="closeMob()">Services</a>
-  <a href="/developers/" onclick="closeMob()">Developers</a>
-  <a href="/developers-open-to-work/" onclick="closeMob()">Open to Work</a>
-  <a href="/submit-profile/" onclick="closeMob()">Add Profile</a>
-  <a href="https://codecraftsystems.github.io/#contact" onclick="closeMob()">Contact</a>
+  <a href="../" onclick="closeMob()">Home</a>
+  <a href="../#services" onclick="closeMob()">Services</a>
+  <a href="./" onclick="closeMob()">Developers</a>
+  <a href="../developers-open-to-work/" onclick="closeMob()">Open to Work</a>
+  <a href="../submit-profile/" onclick="closeMob()">Add Profile</a>
+  <a href="../#contact" onclick="closeMob()">Contact</a>
 </div>
 
 <!-- Nav -->
 <nav class="nav" id="nav">
-  <a href="https://codecraftsystems.github.io/" class="nav-logo">Code<em>Craft</em></a>
+  <a href="../" class="nav-logo">Code<em>Craft</em></a>
   <ul class="nav-links">
-    <li><a href="https://codecraftsystems.github.io/">Home</a></li>
-    <li><a href="/developers/">Developers</a></li>
-    <li><a href="/developers-open-to-work/">Open to Work</a></li>
-    <li><a href="/submit-profile/" class="btn-nav">Add Profile</a></li>
+    <li><a href="../">Home</a></li>
+    <li><a href="./">Developers</a></li>
+    <li><a href="../developers-open-to-work/">Open to Work</a></li>
+    <li><a href="../submit-profile/" class="btn-nav">Add Profile</a></li>
   </ul>
   <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
@@ -319,8 +319,8 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(2
       <p>Add your profile for free — get discovered by employers in UK, USA & globally.</p>
     </div>
     <div class="cta-banner-actions">
-      <a href="/submit-profile/" class="btn-cta primary">Add Your Profile →</a>
-      <a href="/developers-open-to-work/" class="btn-cta secondary">Hiring? See Available Devs</a>
+      <a href="../submit-profile/" class="btn-cta primary">Add Your Profile →</a>
+      <a href="../developers-open-to-work/" class="btn-cta secondary">Hiring? See Available Devs</a>
     </div>
   </div>
 
@@ -349,10 +349,10 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(2
     <div class="footer-logo">Code<em>Craft</em></div>
     <p class="footer-copy">© <span id="yr"></span> CodeCraft Studio · Sonu Sahani</p>
     <ul class="footer-links">
-      <li><a href="https://codecraftsystems.github.io/">Home</a></li>
-      <li><a href="/developers/">Developers</a></li>
-      <li><a href="/submit-profile/">Add Profile</a></li>
-      <li><a href="https://codecraftsystems.github.io/#contact">Contact</a></li>
+      <li><a href="../">Home</a></li>
+      <li><a href="./">Developers</a></li>
+      <li><a href="../submit-profile/">Add Profile</a></li>
+      <li><a href="../#contact">Contact</a></li>
     </ul>
   </div>
 </footer>
@@ -427,7 +427,7 @@ function renderCard(dev,i){
     </div>
     <div class="card-foot">
       <div class="card-exp"><strong>${Number(dev.experience_years||0)}</strong> yrs exp</div>
-      <a class="card-btn" href="/developer/${encodeURIComponent(dev.slug||dev.id||'')}" itemprop="url">View Profile →</a>
+      <a class="card-btn" href="../developer/${encodeURIComponent(dev.slug||dev.id||'')}" itemprop="url">View Profile →</a>
     </div>
   </article>`;
 }

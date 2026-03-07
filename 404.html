@@ -13,12 +13,31 @@
     var path = window.location.pathname;
     var devMarker = '/developer/';
     var idx = path.indexOf(devMarker);
+
     if (idx !== -1 && !path.endsWith('/developer/') && !path.endsWith('/developer')) {
-      var slug = path.slice(idx + devMarker.length).replace(/\/$/, '');
-      if (slug) {
+      var slugFromDeveloperPath = path.slice(idx + devMarker.length).replace(/\/$/, '');
+      if (slugFromDeveloperPath) {
         var basePath = idx > 0 ? path.slice(0, idx) : '';
-        window.location.replace(basePath + '/developer/?slug=' + encodeURIComponent(slug) + '&clean=1');
+        window.location.replace(basePath + '/developer/?slug=' + encodeURIComponent(slugFromDeveloperPath) + '&clean=1');
+        return;
       }
+    }
+
+    var cleanPath = path.replace(/\/+$/, '');
+    var segments = cleanPath.split('/').filter(Boolean);
+    var reserved = new Set(['developer','developers','developers-open-to-work','submit-profile','auth','services','blog','database','assets','supabase']);
+    var basePrefix = '';
+    var possibleSlug = '';
+
+    if (segments.length === 1) {
+      possibleSlug = segments[0];
+    } else if (segments.length === 2 && segments[0] === 'codecraftsystems.github.io') {
+      basePrefix = '/' + segments[0];
+      possibleSlug = segments[1];
+    }
+
+    if (possibleSlug && !reserved.has(possibleSlug) && !possibleSlug.includes('.')) {
+      window.location.replace(basePrefix + '/developer/?slug=' + encodeURIComponent(possibleSlug) + '&clean=1');
     }
   })();
 </script>
