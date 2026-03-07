@@ -106,6 +106,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .req{color:var(--accent)}
 .fhint{font-size:.68rem;color:var(--muted2);line-height:1.4}
 .input,.ta,.sel{background:var(--card2);border:1px solid var(--border2);color:var(--white);padding:clamp(9px,1.5vw,11px) clamp(11px,2vw,14px);border-radius:6px;font-family:var(--font-b);transition:border-color .2s,box-shadow .2s;width:100%;outline:none;-webkit-appearance:none;font-size:16px}
+.input::placeholder,.ta::placeholder,.taginp::placeholder{font-size:.8rem;color:var(--muted2)}
 .input:focus,.ta:focus,.sel:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,77,0,.08)}
 .input.ok{border-color:rgba(34,197,94,.35)}.input.er{border-color:rgba(239,68,68,.4)}
 .ta{resize:vertical;min-height:100px;line-height:1.7}
@@ -170,12 +171,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .pc-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--a2));transition:width .25s ease}
 .pc-note{margin-top:6px;font-size:.68rem;color:var(--muted)}
 
-.btn{display:inline-flex;align-items:center;gap:7px;padding:clamp(9px,1.8vw,11px) clamp(16px,3vw,24px);border-radius:3px;font-weight:700;font-size:.82rem;cursor:pointer;font-family:var(--font-b);transition:all .22s;white-space:nowrap;border:none;text-decoration:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:clamp(10px,1.8vw,12px) clamp(16px,3vw,24px);border-radius:10px;font-weight:700;font-size:.8rem;cursor:pointer;font-family:var(--font-b);transition:all .22s;white-space:nowrap;border:1px solid transparent;text-decoration:none;min-height:44px}
 .btn-p{background:var(--accent);color:var(--white)}
 .btn-p:hover:not(:disabled){background:#d94000;transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,77,0,.26)}
 .btn-p:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.btn-g{border:1px solid var(--border2);color:var(--muted);background:none}
-.btn-g:hover{border-color:var(--white);color:var(--white)}
+.btn-g{border:1px solid var(--border2);color:var(--muted);background:linear-gradient(180deg,#ffffff,#f7f9fc)}
+.btn-g:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:0 8px 20px rgba(255,77,0,.14)}
+.ai-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+.ai-actions .btn{width:100%}
 .btn-d{border:1px solid rgba(239,68,68,.26);color:var(--danger);background:none}
 .btn-d:hover{border-color:var(--danger);background:rgba(239,68,68,.05)}
 .btn-sm{padding:6px 12px;font-size:.74rem}
@@ -309,16 +312,16 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
 <!-- Mobile menu -->
 <div class="mob" id="mob">
   <button class="mob-x" onclick="closeMob()">✕</button>
-  <a href="https://codecraftsystems.github.io/" onclick="closeMob()">Home</a>
+  <a href="../" onclick="closeMob()">Home</a>
   <a href="../developers/" onclick="closeMob()">All Developers</a>
   <a href="../submit-profile/" onclick="closeMob()">My Profile</a>
-  <a href="https://codecraftsystems.github.io/#contact" onclick="closeMob()">Contact</a>
+  <a href="../#contact" onclick="closeMob()">Contact</a>
 </div>
 
 <nav class="nav" id="nav">
-  <a href="https://codecraftsystems.github.io/" class="nav-logo">Code<b>Craft</b></a>
+  <a href="../" class="nav-logo">Code<b>Craft</b></a>
   <ul class="nav-links">
-    <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+    <li><a href="../">Home</a></li>
     <li><a href="../developers/">Developers</a></li>
     <li><a href="../developer/" id="nvView" style="display:none">View My Profile</a></li>
     <li><a href="#" id="nvLogout" style="display:none" onclick="doLogout(event)">Logout</a></li>
@@ -342,7 +345,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
     <p class="fc">© <span id="yr"></span> CodeCraft Systems</p>
     <ul class="flinks">
       <li><a href="../developers/">All Developers</a></li>
-      <li><a href="https://codecraftsystems.github.io/#contact">Contact</a></li>
+      <li><a href="../#contact">Contact</a></li>
     </ul>
   </div>
 </footer>
@@ -710,7 +713,8 @@ function populate(d){
 
 /* render wall */
 function renderWall(){
-  document.getElementById('root').innerHTML='<div class="page"><div class="auth-wall"><div class="auth-icon">🔒</div><h1 class="auth-title">LOGIN REQUIRED</h1><p class="auth-sub">Sign in to create or manage your developer profile in the CodeCraft talent network.</p><a class="btn btn-p" href="../auth/?next=/submit-profile/">Sign In with Email OTP →</a></div></div>';
+  const nextPath = encodeURIComponent(location.pathname.replace(/index\.html$/,'') || '/submit-profile/');
+  document.getElementById('root').innerHTML='<div class="page"><div class="auth-wall"><div class="auth-icon">🔒</div><h1 class="auth-title">LOGIN REQUIRED</h1><p class="auth-sub">Sign in to create or manage your developer profile in the CodeCraft talent network.</p><a class="btn btn-p" href="../auth/?next='+nextPath+'">Sign In with Email OTP →</a></div></div>';
 }
 
 /* render form */
@@ -723,7 +727,7 @@ function renderForm(profile){
   <div class="page">
     <div class="pg-header">
       <div class="pg-bc">
-        <a href="https://codecraftsystems.github.io/">Home</a><span class="pg-bc-sep">›</span>
+        <a href="../">Home</a><span class="pg-bc-sep">›</span>
         <a href="../developers/">Developers</a><span class="pg-bc-sep">›</span>
         <span>${isEdit?'Edit Profile':'Create Profile'}</span>
       </div>
@@ -785,9 +789,9 @@ function renderForm(profile){
     id="ai_prompt"
     class="ta"
     placeholder="Example: Laravel + Vue.js engineer with 6 years building SaaS products. Include your industries, achievements, and the type of role you want next."
-    style="min-height:80px;margin-bottom:8px"></textarea>
+    style="min-height:180px;margin-bottom:8px"></textarea>
 
-  <div class="ai-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+  <div class="ai-actions">
     <button
       type="button"
       class="btn btn-g"
