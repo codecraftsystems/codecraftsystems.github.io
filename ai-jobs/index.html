@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Jobs | CodeCraft Systems</title>
+<meta name="description" content="Find matching developer jobs with AI after your profile is complete.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--border:#d9e2ef;--text:#1f2937;--muted:#5f6b7a;--accent:#ff4d00}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif}
+.nav{position:sticky;top:0;z-index:10;background:rgba(244,247,251,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;color:var(--text);text-decoration:none}.logo b{color:var(--accent);font-weight:400}
+.nav-links{display:flex;gap:14px;list-style:none;margin:0;padding:0}.nav-links a{text-decoration:none;color:var(--muted);font-size:.83rem;text-transform:uppercase;font-weight:600;letter-spacing:.6px}
+.nav-links a.active{color:var(--accent)}
+.wrap{max-width:980px;margin:0 auto;padding:28px 16px 70px}
+.hero{background:linear-gradient(145deg,#fff,#f8fbff);border:1px solid var(--border);border-radius:18px;padding:clamp(18px,4vw,34px)}
+.k{display:inline-block;padding:5px 10px;border-radius:99px;background:rgba(255,77,0,.08);color:var(--accent);font-size:.72rem;font-weight:700}
+h1{margin:12px 0 8px;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;font-size:clamp(2rem,5vw,3.1rem);line-height:1}
+.p{color:var(--muted);max-width:690px}
+.btn{margin-top:16px;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:12px 18px;min-height:46px;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.65;cursor:not-allowed}
+.panel{margin-top:16px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
+.info{font-size:.92rem;color:var(--muted)}
+.info.ok{color:#166534}.info.err{color:#b91c1c}
+.job-list-wrap{display:none;margin-top:16px}.job-list-title{font-weight:700;margin-bottom:8px}
+.job-list{display:grid;gap:10px}.job-item{background:#fff;border:1px solid var(--border);border-radius:10px;padding:11px}
+.job-role{font-weight:700}.job-company{font-size:.86rem;color:var(--muted);margin-top:3px}.job-link{display:block;margin-top:6px;color:#1d4ed8;word-break:break-all}
+@media (max-width:760px){.nav-links{gap:10px}.nav-links a{font-size:.73rem}}
+@media (max-width:620px){.nav{align-items:flex-start;flex-direction:column;gap:8px}.nav-links{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="logo" href="../">Code<b>Craft</b></a>
+  <ul class="nav-links">
+    <li><a href="../">Home</a></li>
+    <li><a href="../developers/">Developers</a></li>
+    <li><a href="../submit-profile/">My Profile</a></li>
+    <li><a href="./" class="active">AI Jobs</a></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="k">AI Career Assistant</span>
+    <h1>AI JOBS FOR DEVELOPERS</h1>
+    <p class="p">Click the button to find matching jobs with AI. We first validate your profile completion. If profile is incomplete, we show a clear message to complete your profile first.</p>
+    <button class="btn" id="findJobBtn" type="button" onclick="runJobSearch(this)">💼 Find Jobs with AI</button>
+    <div class="panel">
+      <div class="info" id="statusMsg">Login required to continue.</div>
+      <div class="job-list-wrap" id="jobListWrap">
+        <div class="job-list-title">AI Job Matches (Top 5)</div>
+        <div class="job-list" id="jobList"></div>
+      </div>
+    </div>
+  </section>
+
+  <input id="f_name" type="hidden"><input id="f_title" type="hidden"><input id="f_loc" type="hidden">
+  <input id="f_bio" type="hidden"><input id="f_exp" type="hidden"><input id="f_github" type="hidden">
+  <input id="f_linkedin" type="hidden"><input id="f_portfolio" type="hidden">
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/supabase-config.js"></script>
+<script src="../assets/developers.js"></script>
+<script src="../submit-profile/ai-profile-generator.js"></script>
+<script>
+'use strict';
+let SB=null, session=null, profile=null;
+window.tags=[];
+function toast(type,title,msg){const el=document.getElementById('statusMsg');if(!el)return;el.textContent=(title?title+': ':'')+(msg||'');el.className='info '+(type==='ts'?'ok':type==='te'?'err':'');}
+function getSession(){try{const raw=localStorage.getItem('cc_session');if(!raw)return null;const s=JSON.parse(raw);if(!s?.email||!s?.loginAt)return null;if(Date.now()-s.loginAt>7*24*60*60*1000){localStorage.removeItem('cc_session');return null;}return s;}catch(e){return null;}}
+function applyProfile(p){
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
+  set('f_name',p?.name);set('f_title',p?.title);set('f_loc',p?.location||'Remote');set('f_bio',p?.bio);set('f_exp',p?.experience_years||0);
+  set('f_github',p?.github_url);set('f_linkedin',p?.linkedin_url);set('f_portfolio',p?.portfolio_url);
+  window.tags=(p?.skills||'').split(',').map(s=>s.trim()).filter(Boolean);
+}
+function getMissingFields(p){
+  const missing=[];
+  if(!p?.name || p.name.trim().length<2) missing.push('Full Name');
+  if(!p?.title || p.title.trim().length<2) missing.push('Professional Title');
+  if(!p?.bio || p.bio.trim().length<20) missing.push('Bio (minimum 20 chars)');
+  if(!p?.skills || !String(p.skills).trim()) missing.push('Skills');
+  return missing;
+}
+async function runJobSearch(btn){
+  if(!session){window.location.href='../auth/?next='+encodeURIComponent('/ai-jobs/');return;}
+  if(!profile){toast('te','Profile missing','Please create your profile first.');setTimeout(()=>window.location.href='../submit-profile/',1200);return;}
+  const missing=getMissingFields(profile);
+  if(missing.length){toast('te','Complete profile first','Please complete: '+missing.join(', ')+'.');return;}
+  applyProfile(profile);
+  toast('ti','Processing','Finding jobs with AI...');
+  if(typeof window.findJobsWithAI==='function') await window.findJobsWithAI(btn);
+}
+(async function boot(){
+  try{if(typeof devDirectory!=='undefined'&&devDirectory.createClient)SB=devDirectory.createClient();}catch(e){}
+  session=getSession();
+  const btn=document.getElementById('findJobBtn');
+  if(!session){document.getElementById('statusMsg').innerHTML='Please login first to use AI Jobs. <a href="../auth/?next=%2Fai-jobs%2F">Login here</a>.';btn.disabled=false;return;}
+  if(!SB){toast('te','Setup issue','Database client unavailable.');btn.disabled=true;return;}
+  try{
+    const {data,error}=await SB.from('developers').select('*').eq('email',session.email).maybeSingle();
+    if(error) throw error;
+    profile=data||null;
+    if(!profile){toast('te','No profile found','Create profile to unlock AI Jobs.');return;}
+    const missing=getMissingFields(profile);
+    if(missing.length){toast('te','Profile incomplete','Complete profile fields first: '+missing.join(', ')+'.');return;}
+    toast('ts','Ready','Your profile is complete. Click "💼 Find Jobs with AI".');
+  }catch(e){toast('te','Error',e.message||'Could not load profile.');}
+})();
+</script>
+</body>
+</html>
