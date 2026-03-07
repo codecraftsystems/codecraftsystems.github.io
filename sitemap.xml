@@ -121,6 +121,14 @@
     <priority>0.9</priority>
   </url>
 
+
+  <url>
+    <loc>https://codecraftsystems.github.io/ai-job-finder/</loc>
+    <lastmod>2026-03-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <url>
     <loc>https://codecraftsystems.github.io/submit-profile/</loc>
     <lastmod>2026-03-05</lastmod>
