@@ -901,30 +901,13 @@ footer{
   .flinks{justify-content:center}
 }
 </style>
+<link rel="stylesheet" href="../assets/shared-layout.css">
 </head>
 <body>
 
 <div class="toasts" id="toasts"></div>
 
-<!-- Mobile menu -->
-<div class="mob" id="mob">
-  <button class="mob-x" onclick="closeMob()">✕</button>
-  <a href="../" onclick="closeMob()">Home</a>
-  <a href="../developers/" onclick="closeMob()">Developers</a>
-  <a href="../submit-profile/" onclick="closeMob()">My Profile</a>
-  <a href="./" onclick="closeMob()">Find Jobs with AI</a>
-</div>
-
-<nav class="nav" id="nav">
-  <a href="../" class="nav-logo">Code<b>Craft</b></a>
-  <ul class="nav-links">
-    <li><a href="../">Home</a></li>
-    <li><a href="../developers/">Developers</a></li>
-    <li><a href="../submit-profile/">My Profile</a></li>
-    <li><a href="./" class="active">Find Jobs with AI</a></li>
-  </ul>
-  <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
-</nav>
+<div data-shared-header></div>
 
 <div class="page">
 
@@ -1037,26 +1020,13 @@ footer{
 
 </div><!-- .page -->
 
-<footer>
-  <div class="fi">
-    <div class="fl">Code<b>Craft</b></div>
-    <p class="fc">© <span id="yr"></span> CodeCraft Systems</p>
-    <ul class="flinks">
-      <li><a href="../developers/">All Developers</a></li>
-      <li><a href="../#contact">Contact</a></li>
-    </ul>
-  </div>
-</footer>
+<div data-shared-footer></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/supabase-config.js"></script>
 <script src="../assets/developers.js"></script>
 <script>
 'use strict';
-document.getElementById('yr').textContent = new Date().getFullYear();
-window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('stuck', scrollY > 36));
-function toggleMob() { document.getElementById('mob').classList.toggle('on'); }
-function closeMob() { document.getElementById('mob').classList.remove('on'); }
 
 let SB = null, session = null, profile = null;
 window.tags = [];
@@ -1682,5 +1652,6 @@ function getSession() {
   }
 })();
 </script>
+<script src="../assets/shared-layout.js"></script>
 </body>
 </html>

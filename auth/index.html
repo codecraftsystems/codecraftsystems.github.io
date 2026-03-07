@@ -534,6 +534,7 @@ footer{
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 <link rel="stylesheet" href="../assets/ui-polish.css">
+<link rel="stylesheet" href="../assets/shared-layout.css">
 </head>
 <body>
 
@@ -543,11 +544,7 @@ footer{
 <div class="amb amb-2" aria-hidden="true"></div>
 <div class="amb amb-3" aria-hidden="true"></div>
 
-<!-- NAV -->
-<nav class="nav" aria-label="Navigation">
-  <a href="../" class="nav-logo">Code<b>Craft</b></a>
-  <a href="../developers/" class="nav-link">← All Developers</a>
-</nav>
+<div data-shared-header></div>
 
 <!-- PAGE -->
 <main class="page">
@@ -684,16 +681,7 @@ footer{
   </div>
 </main>
 
-<footer>
-  <div class="fi">
-    <div class="fl">Code<b>Craft</b></div>
-    <p class="fc">© <span id="yr"></span> CodeCraft Systems</p>
-    <ul class="flinks">
-      <li><a href="../developers/">Developers</a></li>
-      <li><a href="../submit-profile/">Add Profile</a></li>
-    </ul>
-  </div>
-</footer>
+<div data-shared-footer></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/supabase-config.js"></script>
@@ -737,7 +725,6 @@ var CFG = {
     requestAnimationFrame(loop);
   })();
 })();
-document.getElementById('yr').textContent = new Date().getFullYear();
 
 /* ── SUPABASE ── */
 var sb = null;
@@ -1070,5 +1057,6 @@ document.getElementById('diffUserBtn').onclick    = function(){ OtpFlow.logout()
 })();
 </script>
 <script src="../assets/ui-polish.js"></script>
+<script src="../assets/shared-layout.js"></script>
 </body>
 </html>
