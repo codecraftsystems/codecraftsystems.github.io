@@ -66,10 +66,10 @@ html, body { max-width:100%; overflow-x:hidden; }
 img, video, iframe { max-width:100%; height:auto; display:block; }
 
 :root {
-  --black:   #090909;
-  --dark:    #101010;
-  --card:    #151515;
-  --card2:   #1a1a1a;
+  --black:   #f4f7fb;
+  --dark:    #ffffff;
+  --card:    #ffffff;
+  --card2:   #eef3f9;
   --border:  #252525;
   --border2: #2f2f2f;
 
@@ -102,7 +102,7 @@ body {
   font-family: var(--font-body);
   line-height: 1.65;
   overflow-x: hidden;
-  cursor: none;
+  cursor: auto;
 }
 
 /* Noise overlay */
@@ -113,7 +113,7 @@ body::before {
 }
 
 /* ────── CURSOR ────── */
-.cur  { width:10px; height:10px; background:var(--accent); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9999; mix-blend-mode:difference; transition:transform .12s; }
+.cur  { display:none; width:10px; height:10px; background:var(--accent); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9999; mix-blend-mode:normal; transition:transform .12s; }
 .cur2 { width:36px; height:36px; border:1px solid rgba(255,77,0,.5); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9998; transition:all .28s ease; }
 
 /* ════════════════════════════════════════════════
@@ -128,7 +128,7 @@ body::before {
   transition:all .3s;
 }
 .nav.scrolled {
-  background:rgba(9,9,9,.96);
+  background:rgba(244,247,251,.96);
   border-color:var(--border);
   backdrop-filter:blur(24px);
 }
@@ -149,7 +149,7 @@ body::before {
 
 .mobile-menu {
   display:none; position:fixed; inset:0; z-index:990;
-  background:rgba(9,9,9,.99); flex-direction:column;
+  background:rgba(244,247,251,.99); flex-direction:column;
   align-items:center; justify-content:center; gap:clamp(20px,5vh,40px);
   padding:var(--nav-h) 24px 40px;
 }
