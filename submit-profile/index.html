@@ -16,23 +16,23 @@
 html,body{max-width:100vw;overflow-x:hidden}
 img,svg{max-width:100%;display:block}
 :root{
-  --black:#090909;--dark:#0f0f0f;--card:#141414;--card2:#1a1a1a;
-  --border:#1e1e1e;--border2:#272727;
+  --black:#f4f7fb;--dark:#ffffff;--card:#ffffff;--card2:#eef3f9;
+  --border:#d9e2ef;--border2:#cfd8e3;
   --accent:#ff4d00;--a2:#ffb800;--vue:#42b883;
   --success:#22c55e;--danger:#ef4444;
-  --white:#ede8e1;--muted:#656565;--muted2:#333;
+  --white:#1f2937;--muted:#5f6b7a;--muted2:#6b7280;
   --font-d:'Bebas Neue',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'JetBrains Mono',monospace;
   --nav-h:62px;
 }
 html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--white);font-family:var(--font-b);font-size:16px;line-height:1.6;cursor:none}
+body{background:var(--black);color:var(--white);font-family:var(--font-b);font-size:16px;line-height:1.6;cursor:auto}
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.3}
 
-#cur{width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;mix-blend-mode:difference}
+#cur{display:none;width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;mix-blend-mode:normal}
 #cur-r{width:34px;height:34px;border:1px solid rgba(255,77,0,.4);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transition:all .24s ease;opacity:.5}
 
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);padding:0 clamp(14px,4vw,40px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:all .3s}
-.nav.stuck{background:rgba(9,9,9,.97);border-color:var(--border);backdrop-filter:blur(20px)}
+.nav.stuck{background:rgba(244,247,251,.97);border-color:var(--border);backdrop-filter:blur(20px)}
 .nav-logo{font-family:var(--font-d);font-size:clamp(1.2rem,3vw,1.7rem);letter-spacing:2px;color:var(--white);text-decoration:none;flex-shrink:0}
 .nav-logo b{color:var(--accent);font-weight:400}
 .nav-links{display:flex;gap:clamp(12px,2vw,26px);list-style:none;align-items:center}
@@ -41,7 +41,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .nav-cta{background:var(--accent)!important;color:var(--white)!important;padding:7px 18px;border-radius:2px;font-weight:600!important}
 .ham{display:none;flex-direction:column;gap:5px;cursor:pointer;border:none;background:none;padding:4px;flex-shrink:0}
 .ham span{width:24px;height:2px;background:var(--white);border-radius:2px;display:block;transition:all .3s}
-.mob{display:none;position:fixed;inset:0;background:rgba(9,9,9,.99);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.mob{display:none;position:fixed;inset:0;background:rgba(244,247,251,.99);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:28px}
 .mob.on{display:flex}
 .mob a{font-family:var(--font-d);font-size:clamp(1.8rem,6vw,2.6rem);color:var(--white);text-decoration:none;letter-spacing:2px;transition:color .2s}
 .mob a:hover{color:var(--accent)}
@@ -106,6 +106,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .req{color:var(--accent)}
 .fhint{font-size:.68rem;color:var(--muted2);line-height:1.4}
 .input,.ta,.sel{background:var(--card2);border:1px solid var(--border2);color:var(--white);padding:clamp(9px,1.5vw,11px) clamp(11px,2vw,14px);border-radius:6px;font-family:var(--font-b);transition:border-color .2s,box-shadow .2s;width:100%;outline:none;-webkit-appearance:none;font-size:16px}
+.input::placeholder,.ta::placeholder,.taginp::placeholder{font-size:.8rem;color:var(--muted2)}
 .input:focus,.ta:focus,.sel:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,77,0,.08)}
 .input.ok{border-color:rgba(34,197,94,.35)}.input.er{border-color:rgba(239,68,68,.4)}
 .ta{resize:vertical;min-height:100px;line-height:1.7}
@@ -170,12 +171,14 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .pc-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--a2));transition:width .25s ease}
 .pc-note{margin-top:6px;font-size:.68rem;color:var(--muted)}
 
-.btn{display:inline-flex;align-items:center;gap:7px;padding:clamp(9px,1.8vw,11px) clamp(16px,3vw,24px);border-radius:3px;font-weight:700;font-size:.82rem;cursor:pointer;font-family:var(--font-b);transition:all .22s;white-space:nowrap;border:none;text-decoration:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:clamp(10px,1.8vw,12px) clamp(16px,3vw,24px);border-radius:10px;font-weight:700;font-size:.8rem;cursor:pointer;font-family:var(--font-b);transition:all .22s;white-space:nowrap;border:1px solid transparent;text-decoration:none;min-height:44px}
 .btn-p{background:var(--accent);color:var(--white)}
 .btn-p:hover:not(:disabled){background:#d94000;transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,77,0,.26)}
 .btn-p:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.btn-g{border:1px solid var(--border2);color:var(--muted);background:none}
-.btn-g:hover{border-color:var(--white);color:var(--white)}
+.btn-g{border:1px solid var(--border2);color:var(--muted);background:linear-gradient(180deg,#ffffff,#f7f9fc)}
+.btn-g:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:0 8px 20px rgba(255,77,0,.14)}
+.ai-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+.ai-actions .btn{width:100%}
 .btn-d{border:1px solid rgba(239,68,68,.26);color:var(--danger);background:none}
 .btn-d:hover{border-color:var(--danger);background:rgba(239,68,68,.05)}
 .btn-sm{padding:6px 12px;font-size:.74rem}
@@ -309,16 +312,16 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
 <!-- Mobile menu -->
 <div class="mob" id="mob">
   <button class="mob-x" onclick="closeMob()">✕</button>
-  <a href="https://codecraftsystems.github.io/" onclick="closeMob()">Home</a>
+  <a href="../" onclick="closeMob()">Home</a>
   <a href="../developers/" onclick="closeMob()">All Developers</a>
   <a href="../submit-profile/" onclick="closeMob()">My Profile</a>
-  <a href="https://codecraftsystems.github.io/#contact" onclick="closeMob()">Contact</a>
+  <a href="../#contact" onclick="closeMob()">Contact</a>
 </div>
 
 <nav class="nav" id="nav">
-  <a href="https://codecraftsystems.github.io/" class="nav-logo">Code<b>Craft</b></a>
+  <a href="../" class="nav-logo">Code<b>Craft</b></a>
   <ul class="nav-links">
-    <li><a href="https://codecraftsystems.github.io/">Home</a></li>
+    <li><a href="../">Home</a></li>
     <li><a href="../developers/">Developers</a></li>
     <li><a href="../developer/" id="nvView" style="display:none">View My Profile</a></li>
     <li><a href="#" id="nvLogout" style="display:none" onclick="doLogout(event)">Logout</a></li>
@@ -342,7 +345,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
     <p class="fc">© <span id="yr"></span> CodeCraft Systems</p>
     <ul class="flinks">
       <li><a href="../developers/">All Developers</a></li>
-      <li><a href="https://codecraftsystems.github.io/#contact">Contact</a></li>
+      <li><a href="../#contact">Contact</a></li>
     </ul>
   </div>
 </footer>
@@ -409,7 +412,7 @@ function tagStyle(s){
   if(l.includes('quasar'))return'background:rgba(0,180,255,.07);border-color:rgba(0,180,255,.22);color:#00b4ff';
   if(l.includes('php'))return'background:rgba(119,123,180,.1);border-color:rgba(119,123,180,.25);color:#9b9fd4';
   if(l.includes('js')||l.includes('typescript'))return'background:rgba(255,184,0,.07);border-color:rgba(255,184,0,.22);color:#ffb800';
-  return'background:rgba(255,255,255,.04);border-color:#272727;color:#656565';
+  return'background:rgba(31,41,55,.04);border-color:#cfd8e3;color:#5f6b7a';
 }
 
 /* toast */
@@ -710,7 +713,8 @@ function populate(d){
 
 /* render wall */
 function renderWall(){
-  document.getElementById('root').innerHTML='<div class="page"><div class="auth-wall"><div class="auth-icon">🔒</div><h1 class="auth-title">LOGIN REQUIRED</h1><p class="auth-sub">Sign in to create or manage your developer profile in the CodeCraft talent network.</p><a class="btn btn-p" href="../auth/?next=/submit-profile/">Sign In with Email OTP →</a></div></div>';
+  const nextPath = encodeURIComponent(location.pathname.replace(/index\.html$/,'') || '/submit-profile/');
+  document.getElementById('root').innerHTML='<div class="page"><div class="auth-wall"><div class="auth-icon">🔒</div><h1 class="auth-title">LOGIN REQUIRED</h1><p class="auth-sub">Sign in to create or manage your developer profile in the CodeCraft talent network.</p><a class="btn btn-p" href="../auth/?next='+nextPath+'">Sign In with Email OTP →</a></div></div>';
 }
 
 /* render form */
@@ -723,7 +727,7 @@ function renderForm(profile){
   <div class="page">
     <div class="pg-header">
       <div class="pg-bc">
-        <a href="https://codecraftsystems.github.io/">Home</a><span class="pg-bc-sep">›</span>
+        <a href="../">Home</a><span class="pg-bc-sep">›</span>
         <a href="../developers/">Developers</a><span class="pg-bc-sep">›</span>
         <span>${isEdit?'Edit Profile':'Create Profile'}</span>
       </div>
@@ -785,9 +789,9 @@ function renderForm(profile){
     id="ai_prompt"
     class="ta"
     placeholder="Example: Laravel + Vue.js engineer with 6 years building SaaS products. Include your industries, achievements, and the type of role you want next."
-    style="min-height:80px;margin-bottom:8px"></textarea>
+    style="min-height:180px;margin-bottom:8px"></textarea>
 
-  <div class="ai-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+  <div class="ai-actions">
     <button
       type="button"
       class="btn btn-g"

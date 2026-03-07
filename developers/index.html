@@ -25,11 +25,11 @@ html,body{max-width:100vw;overflow-x:hidden}
 img,svg{max-width:100%;display:block}
 
 :root{
-  --black:#0a0a0a;--dark:#111111;--card:#161616;--card2:#1c1c1c;
+  --black:#f4f7fb;--dark:#ffffff;--card:#ffffff;--card2:#ffffff;
   --border:#252525;--border2:#2e2e2e;
   --accent:#ff4d00;--accent2:#ffb800;
-  --vue:#42b883;--laravel:#ff2d20;--white:#f0ebe4;
-  --muted:#777;--muted2:#555;
+  --vue:#42b883;--laravel:#ff2d20;--white:#1f2937;
+  --muted:#4b5563;--muted2:#6b7280;
   --font-d:'Bebas Neue',sans-serif;
   --font-b:'DM Sans',sans-serif;
   --font-m:'JetBrains Mono',monospace;
@@ -38,18 +38,18 @@ img,svg{max-width:100%;display:block}
 }
 
 html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--white);font-family:var(--font-b);font-size:16px;line-height:1.6;cursor:none}
+body{background:var(--black);color:var(--white);font-family:var(--font-b);font-size:16px;line-height:1.6;cursor:auto}
 
 /* noise overlay */
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.35}
 
 /* ══ CURSOR ══ */
-.cur{width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transition:transform .12s ease;mix-blend-mode:difference}
+.cur{display:none;width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transition:transform .12s ease;mix-blend-mode:normal}
 .cur-r{width:36px;height:36px;border:1.5px solid rgba(255,77,0,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transition:all .28s ease}
 
 /* ══ NAV ══ */
 .nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;padding:0 clamp(14px,4vw,40px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:all .3s}
-.nav.up{background:rgba(10,10,10,.96);border-color:var(--border);backdrop-filter:blur(20px)}
+.nav.up{background:rgba(244,247,251,.96);border-color:var(--border);backdrop-filter:blur(20px)}
 .nav-logo{font-family:var(--font-d);font-size:clamp(1.25rem,3vw,1.7rem);letter-spacing:2px;color:var(--white);text-decoration:none;flex-shrink:0}
 .nav-logo em{font-style:normal;color:var(--accent)}
 .nav-links{display:flex;gap:clamp(16px,2.5vw,32px);list-style:none;align-items:center}
@@ -62,7 +62,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .ham.on span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .ham.on span:nth-child(2){opacity:0}
 .ham.on span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.mob-menu{display:none;position:fixed;inset:0;background:rgba(10,10,10,.98);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.mob-menu{display:none;position:fixed;inset:0;background:rgba(244,247,251,.98);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:28px}
 .mob-menu.on{display:flex}
 .mob-menu a{font-family:var(--font-d);font-size:clamp(1.8rem,7vw,2.8rem);color:var(--white);text-decoration:none;letter-spacing:2px;transition:color .2s}
 .mob-menu a:hover{color:var(--accent)}
@@ -243,22 +243,22 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(2
 <!-- Mobile menu -->
 <div class="mob-menu" id="mob">
   <button class="mob-close" onclick="closeMob()">✕</button>
-  <a href="https://codecraftsystems.github.io/" onclick="closeMob()">Home</a>
-  <a href="https://codecraftsystems.github.io/#services" onclick="closeMob()">Services</a>
-  <a href="/developers/" onclick="closeMob()">Developers</a>
-  <a href="/developers-open-to-work/" onclick="closeMob()">Open to Work</a>
-  <a href="/submit-profile/" onclick="closeMob()">Add Profile</a>
-  <a href="https://codecraftsystems.github.io/#contact" onclick="closeMob()">Contact</a>
+  <a href="../" onclick="closeMob()">Home</a>
+  <a href="../#services" onclick="closeMob()">Services</a>
+  <a href="./" onclick="closeMob()">Developers</a>
+  <a href="../developers-open-to-work/" onclick="closeMob()">Open to Work</a>
+  <a href="../submit-profile/" onclick="closeMob()">Add Profile</a>
+  <a href="../#contact" onclick="closeMob()">Contact</a>
 </div>
 
 <!-- Nav -->
 <nav class="nav" id="nav">
-  <a href="https://codecraftsystems.github.io/" class="nav-logo">Code<em>Craft</em></a>
+  <a href="../" class="nav-logo">Code<em>Craft</em></a>
   <ul class="nav-links">
-    <li><a href="https://codecraftsystems.github.io/">Home</a></li>
-    <li><a href="/developers/">Developers</a></li>
-    <li><a href="/developers-open-to-work/">Open to Work</a></li>
-    <li><a href="/submit-profile/" class="btn-nav">Add Profile</a></li>
+    <li><a href="../">Home</a></li>
+    <li><a href="./">Developers</a></li>
+    <li><a href="../developers-open-to-work/">Open to Work</a></li>
+    <li><a href="../submit-profile/" class="btn-nav">Add Profile</a></li>
   </ul>
   <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
@@ -319,8 +319,8 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(2
       <p>Add your profile for free — get discovered by employers in UK, USA & globally.</p>
     </div>
     <div class="cta-banner-actions">
-      <a href="/submit-profile/" class="btn-cta primary">Add Your Profile →</a>
-      <a href="/developers-open-to-work/" class="btn-cta secondary">Hiring? See Available Devs</a>
+      <a href="../submit-profile/" class="btn-cta primary">Add Your Profile →</a>
+      <a href="../developers-open-to-work/" class="btn-cta secondary">Hiring? See Available Devs</a>
     </div>
   </div>
 
@@ -349,10 +349,10 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(2
     <div class="footer-logo">Code<em>Craft</em></div>
     <p class="footer-copy">© <span id="yr"></span> CodeCraft Studio · Sonu Sahani</p>
     <ul class="footer-links">
-      <li><a href="https://codecraftsystems.github.io/">Home</a></li>
-      <li><a href="/developers/">Developers</a></li>
-      <li><a href="/submit-profile/">Add Profile</a></li>
-      <li><a href="https://codecraftsystems.github.io/#contact">Contact</a></li>
+      <li><a href="../">Home</a></li>
+      <li><a href="./">Developers</a></li>
+      <li><a href="../submit-profile/">Add Profile</a></li>
+      <li><a href="../#contact">Contact</a></li>
     </ul>
   </div>
 </footer>
@@ -427,7 +427,7 @@ function renderCard(dev,i){
     </div>
     <div class="card-foot">
       <div class="card-exp"><strong>${Number(dev.experience_years||0)}</strong> yrs exp</div>
-      <a class="card-btn" href="/developer/${encodeURIComponent(dev.slug||dev.id||'')}" itemprop="url">View Profile →</a>
+      <a class="card-btn" href="../developer/${encodeURIComponent(dev.slug||dev.id||'')}" itemprop="url">View Profile →</a>
     </div>
   </article>`;
 }

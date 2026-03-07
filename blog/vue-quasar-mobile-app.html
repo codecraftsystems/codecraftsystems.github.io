@@ -30,12 +30,12 @@ html,body{max-width:100%;overflow-x:hidden}
 img,video,svg{max-width:100%;height:auto;display:block}
 
 :root{
-  --black:#06080a;
-  --dark:#0c0f12;
-  --card:#111518;
-  --card2:#171b1f;
-  --border:#1c2026;
-  --border2:#252b32;
+  --black:#f4f7fb;
+  --dark:#ffffff;
+  --card:#ffffff;
+  --card2:#eef3f9;
+  --border:#d9e2ef;
+  --border2:#cfd8e3;
 
   /* Quasar brand — teal/cyan */
   --q:#00b4d8;
@@ -50,7 +50,7 @@ img,video,svg{max-width:100%;height:auto;display:block}
   --pwa:#5a55ff;
 
   --accent:#ff4d00;
-  --white:#e8edf2;
+  --white:#1f2937;
   --muted:#64748b;
   --muted2:#2f3740;
 
@@ -62,16 +62,16 @@ img,video,svg{max-width:100%;height:auto;display:block}
 }
 
 html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--white);font-family:var(--fb);line-height:1.65;cursor:none}
+body{background:var(--black);color:var(--white);font-family:var(--fb);line-height:1.65;cursor:auto}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.4}
 
 /* cursor */
-.cur{width:10px;height:10px;background:var(--q);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:difference;transition:transform .12s}
+.cur{display:none;width:10px;height:10px;background:var(--q);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:normal;transition:transform .12s}
 .cur2{width:36px;height:36px;border:1px solid rgba(0,180,216,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:all .28s ease}
 
 /* ── NAV ── */
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nh);padding:0 clamp(14px,4vw,48px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:all .3s}
-.nav.scrolled{background:rgba(6,8,10,.97);border-color:var(--border);backdrop-filter:blur(24px)}
+.nav.scrolled{background:rgba(244,247,251,.97);border-color:var(--border);backdrop-filter:blur(24px)}
 .nav-logo{font-family:var(--fd);font-size:clamp(1.35rem,4vw,1.8rem);letter-spacing:2px;color:var(--white);text-decoration:none;flex-shrink:0}
 .nav-logo span{color:var(--accent)}
 .nav-links{display:flex;gap:clamp(18px,3vw,36px);list-style:none;align-items:center}
@@ -84,7 +84,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .hamburger.open span:nth-child(2){opacity:0}
 .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.mob-menu{display:none;position:fixed;inset:0;z-index:990;background:rgba(6,8,10,.99);flex-direction:column;align-items:center;justify-content:center;gap:clamp(16px,5vh,36px)}
+.mob-menu{display:none;position:fixed;inset:0;z-index:990;background:rgba(244,247,251,.99);flex-direction:column;align-items:center;justify-content:center;gap:clamp(16px,5vh,36px)}
 .mob-menu.open{display:flex}
 .mob-menu a{font-family:var(--fd);font-size:clamp(1.6rem,6vw,2.8rem);color:var(--white);text-decoration:none;letter-spacing:2px;transition:color .2s}
 .mob-menu a:hover{color:var(--q2)}
@@ -106,7 +106,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 @keyframes phoneFloat{0%,100%{transform:translateY(-50%) rotate(-2deg)}50%{transform:translateY(calc(-50% - 12px)) rotate(2deg)}}
 .phone-shell{background:var(--card2);border:1px solid var(--border2);border-radius:28px;padding:14px 10px;box-shadow:0 32px 64px rgba(0,0,0,.6),0 0 0 1px rgba(0,180,216,.08),inset 0 1px 0 rgba(255,255,255,.04);position:relative}
 .phone-notch{width:60px;height:6px;background:var(--border2);border-radius:100px;margin:0 auto 10px}
-.phone-screen{background:#0a1018;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+.phone-screen{background:#f8fbff;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
 .ps-topbar{background:var(--q);padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
 .ps-title{font-family:var(--fd);font-size:.75rem;letter-spacing:1px;color:#fff}
 .ps-icons{display:flex;gap:5px}
@@ -452,6 +452,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   .fls{gap:9px}
 }
 </style>
+<link rel="stylesheet" href="../assets/ui-polish.css">
 </head>
 <body>
 
@@ -474,6 +475,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <li><a href="https://codecraftsystems.github.io/#services">Services</a></li>
     <li><a href="https://codecraftsystems.github.io/#about">About</a></li>
     <li><a href="https://codecraftsystems.github.io/blog">Blog</a></li>
+    <li><a href="../auth/?next=../submit-profile/" id="navProfileLink">Create Profile</a></li>
     <li><a href="https://codecraftsystems.github.io/#contact" class="nav-cta">Hire Us</a></li>
   </ul>
   <button class="hamburger" id="ham" onclick="tM()" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -803,11 +805,11 @@ npx cap add ios</pre>
   <span class="ca">"plugins"</span>: {
     <span class="ca">"SplashScreen"</span>: {
       <span class="ca">"launchShowDuration"</span>: <span class="cn">2000</span>,
-      <span class="ca">"backgroundColor"</span>: <span class="cs">"#06080a"</span>
+      <span class="ca">"backgroundColor"</span>: <span class="cs">"#f4f7fb"</span>
     },
     <span class="ca">"StatusBar"</span>: {
       <span class="ca">"style"</span>: <span class="cs">"Dark"</span>,
-      <span class="ca">"backgroundColor"</span>: <span class="cs">"#06080a"</span>
+      <span class="ca">"backgroundColor"</span>: <span class="cs">"#f4f7fb"</span>
     }
   }
 }</pre>
@@ -1020,5 +1022,6 @@ function copyCode(btn){
   });
 }
 </script>
+<script src="../assets/ui-polish.js"></script>
 </body>
 </html>
