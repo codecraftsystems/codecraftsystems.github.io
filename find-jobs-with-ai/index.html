@@ -1672,7 +1672,7 @@ function getSession() {
       document.getElementById('findJobBtn').onclick = () => { window.location.href = '../submit-profile/'; };
     } else {
       setStatus('ok', 'Profile ready!', `Logged in as ${esc(session.email)} · Click below to find AI jobs`);
-      setBtn('💼 Find Good AI Jobs', false, false);
+      setBtn('💼 Find My Jobs', false, false);
       document.getElementById('findJobBtn').onclick = runJobSearch;
     }
 
