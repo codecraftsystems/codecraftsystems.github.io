@@ -243,6 +243,14 @@ AI_PROFILE_GENERATOR.findJobs = async function(button) {
     this.showToast('te', 'Profile Incomplete', 'Please fill name and title before finding jobs.');
     return false;
   }
+  if (bio.length < 20) {
+    this.showToast('te', 'Bio Required', 'Please add at least 20 characters in your bio for better job matching.');
+    return false;
+  }
+  if (!skills.length) {
+    this.showToast('te', 'Skills Required', 'Please add at least one skill before finding jobs.');
+    return false;
+  }
 
   this.requestLocks.jobs = true;
   this.setButtonLoading(button, true);
@@ -258,7 +266,8 @@ AI_PROFILE_GENERATOR.findJobs = async function(button) {
   try {
     const cfg = await this.loadConfig('find-jobs');
     const model = cfg?.model || 'gemini-2.5-flash-lite';
-    const prompt = (cfg?.promptTemplate || '').replace('{{profilePayload}}', JSON.stringify(profilePayload));
+    const defaultPrompt = `You are a job matching assistant. Return ONLY JSON with this shape: {\"jobs\":[{\"title\":\"\",\"company\":\"\",\"location\":\"\",\"summary\":\"\",\"source\":\"\",\"posted_at\":\"${new Date().toISOString()}\",\"url\":\"https://...\"}]}. Give up to 8 relevant jobs from the last 30 days. Developer profile: {{profilePayload}}`;
+    const prompt = (cfg?.promptTemplate || defaultPrompt).replace('{{profilePayload}}', JSON.stringify(profilePayload));
 
     const req = { contents: [{ parts: [{ text: prompt }] }] };
 
