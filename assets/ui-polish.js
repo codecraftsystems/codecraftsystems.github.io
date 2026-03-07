@@ -26,13 +26,14 @@
     window.location.href = '../auth/?next=' + encodeURIComponent('../submit-profile/');
   }
 
-  function openFindJobsGuide() {
-    var tips = [
-      'Paste this in AI: "Find remote Laravel + Vue.js jobs in UK/US, salary > $60k, visa friendly."',
-      'Paste this in AI: "Optimize my profile summary for full-stack SaaS roles with APIs, Vue, cloud deployment."',
-      'Paste this in AI: "Create a 30-day job application plan for backend/full-stack developer roles."'
-    ];
-    alert('AI Job Prompt Ideas:\n\n• ' + tips.join('\n• '));
+  function goToFindJobs() {
+    var session = getSession();
+    var target = '../submit-profile/?intent=find-jobs';
+    if (session) {
+      window.location.href = target;
+      return;
+    }
+    window.location.href = '../auth/?next=' + encodeURIComponent(target);
   }
 
   function injectActions(target) {
@@ -49,7 +50,7 @@
     ].join('');
 
     box.querySelector('[data-action="profile"]').addEventListener('click', goToProfile);
-    box.querySelector('[data-action="jobs"]').addEventListener('click', openFindJobsGuide);
+    box.querySelector('[data-action="jobs"]').addEventListener('click', goToFindJobs);
 
     target.appendChild(box);
   }
