@@ -348,8 +348,8 @@ footer{margin-top:auto;background:var(--dark);border-top:1px solid var(--border)
   <!-- RATE LIMIT BANNER -->
   <div class="rate-banner" id="rateBanner">
     <div class="rate-title">☕ Too Many Requests — Please Wait</div>
-    <p class="rate-desc">The AI service is temporarily busy (free tier rate limit reached). Your search will automatically retry — no action needed. Grab a coffee, this usually takes under a minute!</p>
-    <div class="rate-timer" id="rateTimer">⏱ Retrying in <strong id="rateCountdown">20</strong>s…</div>
+    <p class="rate-desc">The AI service is temporarily busy (rate limit reached). Please try again after some time.</p>
+    <div class="rate-timer" id="rateTimer">⏱ <strong id="rateCountdown">Please try again after some time</strong></div>
     <div class="rate-bar-wrap"><div class="rate-bar-fill" id="rateBarFill"></div></div>
   </div>
 
@@ -475,57 +475,21 @@ function setBtn(label, disabled, loading) {
 }
 
 /* ─────────── Rate limit handler ─────────── */
-let rateRetryTimer = null;
-
-function showRateLimitBanner(retryInSeconds, onRetry) {
+function showRateLimitBanner() {
   const banner = document.getElementById('rateBanner');
-  const countdown = document.getElementById('rateCountdown');
   const fill = document.getElementById('rateBarFill');
+  const countdown = document.getElementById('rateCountdown');
   banner.classList.add('on');
-  setStatus('rate', 'Rate limit reached', 'The AI is resting — auto-retrying shortly.');
-
-  let remaining = retryInSeconds + 2; // small buffer
-  const total = remaining;
-
-  countdown.textContent = remaining;
+  setStatus('rate', 'Rate limit reached', 'AI quota exceeded. Please try again after some time.');
+  if (countdown) countdown.textContent = 'Please try again after some time';
   fill.style.width = '0%';
-
-  toast('tw', 'Please Wait', `AI quota reached. Auto-retrying in ${remaining}s.`, 6000);
-
-  if (rateRetryTimer) clearInterval(rateRetryTimer);
-
-  rateRetryTimer = setInterval(() => {
-    remaining--;
-    countdown.textContent = remaining;
-    const pct = ((total - remaining) / total) * 100;
-    fill.style.width = pct + '%';
-
-    if (remaining <= 0) {
-      clearInterval(rateRetryTimer);
-      banner.classList.remove('on');
-      fill.style.width = '0%';
-      toast('ti', 'Retrying Now', 'Sending your job search again…', 3000);
-      if (typeof onRetry === 'function') onRetry();
-    }
-  }, 1000);
+  toast('tw', 'Please Wait', 'You exceeded your current quota. Please try again after some time.', 6000);
 }
 
-function extractRetrySeconds(errorBody) {
-  // Try to get retryDelay from details array
-  try {
-    const details = errorBody?.error?.details || [];
-    for (const d of details) {
-      if (d['@type'] && d['@type'].includes('RetryInfo') && d.retryDelay) {
-        const match = String(d.retryDelay).match(/(\d+)/);
-        if (match) return parseInt(match[1], 10);
-      }
-    }
-    // Fallback: parse from message string
-    const msg = errorBody?.error?.message || '';
-    const match = msg.match(/retry in ([\d.]+)s/i);
-    if (match) return Math.ceil(parseFloat(match[1]));
-  } catch (e) {}
-  return 20; // default
+function isRateLimitError(errorBody, statusCode) {
+  return statusCode === 429 || (errorBody?.error?.code === 429) ||
+    (errorBody?.error?.status === 'RESOURCE_EXHAUSTED') ||
+    (typeof errorBody?.error?.message === 'string' && errorBody.error.message.toLowerCase().includes('quota'));
 }
 
 /* ─────────── Profile render ─────────── */
@@ -807,8 +771,8 @@ function normalizeJobUrl(job, profileObj) {
   return source;
 }
 
-/* ─────────── AI Job Search (with rate limit retry) ─────────── */
-async function aiJobSearch(p, retryCount = 0) {
+/* ─────────── AI Job Search ─────────── */
+async function aiJobSearch(p) {
   const skills = (p.skills || '').split(',').map(s => s.trim()).filter(Boolean).join(', ');
 
   const prompt = `You are a career assistant AI. A developer has this profile:
@@ -862,21 +826,9 @@ Return clean JSON only.`;
     let errBody = null;
     try { errBody = await response.json(); } catch (e) {}
 
-    // Rate limit (429) — auto retry
-    if (response.status === 429 || (errBody?.error?.code === 429) ||
-        (errBody?.error?.status === 'RESOURCE_EXHAUSTED') ||
-        (typeof errBody?.error?.message === 'string' && errBody.error.message.toLowerCase().includes('quota'))) {
-      const retryIn = extractRetrySeconds(errBody);
-      return new Promise((resolve, reject) => {
-        showRateLimitBanner(retryIn, async () => {
-          try {
-            const result = await aiJobSearch(p, retryCount + 1);
-            resolve(result);
-          } catch (e) {
-            reject(e);
-          }
-        });
-      });
+    if (isRateLimitError(errBody, response.status)) {
+      showRateLimitBanner();
+      throw new Error('You exceeded your current quota. Please try again after some time.');
     }
 
     const msg = errBody?.error?.message || `HTTP ${response.status} error`;
@@ -886,19 +838,9 @@ Return clean JSON only.`;
   const data = await response.json();
 
   if (data.error) {
-    // Check for rate limit inside response body too
-    if (data.error.code === 429 || data.error.status === 'RESOURCE_EXHAUSTED') {
-      const retryIn = extractRetrySeconds(data);
-      return new Promise((resolve, reject) => {
-        showRateLimitBanner(retryIn, async () => {
-          try {
-            const result = await aiJobSearch(p, retryCount + 1);
-            resolve(result);
-          } catch (e) {
-            reject(e);
-          }
-        });
-      });
+    if (isRateLimitError(data)) {
+      showRateLimitBanner();
+      throw new Error('You exceeded your current quota. Please try again after some time.');
     }
     throw new Error(data.error.message || 'API error');
   }
@@ -1039,8 +981,8 @@ async function runJobSearch() {
     finishLoading();
     // If it's a rate limit error that wasn't auto-handled
     if (e.message && (e.message.toLowerCase().includes('quota') || e.message.toLowerCase().includes('rate'))) {
-      setStatus('rate', 'Rate limit reached', 'Please wait a moment and try again.');
-      toast('tw', 'Rate Limit', 'AI quota reached. Please wait and try again.', 6000);
+      setStatus('rate', 'Rate limit reached', 'You exceeded your current quota. Please try again after some time.');
+      toast('tw', 'Rate Limit', 'You exceeded your current quota. Please try again after some time.', 6000);
     } else {
       setStatus('err', 'Search failed', e.message || 'Something went wrong. Please try again.');
       toast('te', 'Search Failed', e.message || 'Try again in a moment.');
