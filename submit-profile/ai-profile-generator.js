@@ -237,7 +237,9 @@ AI_PROFILE_GENERATOR.findJobs = async function(button) {
   const title = document.getElementById('f_title')?.value.trim() || '';
   const location = document.getElementById('f_loc')?.value.trim() || 'Remote';
   const bio = document.getElementById('f_bio')?.value.trim() || '';
-  const skills = (window.tags || []).slice(0, 12);
+  const inMemorySkills = Array.isArray(window.tags) ? window.tags : [];
+  const persistedSkills = String(window.EP?.skills || '').split(',').map((s) => s.trim()).filter(Boolean);
+  const skills = [...new Set([...inMemorySkills, ...persistedSkills])].slice(0, 12);
 
   if (!name || !title) {
     this.showToast('te', 'Profile Incomplete', 'Please fill name and title before finding jobs.');

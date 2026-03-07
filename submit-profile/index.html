@@ -487,19 +487,21 @@ function renderTags(){
   inp.className='taginp';inp.placeholder=tags.length?'Add more…':'Type skill + Enter…';inp.value=pv;
   inp.addEventListener('keydown',ev=>{
     if(ev.key==='Enter'||ev.key===','){ev.preventDefault();addTag(inp.value.trim());inp.value='';}
-    if(ev.key==='Backspace'&&!inp.value&&tags.length){tags.pop();renderTags();}
+    if(ev.key==='Backspace'&&!inp.value&&tags.length){tags.pop();window.tags=tags;renderTags();}
   });
   inp.addEventListener('blur',()=>{if(inp.value.trim()){addTag(inp.value.trim());inp.value='';}});
   box.appendChild(inp);
+  window.tags=tags;
   preview();
 }
 function addTag(v){
   v.split(',').map(s=>s.trim()).filter(Boolean).forEach(t=>{
     if(t&&!tags.find(s=>s.toLowerCase()===t.toLowerCase()))tags.push(t);
   });
+  window.tags=tags;
   renderTags();
 }
-function rmTag(i){tags.splice(i,1);renderTags();}
+function rmTag(i){tags.splice(i,1);window.tags=tags;renderTags();}
 
 /* experience */
 function renderExps(){
@@ -710,6 +712,7 @@ function populate(d){
   set('f_portfolio',d.portfolio_url);set('f_image',d.profile_image);
   const otw=document.getElementById('f_otw');if(otw)otw.checked=!!d.open_to_work;
   tags=(d.skills||'').split(',').map(s=>s.trim()).filter(Boolean);
+  window.tags=tags;
   exps=Array.isArray(d.experience)?d.experience:[];
   renderTags();renderExps();preview();
   document.querySelectorAll('.input,.ta').forEach(el=>el.dispatchEvent(new Event('input')));

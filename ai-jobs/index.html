@@ -149,6 +149,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .results-badge{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.22);color:var(--success);font-family:var(--font-m);font-size:.64rem;font-weight:700;padding:3px 10px;border-radius:100px}
 
 .job-grid{display:flex;flex-direction:column;gap:9px}
+.job-subtitle{font-family:var(--font-m);font-size:.67rem;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;margin-top:8px;margin-bottom:2px}
 .job-card{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:clamp(12px,2vw,16px);display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;transition:all .2s;text-decoration:none;color:inherit;cursor:pointer;animation:fadeUp .35s ease both}
 .job-card:hover{border-color:rgba(255,77,0,.3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.07)}
 .job-role{font-weight:700;font-size:.9rem;color:var(--white);margin-bottom:3px}
@@ -156,7 +157,10 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .job-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
 .job-tag{padding:2px 7px;border-radius:4px;font-family:var(--font-m);font-size:.62rem;background:rgba(31,41,55,.04);border:1px solid var(--border2);color:var(--muted)}
 .job-tag.match{background:rgba(255,77,0,.07);border-color:rgba(255,77,0,.2);color:var(--accent)}
-.job-url{font-family:var(--font-m);font-size:.65rem;color:var(--blue);word-break:break-all;display:flex;align-items:center;gap:4px}
+.job-url{font-family:var(--font-m);font-size:.65rem;color:var(--blue);word-break:break-word;overflow-wrap:anywhere;display:flex;align-items:flex-start;gap:4px;line-height:1.45}
+.job-actions{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+.job-link-btn{font-family:var(--font-m);font-size:.62rem;border:1px solid var(--border2);background:var(--card2);color:var(--muted);border-radius:6px;padding:6px 9px;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.job-link-btn.apply{background:rgba(34,197,94,.11);border-color:rgba(34,197,94,.28);color:#15803d;font-weight:600}
 .match-box{background:var(--card);border:1px solid var(--border2);border-radius:7px;padding:8px 10px;text-align:center;min-width:52px;flex-shrink:0}
 .match-pct{font-family:var(--font-d);font-size:1.2rem;letter-spacing:1px;color:var(--success);line-height:1}
 .match-lbl{font-family:var(--font-m);font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
@@ -211,12 +215,19 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
 @media(max-width:820px){.nav-links{display:none}.ham{display:flex}}
 @media(max-width:600px){
   :root{--nav-h:56px}
-  .job-card{grid-template-columns:1fr}
+  .page{padding-left:12px;padding-right:12px}
+  .action-card,.status-bar,.profile-card,.tips-card,.rate-banner{border-radius:8px}
+  .job-card{grid-template-columns:1fr;gap:10px;padding:11px}
   .match-box{width:fit-content}
   .how-steps{gap:0}
+  .find-btn{width:100%;justify-content:center;text-align:center}
 }
 @media(max-width:430px){
   :root{--nav-h:52px}
+  .pg-title{font-size:1.65rem}
+  .profile-top{flex-wrap:wrap;gap:10px}
+  .profile-top .btn{width:100%}
+  .results-header{flex-direction:column;align-items:flex-start;gap:8px}
   .fi{flex-direction:column;align-items:center;text-align:center}
   .flinks{justify-content:center}
 }
@@ -322,7 +333,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
   <!-- ACTION CARD -->
   <div class="action-card">
     <button class="find-btn" id="findJobBtn" disabled>
-      <span>💼</span>
+      <!-- <span>💼</span> -->
       <span id="btnLabel">Find Jobs with AI</span>
     </button>
 
@@ -545,7 +556,11 @@ function renderJobs(jobs) {
   const section = document.getElementById('resultsSection');
   document.getElementById('resultsBadge').textContent = `${jobs.length} found`;
 
-  grid.innerHTML = jobs.map((job, i) => {
+  const topFive = jobs.slice(0, 5);
+  const moreJobs = jobs.slice(5, 20);
+
+  const sectionTitle = (title) => `<div class="job-subtitle">${esc(title)}</div>`;
+  const renderJobCard = (job, i) => {
     const pct = job.match_score || job.matchScore || Math.floor(68 + Math.random() * 27);
     const tags = (job.tags || job.skills || []).slice(0, 4);
     const matchTags = (job.matched_skills || []).slice(0, 2);
@@ -554,23 +569,71 @@ function renderJobs(jobs) {
       ...tags.filter(t => !matchTags.includes(t)).map(t => `<span class="job-tag">${esc(t)}</span>`)
     ];
     const url = job.url || job.apply_url || job.link || '#';
-    const shortUrl = url !== '#' ? url.replace(/^https?:\/\/(www\.)?/, '').substring(0, 52) : 'See details';
+    const applyUrl = job.apply_url || url;
+    const postedDays = Number.isFinite(job.posted_days_ago) ? job.posted_days_ago : daysAgoFromJob(job);
+    const postedLabel = Number.isFinite(postedDays) ? (postedDays === 0 ? 'Today' : `${postedDays}d ago`) : 'Recent';
 
-    return `<a class="job-card" href="${esc(url)}" target="_blank" rel="noopener" style="animation-delay:${i * 0.07}s">
+    return `<div class="job-card" style="animation-delay:${i * 0.07}s">
       <div>
         <div class="job-role">${esc(job.role || job.title || 'Developer Role')}</div>
-        <div class="job-company">🏢 ${esc(job.company || 'Company')} · ${esc(job.location || 'Remote')}</div>
+        <div class="job-company">🏢 ${esc(job.company || 'Company')} · ${esc(job.location || 'Remote')} · 🗓 ${esc(postedLabel)}</div>
         ${allTags.length ? `<div class="job-tags">${allTags.join('')}</div>` : ''}
-        <div class="job-url">🔗 ${esc(shortUrl)}</div>
+        <div class="job-url">🔗 ${esc(url)}</div>
+        <div class="job-actions">
+          <a class="job-link-btn" href="${esc(url)}" target="_blank" rel="noopener">View Job URL</a>
+          <a class="job-link-btn apply" href="${esc(applyUrl)}" target="_blank" rel="noopener">⚡ Apply Fast</a>
+        </div>
       </div>
       <div class="match-box">
         <div class="match-pct">${pct}%</div>
         <div class="match-lbl">Match</div>
       </div>
-    </a>`;
-  }).join('');
+    </div>`;
+  };
+
+  grid.innerHTML = [
+    topFive.length ? sectionTitle('AI Job Matches (Top 5)') + topFive.map((job, i) => renderJobCard(job, i)).join('') : '',
+    moreJobs.length ? sectionTitle('More Opportunities (Top 15)') + moreJobs.map((job, i) => renderJobCard(job, i + 5)).join('') : ''
+  ].join('');
 
   section.classList.add('on');
+}
+
+function extractJsonObject(raw) {
+  const text = String(raw || '');
+  const start = text.indexOf('{');
+  if (start === -1) return null;
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (ch === '\\') {
+        escaped = true;
+      } else if (ch === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (ch === '"') {
+      inString = true;
+      continue;
+    }
+
+    if (ch === '{') depth += 1;
+    if (ch === '}') {
+      depth -= 1;
+      if (depth === 0) return text.slice(start, i + 1);
+    }
+  }
+
+  return null;
 }
 
 function renderTips(tips) {
@@ -579,6 +642,126 @@ function renderTips(tips) {
   if (!tips) return;
   body.innerHTML = tips.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   card.classList.add('on');
+}
+
+function daysAgoFromJob(job) {
+  const maybeDays = [job.days_ago, job.posted_days_ago, job.age_days].map(v => Number(v)).find(v => Number.isFinite(v));
+  if (Number.isFinite(maybeDays)) return Math.max(0, maybeDays);
+
+  const dateValue = job.posted_at || job.posted_date || job.date_posted || job.published_at || '';
+  if (!dateValue) return null;
+
+  const ts = Date.parse(dateValue);
+  if (!Number.isNaN(ts)) return Math.max(0, Math.floor((Date.now() - ts) / 86400000));
+
+  const rel = String(dateValue).toLowerCase();
+  const m = rel.match(/(\d+)\s*(day|days|d|hour|hours|hr|hrs|h|week|weeks|w)/);
+  if (!m) return null;
+  const amount = Number(m[1]);
+  const unit = m[2];
+  if (/hour|hr|h/.test(unit)) return 0;
+  if (/week|w/.test(unit)) return amount * 7;
+  return amount;
+}
+
+function scoreJob(job, profileObj) {
+  const profileSkills = (profileObj.skills || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+  const textBlob = [job.role, job.title, job.company, job.location, ...(job.tags || []), ...(job.skills || []), ...(job.matched_skills || [])].join(' ').toLowerCase();
+
+  const locationPref = (profileObj.location || '').toLowerCase();
+  const locationText = String(job.location || '').toLowerCase();
+  const locationHit = locationPref && (locationText.includes(locationPref) || locationPref.includes(locationText) || locationText.includes('remote'));
+
+  const skillHits = profileSkills.filter(skill => skill && textBlob.includes(skill)).length;
+  const daysAgo = daysAgoFromJob(job);
+  const recencyBoost = Number.isFinite(daysAgo) ? Math.max(0, 10 - daysAgo) : 2;
+
+  return (locationHit ? 22 : 0) + (skillHits * 8) + recencyBoost;
+}
+
+function buildSearchUrl(sourceKey, role, location) {
+  const qRole = encodeURIComponent(role);
+  const qLocation = encodeURIComponent(location || 'Remote');
+  const term = encodeURIComponent(`${role} ${location || 'remote'}`);
+
+  const sourceMap = {
+    linkedin: `https://www.linkedin.com/jobs/search/?keywords=${qRole}&location=${qLocation}&f_TPR=r864000`,
+    indeed: `https://www.indeed.com/jobs?q=${qRole}&l=${qLocation}&fromage=10`,
+    glassdoor: `https://www.glassdoor.com/Job/jobs.htm?sc.keyword=${qRole}&locT=C&locId=1147401&fromAge=10`,
+    wellfound: `https://wellfound.com/jobs?query=${qRole}%20${qLocation}`,
+    ziprecruiter: `https://www.ziprecruiter.com/Jobs/${qRole}/in-${qLocation}?days=10`,
+    remoteok: `https://remoteok.com/remote-${encodeURIComponent(role.toLowerCase().replace(/\s+/g, '-'))}-jobs`,
+    google: `https://www.google.com/search?q=${term}+jobs+posted+last+10+days`
+  };
+
+  return sourceMap[sourceKey] || sourceMap.linkedin;
+}
+
+function chooseUrlSource(job) {
+  const seed = `${job.role || job.title || ''}${job.company || ''}${job.location || ''}`.toLowerCase();
+  const sources = ['linkedin', 'indeed', 'glassdoor', 'wellfound', 'ziprecruiter', 'remoteok', 'google'];
+  if (!seed) return sources[0];
+  const idx = seed.split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % sources.length;
+  return sources[idx];
+}
+
+function locationPriority(jobLocation, profileLocation) {
+  const j = String(jobLocation || '').toLowerCase();
+  const p = String(profileLocation || '').toLowerCase();
+  if (!j) return 3;
+  if (p && (j.includes(p) || p.includes(j))) return 0;
+  if (j.includes('remote') || j.includes('anywhere')) return 2;
+  return 1;
+}
+
+function ensureJobSourceMix(jobs, profileObj) {
+  const topFive = jobs.slice(0, 5).map(job => {
+    const role = job.role || job.title || profileObj.title || 'Developer';
+    const loc = job.location || profileObj.location || 'Remote';
+    const linkedInUrl = buildSearchUrl('linkedin', role, loc);
+    return {
+      ...job,
+      company: job.company || 'LinkedIn Jobs',
+      url: linkedInUrl,
+      apply_url: linkedInUrl
+    };
+  });
+
+  const boards = ['indeed', 'wellfound', 'remoteok', 'google', 'ziprecruiter', 'glassdoor'];
+  const rest = jobs.slice(5, 20).map((job, idx) => {
+    const role = job.role || job.title || profileObj.title || 'Developer';
+    const loc = job.location || profileObj.location || 'Remote';
+    const board = boards[idx % boards.length];
+    const searchUrl = buildSearchUrl(board, role, loc);
+    return {
+      ...job,
+      company: `${board[0].toUpperCase()}${board.slice(1)} Jobs`,
+      url: searchUrl,
+      apply_url: searchUrl
+    };
+  });
+
+  return [...topFive, ...rest];
+}
+
+function normalizeJobUrl(job, profileObj) {
+  const role = job.role || job.title || profileObj.title || 'Developer';
+  const loc = job.location || profileObj.location || 'Remote';
+  const source = [job.url, job.apply_url, job.link, job.job_url].find(v => /^https?:\/\//i.test(v || ''));
+  const fallback = buildSearchUrl(chooseUrlSource(job), role, loc);
+
+  if (!source) return fallback;
+
+  const isGeneric = /(linkedin\.com\/jobs\/?$|indeed\.com\/?$|wellfound\.com\/?$|remoteok\.io\/?$|glassdoor\.com\/?$|ziprecruiter\.com\/?$)/i.test(source);
+  if (isGeneric) return fallback;
+
+  const hasAgeFilter = /[?&](fromage|f_TPR|days_ago)=/i.test(source);
+  if (hasAgeFilter) return source;
+
+  if (/linkedin\.com\/jobs\/search/i.test(source)) return `${source}${source.includes('?') ? '&' : '?'}f_TPR=r864000`;
+  if (/indeed\./i.test(source)) return `${source}${source.includes('?') ? '&' : '?'}fromage=10`;
+  if (/glassdoor\./i.test(source)) return `${source}${source.includes('?') ? '&' : '?'}fromAge=10`;
+  return source;
 }
 
 /* ─────────── AI Job Search (with rate limit retry) ─────────── */
@@ -610,7 +793,14 @@ Respond ONLY with a JSON object (no markdown, no backticks) in this exact format
   "strategy": "**Step 1:** ...\\n**Step 2:** ... (5 specific tips)"
 }
 
-Generate exactly 5 highly relevant job matches. Use real LinkedIn/Indeed search URLs with actual query params. Make match_score realistic (60-97%). Strategy: 5 specific, actionable tips.`;
+Generate 30 highly relevant job matches. Rules:
+- Use ONLY jobs posted today to 10 days ago.
+- Prefer jobs near this developer location (same city/state/country) and then remote roles.
+- Every job must include a direct real job URL (actual listing or filtered search URL), never homepage-only links.
+- Include posted_at in ISO date format if known, otherwise include days_ago (0-10).
+- Make match_score realistic (60-97%).
+- Strategy must focus on fast, high-quality applications and interview conversion.
+Return clean JSON only.`;
 
   const keyParts = ['AIzaSyA', 'Sx7xQq', 'IrQKUK', 'ghARB8', 'w0cto_', '-rbiqd', 'UI'];
   const apiKey = keyParts.join('');
@@ -676,24 +866,87 @@ Generate exactly 5 highly relevant job matches. Use real LinkedIn/Indeed search 
     .filter(Boolean)
     .join('\n');
   const clean = text.replace(/```json|```/g, '').trim();
-  const jsonMatch = clean.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Could not parse AI response. Please try again.');
-  const parsed = JSON.parse(jsonMatch[0]);
+  const jsonText = extractJsonObject(clean);
+  if (!jsonText) throw new Error('Could not parse AI response. Please try again.');
+  const parsed = JSON.parse(jsonText);
 
   if (!Array.isArray(parsed.jobs)) parsed.jobs = [];
-  parsed.jobs = parsed.jobs.slice(0, 5).map(job => {
-    const fallbackUrl = `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(job.role || job.title || 'Developer')}&location=${encodeURIComponent(job.location || 'Remote')}`;
+
+  parsed.jobs = parsed.jobs.slice(0, 50).map(job => {
+    const role = job.role || job.title || p.title || 'Developer Role';
+    const loc = job.location || p.location || 'Remote';
+    const normalizedUrl = normalizeJobUrl(job, p);
+    const daysAgo = daysAgoFromJob(job);
+
     return {
       ...job,
-      role: job.role || job.title || 'Developer Role',
+      role,
       company: job.company || 'Company',
-      location: job.location || 'Remote',
-      url: /^https?:\/\//i.test(job.url || '') ? job.url : fallbackUrl,
-      apply_url: /^https?:\/\//i.test(job.apply_url || '') ? job.apply_url : fallbackUrl,
-      tags: Array.isArray(job.tags) ? job.tags : [],
-      matched_skills: Array.isArray(job.matched_skills) ? job.matched_skills : []
+      location: loc,
+      url: normalizedUrl,
+      apply_url: normalizeJobUrl({ ...job, url: job.apply_url || job.url }, p),
+      tags: Array.isArray(job.tags) ? job.tags : (Array.isArray(job.skills) ? job.skills : []),
+      matched_skills: Array.isArray(job.matched_skills) ? job.matched_skills : [],
+      posted_days_ago: Number.isFinite(daysAgo) ? daysAgo : null
     };
   });
+
+  parsed.jobs = parsed.jobs.filter(job => Number.isFinite(job.posted_days_ago) ? job.posted_days_ago <= 10 : true);
+
+  const seen = new Set();
+  parsed.jobs = parsed.jobs.filter(job => {
+    const key = `${(job.role || '').toLowerCase()}|${(job.company || '').toLowerCase()}|${(job.url || '').toLowerCase()}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  parsed.jobs = parsed.jobs
+    .map(job => ({
+      ...job,
+      _smartScore: scoreJob(job, p)
+    }))
+    .sort((a, b) => b._smartScore - a._smartScore)
+    .map(({ _smartScore, ...job }) => job);
+
+  const baseSkills = (p.skills || '').split(',').map(s => s.trim()).filter(Boolean);
+  const roleSeeds = [p.title || 'Developer', ...baseSkills.slice(0, 4), 'AI Developer', 'Full Stack Developer', 'Backend Developer', 'Frontend Developer'];
+  const locationSeeds = [p.location || 'Remote', `Near ${p.location || 'your area'}`, 'Remote'];
+  const boards = ['linkedin', 'indeed', 'glassdoor', 'wellfound', 'ziprecruiter', 'google'];
+
+  if (parsed.jobs.length > 0 && parsed.jobs.length < 12) {
+    for (let i = 0; i < 12 - parsed.jobs.length; i++) {
+      const seed = roleSeeds[i % roleSeeds.length] || 'Developer';
+      const loc = locationSeeds[i % locationSeeds.length] || 'Remote';
+      const board = boards[i % boards.length];
+      const searchUrl = buildSearchUrl(board, seed, loc);
+
+      parsed.jobs.push({
+        role: seed,
+        company: `${board[0].toUpperCase()}${board.slice(1)} Search`,
+        location: loc,
+        match_score: Math.max(60, 88 - (i % 15)),
+        tags: baseSkills.slice(0, 4),
+        matched_skills: baseSkills.slice(0, 2),
+        posted_days_ago: i % 10,
+        url: searchUrl,
+        apply_url: searchUrl
+      });
+    }
+  }
+
+  parsed.jobs = parsed.jobs
+    .filter(job => Number.isFinite(job.posted_days_ago) ? job.posted_days_ago <= 10 : true)
+    .sort((a, b) => {
+      const locDiff = locationPriority(a.location, p.location) - locationPriority(b.location, p.location);
+      if (locDiff !== 0) return locDiff;
+      const daysA = Number.isFinite(a.posted_days_ago) ? a.posted_days_ago : 99;
+      const daysB = Number.isFinite(b.posted_days_ago) ? b.posted_days_ago : 99;
+      return daysA - daysB;
+    })
+    .slice(0, 20);
+
+  parsed.jobs = ensureJobSourceMix(parsed.jobs, p);
 
   return parsed;
 }
