@@ -409,6 +409,7 @@ footer { background:var(--dark); border-top:1px solid var(--border); padding:cla
   .footer-links { gap:9px; }
 }
 </style>
+<link rel="stylesheet" href="../assets/ui-polish.css">
 </head>
 <body>
 
@@ -432,6 +433,7 @@ footer { background:var(--dark); border-top:1px solid var(--border); padding:cla
     <li><a href="https://codecraftsystems.github.io/#services">Services</a></li>
     <li><a href="https://codecraftsystems.github.io/#about">About</a></li>
     <li><a href="https://codecraftsystems.github.io/blog">Blog</a></li>
+    <li><a href="../auth/?next=../submit-profile/" id="navProfileLink">Create Profile</a></li>
     <li><a href="https://codecraftsystems.github.io/#contact" class="nav-cta">Hire Us</a></li>
   </ul>
   <div class="hamburger" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></div>
@@ -932,5 +934,6 @@ function copyCode(btn){
   });
 }
 </script>
+<script src="../assets/ui-polish.js"></script>
 </body>
 </html>
