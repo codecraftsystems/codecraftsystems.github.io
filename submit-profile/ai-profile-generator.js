@@ -51,6 +51,21 @@ const AI_PROFILE_GENERATOR = {
     return JSON.parse(jsonMatch[0]);
   },
 
+
+
+  isRateLimitResponse(statusCode, data) {
+    return statusCode === 429 || data?.error?.code === 429 || data?.error?.status === 'RESOURCE_EXHAUSTED' ||
+      (typeof data?.error?.message === 'string' && data.error.message.toLowerCase().includes('quota'));
+  },
+
+  getRateLimitMessage(data) {
+    const apiMessage = String(data?.error?.message || '');
+    if (apiMessage.toLowerCase().includes('quota')) {
+      return 'You exceeded your current quota. Please try again after some time.';
+    }
+    return 'AI service is busy. Please try again after some time.';
+  },
+
   buildPrompt(userPrompt) {
     return `You are an expert developer profile generator for hiring marketplaces. Return ONLY valid JSON. No markdown, no explanations.\n\nExtract or generate a complete developer profile with these EXACT fields:\n{\n  "name":"", "title":"", "location":"", "bio":"",\n  "skills":[], "experience_years":0,\n  "github_url":"", "linkedin_url":"", "portfolio_url":"",\n  "experience":[{"role":"","company":"","period":"","description":""}],\n  "certifications":[{"name":"","issuer":"","year":""}],\n  "seo_focus_keywords":["laravel developer","vue.js developer","full stack developer"]\n}\n\nRules for quality:\n- Write a professional bio of 80-140 words, clear and recruiter-friendly.\n- Mention strengths, achievements, tech stack, and preferred role type.\n- Make the bio naturally SEO-friendly using role and stack keywords without keyword stuffing.\n- Keep skills practical and specific (frameworks, tools, cloud, testing).\n\nDescription from user: "${userPrompt}"`;
   },
@@ -80,6 +95,10 @@ const AI_PROFILE_GENERATOR = {
       );
 
       const data = await res.json();
+      if (!res.ok || this.isRateLimitResponse(res.status, data)) {
+        throw new Error(this.getRateLimitMessage(data));
+      }
+
       const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
       const profile = this.extractJson(raw);
       this.fillFields(profile);
@@ -87,7 +106,7 @@ const AI_PROFILE_GENERATOR = {
       return true;
     } catch (e) {
       console.error(e);
-      this.showToast('te', '❌ AI Error', 'Failed to generate profile. Try again with more details.');
+      this.showToast('te', '❌ AI Error', e?.message || 'Failed to generate profile. Try again with more details.');
       return false;
     } finally {
       this.requestLocks.generate = false;
@@ -196,6 +215,10 @@ AI_PROFILE_GENERATOR.generateFromResumeFile = async function(file, button) {
     );
 
     const data = await res.json();
+    if (!res.ok || this.isRateLimitResponse(res.status, data)) {
+      throw new Error(this.getRateLimitMessage(data));
+    }
+
     const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const profile = this.extractJson(raw);
     this.fillFields(profile);
@@ -203,7 +226,7 @@ AI_PROFILE_GENERATOR.generateFromResumeFile = async function(file, button) {
     return true;
   } catch (e) {
     console.error(e);
-    this.showToast('te', 'Resume Parse Failed', 'Could not extract details. Try a clearer resume or use AI prompt text.');
+    this.showToast('te', 'Resume Parse Failed', e?.message || 'Could not extract details. Try a clearer resume or use AI prompt text.');
     return false;
   } finally {
     this.requestLocks.resume = false;
@@ -279,6 +302,10 @@ AI_PROFILE_GENERATOR.findJobs = async function(button) {
     );
 
     const data = await res.json();
+    if (!res.ok || this.isRateLimitResponse(res.status, data)) {
+      throw new Error(this.getRateLimitMessage(data));
+    }
+
     const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const parsed = this.extractJson(raw);
     const rawJobs = Array.isArray(parsed.jobs) ? parsed.jobs.slice(0, 8) : [];
@@ -290,7 +317,7 @@ AI_PROFILE_GENERATOR.findJobs = async function(button) {
   } catch (e) {
     console.error(e);
     this.renderJobs([], true, profilePayload);
-    this.showToast('te', 'Job Match Failed', 'Could not find jobs now. Added alternative search links below.');
+    this.showToast('te', 'Job Match Failed', e?.message || 'Could not find jobs now. Added alternative search links below.');
     return false;
   } finally {
     this.requestLocks.jobs = false;
