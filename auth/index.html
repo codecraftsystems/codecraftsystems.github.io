@@ -11,253 +11,522 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-/* ══ RESET ══ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;max-width:100vw;overflow-x:hidden}
 
 :root{
-  --black:#f4f7fb; --dark:#ffffff; --card:#ffffff; --card2:#ffffff;
-  --b:#d9e2ef; --b2:#cfd8e3; --b3:#b8c5d6;
-  --accent:#ff4d00; --a-dim:rgba(255,77,0,.12); --a-glow:rgba(255,77,0,.25);
-  --gold:#ffb800;   --ok:#22c55e;  --err:#ef4444;  --blue:#60a5fa;
-  --white:#1f2937;  --muted:#5f6b7a; --m2:#6b7280;
+  --black:#f0f4f9;
+  --dark:#ffffff;
+  --card:#ffffff;
+  --card2:#f7f9fc;
+  --b:#d4dde9;
+  --b2:#c8d4e3;
+  --b3:#b0bfcf;
+  --accent:#ff4d00;
+  --accent-soft:rgba(255,77,0,.07);
+  --accent-mid:rgba(255,77,0,.14);
+  --accent-glow:rgba(255,77,0,.22);
+  --gold:#ffb800;
+  --ok:#16a34a;
+  --ok-bg:rgba(22,163,74,.07);
+  --err:#dc2626;
+  --err-bg:rgba(220,38,38,.06);
+  --blue:#2563eb;
+  --white:#111827;
+  --muted:#64748b;
+  --m2:#94a3b8;
   --font-d:'Bebas Neue',sans-serif;
   --font-b:'DM Sans',sans-serif;
   --font-m:'JetBrains Mono',monospace;
-  --ease:.22s ease;
+  --ease:.22s cubic-bezier(.4,0,.2,1);
+  --radius:14px;
+  --radius-sm:9px;
+  --shadow-card:0 24px 64px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.05),0 1px 4px rgba(0,0,0,.04);
 }
 
 body{
-  background:var(--black); color:var(--white);
-  font-family:var(--font-b); font-size:16px; line-height:1.6;
-  min-height:100vh; display:flex; flex-direction:column;
-  cursor:auto;
+  background:var(--black);
+  color:var(--white);
+  font-family:var(--font-b);
+  font-size:16px;
+  line-height:1.6;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
 }
 
-/* grain */
-body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.28}
+/* Subtle grid */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(var(--b) 1px,transparent 1px),
+    linear-gradient(90deg,var(--b) 1px,transparent 1px);
+  background-size:52px 52px;
+  opacity:.3;
+  pointer-events:none;
+  z-index:0;
+}
 
-/* ══ CURSOR ══ */
-#cur{display:none;width:8px;height:8px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;mix-blend-mode:normal;will-change:transform}
-#cur-r{width:30px;height:30px;border:1px solid rgba(255,77,0,.35);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transition:transform .26s ease;will-change:transform}
+/* Grain */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:.25;
+}
 
-/* ══ AMBIENT ══ */
+/* ── AMBIENT GLOWS ── */
 .amb{position:fixed;pointer-events:none;border-radius:50%}
-.amb-1{width:min(600px,100vw);height:min(600px,100vw);background:radial-gradient(circle,rgba(255,77,0,.055),transparent 65%);top:-15%;left:-10%}
-.amb-2{width:min(500px,90vw);height:min(500px,90vw);background:radial-gradient(circle,rgba(66,184,131,.04),transparent 65%);bottom:-10%;right:-8%}
-.amb-3{width:min(300px,70vw);height:min(300px,70vw);background:radial-gradient(circle,rgba(255,184,0,.03),transparent 65%);top:40%;right:5%}
-.grid{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 85% 85% at 50% 50%,black 20%,transparent);pointer-events:none}
+.amb-1{
+  width:min(700px,110vw);height:min(700px,110vw);
+  background:radial-gradient(circle,rgba(255,77,0,.06),transparent 60%);
+  top:-20%;left:-15%;
+}
+.amb-2{
+  width:min(500px,90vw);height:min(500px,90vw);
+  background:radial-gradient(circle,rgba(22,163,74,.04),transparent 65%);
+  bottom:-15%;right:-10%;
+}
+.amb-3{
+  width:min(350px,70vw);height:min(350px,70vw);
+  background:radial-gradient(circle,rgba(255,184,0,.035),transparent 65%);
+  top:38%;right:2%;
+}
 
-/* ══ NAV ══ */
-.nav{position:fixed;top:0;left:0;right:0;z-index:500;height:56px;padding:0 clamp(14px,4vw,40px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b2);background:rgba(244,247,251,.96);backdrop-filter:blur(24px)}
-.nav-logo{font-family:var(--font-d);font-size:1.5rem;letter-spacing:2px;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:2px}
+/* ── CURSOR ── */
+#cur{display:none;width:8px;height:8px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;mix-blend-mode:normal;will-change:transform}
+#cur-r{width:30px;height:30px;border:1px solid rgba(255,77,0,.3);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transition:transform .26s ease;will-change:transform}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:58px;padding:0 clamp(16px,4vw,44px);
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--b2);
+  background:rgba(240,244,249,.95);
+  backdrop-filter:blur(24px) saturate(1.3);
+}
+.nav-logo{
+  font-family:var(--font-d);font-size:1.55rem;
+  letter-spacing:2.5px;color:var(--white);
+  text-decoration:none;display:flex;align-items:center;gap:2px;
+}
 .nav-logo b{color:var(--accent);font-weight:400}
-.nav-link{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-family:var(--font-m);font-size:.68rem;text-decoration:none;letter-spacing:.5px;transition:color var(--ease)}
+.nav-link{
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--muted);font-family:var(--font-m);font-size:.68rem;
+  text-decoration:none;letter-spacing:.5px;
+  transition:color var(--ease);
+  padding:6px 0;
+  position:relative;
+}
+.nav-link::after{
+  content:'';
+  position:absolute;bottom:-1px;left:0;right:0;
+  height:1.5px;background:var(--accent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
+}
 .nav-link:hover{color:var(--white)}
+.nav-link:hover::after{transform:scaleX(1)}
 
-/* ══ PAGE ══ */
-.page{flex:1;display:flex;align-items:center;justify-content:center;padding:calc(56px + clamp(20px,5vh,52px)) clamp(12px,4vw,24px) clamp(20px,5vh,48px)}
+/* ── PAGE ── */
+.page{
+  position:relative;z-index:1;
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:calc(58px + clamp(22px,5vh,56px)) clamp(12px,4vw,24px) clamp(22px,5vh,52px);
+}
 
-/* ══ CARD ══ */
+/* ── CARD ── */
 .card{
-  width:100%;max-width:440px;
+  width:100%;max-width:448px;
   background:var(--card);
   border:1px solid var(--b2);
-  border-radius:16px;
+  border-radius:var(--radius);
   overflow:hidden;
   position:relative;
   animation:rise .48s cubic-bezier(.22,.68,0,1.2) both;
-  box-shadow:0 32px 80px rgba(0,0,0,.6);
+  box-shadow:var(--shadow-card);
 }
-@keyframes rise{from{opacity:0;transform:translateY(28px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes rise{
+  from{opacity:0;transform:translateY(28px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
 
-/* rainbow accent top line */
-.card-line{height:2px;background:linear-gradient(90deg,var(--accent) 0%,#ff8c00 35%,var(--gold) 65%,var(--ok) 100%);width:100%}
+/* Gradient top stripe */
+.card-line{
+  height:3px;
+  background:linear-gradient(90deg,var(--accent) 0%,#ff7a30 30%,var(--gold) 60%,var(--ok) 100%);
+  width:100%;
+}
 
-/* ══ STEP INDICATOR ══ */
-.steps{display:flex;align-items:center;padding:clamp(18px,3vw,24px) clamp(20px,4vw,28px) 0;gap:0}
-.si{display:flex;align-items:center;gap:7px}
+/* ── STEP INDICATOR ── */
+.steps{
+  display:flex;align-items:center;
+  padding:clamp(18px,3vw,26px) clamp(22px,4vw,30px) 0;
+  gap:0;
+}
+.si{display:flex;align-items:center;gap:8px}
 .si-dot{
-  width:26px;height:26px;border-radius:50%;
+  width:28px;height:28px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   font-family:var(--font-m);font-size:.62rem;font-weight:600;
   border:1.5px solid var(--b3);color:var(--muted);
-  transition:all .3s ease;flex-shrink:0;
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+  flex-shrink:0;
 }
-.si-dot.act{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 12px var(--a-glow)}
-.si-dot.done{background:var(--ok);border-color:var(--ok);color:#fff}
-.si-txt{font-family:var(--font-m);font-size:.62rem;color:var(--muted);transition:color .3s;white-space:nowrap}
-.si-txt.act{color:var(--white)}
+.si-dot.act{
+  background:var(--accent);border-color:var(--accent);color:#fff;
+  box-shadow:0 0 0 4px rgba(255,77,0,.1),0 2px 10px rgba(255,77,0,.25);
+}
+.si-dot.done{
+  background:var(--ok);border-color:var(--ok);color:#fff;
+  box-shadow:0 0 0 3px rgba(22,163,74,.1);
+}
+.si-txt{
+  font-family:var(--font-m);font-size:.62rem;
+  color:var(--muted);transition:color .3s;white-space:nowrap;
+}
+.si-txt.act{color:var(--white);font-weight:600}
 .si-txt.done{color:var(--ok)}
-.si-line{flex:1;height:1px;background:var(--b2);margin:0 6px;transition:background .3s}
-.si-line.done{background:var(--ok)}
-
-/* ══ CARD HEAD ══ */
-.card-head{padding:clamp(18px,3vw,24px) clamp(20px,4vw,28px) 0}
-.head-icon{
-  width:46px;height:46px;border-radius:10px;
-  background:var(--a-dim);border:1px solid rgba(255,77,0,.18);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;margin-bottom:14px;
+.si-line{
+  flex:1;height:1px;
+  background:var(--b2);
+  margin:0 6px;
+  transition:background .4s;
+  position:relative;overflow:hidden;
 }
-.head-title{font-family:var(--font-d);font-size:clamp(1.7rem,5vw,2.2rem);letter-spacing:1px;color:var(--white);line-height:1;margin-bottom:6px}
-.head-sub{font-size:.83rem;color:var(--muted);line-height:1.6}
+.si-line::after{
+  content:'';
+  position:absolute;inset:0;
+  background:var(--ok);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .4s cubic-bezier(.4,0,.2,1);
+}
+.si-line.done::after{transform:scaleX(1)}
 
-/* ══ CARD BODY ══ */
-.card-body{padding:clamp(16px,3vw,22px) clamp(20px,4vw,28px) clamp(20px,3vw,26px)}
+/* ── CARD HEAD ── */
+.card-head{
+  padding:clamp(18px,3vw,26px) clamp(22px,4vw,30px) 0;
+}
+.head-icon{
+  width:48px;height:48px;
+  border-radius:10px;
+  background:var(--accent-soft);
+  border:1px solid var(--accent-mid);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;margin-bottom:16px;
+  transition:all .3s;
+}
+.head-title{
+  font-family:var(--font-d);
+  font-size:clamp(1.75rem,5vw,2.3rem);
+  letter-spacing:1.5px;color:var(--white);
+  line-height:.95;margin-bottom:8px;
+}
+.head-sub{font-size:.84rem;color:var(--muted);line-height:1.65}
 
-/* ── Panel transition ── */
+/* ── CARD BODY ── */
+.card-body{
+  padding:clamp(18px,3vw,24px) clamp(22px,4vw,30px) clamp(22px,3vw,28px);
+}
+
+/* Panel transitions */
 .panel{display:none}
-.panel.act{display:block;animation:pIn .28s ease both}
-@keyframes pIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
-.panel.back{animation:pBack .28s ease both}
-@keyframes pBack{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.panel.act{display:block;animation:pIn .3s cubic-bezier(.4,0,.2,1) both}
+@keyframes pIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+.panel.back{animation:pBack .3s cubic-bezier(.4,0,.2,1) both}
+@keyframes pBack{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
 
 /* ── Field ── */
-.field{margin-bottom:16px}
+.field{margin-bottom:18px}
 .flabel{
-  font-family:var(--font-m);font-size:.65rem;color:var(--muted);
-  letter-spacing:.8px;text-transform:uppercase;
+  font-family:var(--font-m);font-size:.64rem;
+  color:var(--muted);letter-spacing:.9px;text-transform:uppercase;
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:7px;
+  margin-bottom:8px;
 }
-.flabel-hint{text-transform:none;letter-spacing:0;font-size:.6rem;color:var(--m2)}
+.flabel-hint{
+  text-transform:none;letter-spacing:0;
+  font-size:.6rem;color:var(--m2);
+}
 
 .inp-wrap{position:relative}
 .inp{
-  width:100%;background:var(--card2);border:1.5px solid var(--b2);border-radius:8px;
-  color:var(--white);font-family:var(--font-b);font-size:.93rem;
-  padding:clamp(11px,2vw,13px) clamp(12px,2.5vw,14px);
-  outline:none;transition:border-color var(--ease),box-shadow var(--ease);
+  width:100%;
+  background:var(--card2);
+  border:1.5px solid var(--b2);
+  border-radius:var(--radius-sm);
+  color:var(--white);
+  font-family:var(--font-b);font-size:.94rem;
+  padding:clamp(11px,2vw,13px) clamp(13px,2.5vw,15px);
+  outline:none;
+  transition:border-color var(--ease),box-shadow var(--ease),background var(--ease);
   -webkit-appearance:none;
 }
 .inp::placeholder{color:var(--m2)}
-.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,77,0,.09)}
-.inp.v-ok{border-color:var(--ok);box-shadow:0 0 0 3px rgba(34,197,94,.07)}
-.inp.v-err{border-color:var(--err);box-shadow:0 0 0 3px rgba(239,68,68,.07)}
-.inp-sfx{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:.9rem;transition:opacity .2s}
-
-/* OTP — big centered digits */
-.otp-inp{
-  font-family:var(--font-m);font-size:clamp(1.4rem,5vw,1.8rem);
-  font-weight:700;letter-spacing:clamp(8px,2.5vw,16px);
-  text-align:center;padding:clamp(13px,2.5vw,16px) 10px;
+.inp:focus{
+  border-color:var(--accent);
+  background:#fff;
+  box-shadow:0 0 0 4px rgba(255,77,0,.08);
+}
+.inp.v-ok{
+  border-color:var(--ok);
+  box-shadow:0 0 0 3px rgba(22,163,74,.08);
+}
+.inp.v-err{
+  border-color:var(--err);
+  box-shadow:0 0 0 3px rgba(220,38,38,.08);
+  animation:shake .35s cubic-bezier(.36,.07,.19,.97);
+}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-5px)}
+  40%{transform:translateX(5px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(3px)}
+}
+.inp-sfx{
+  position:absolute;right:13px;top:50%;
+  transform:translateY(-50%);
+  pointer-events:none;font-size:.9rem;
+  transition:opacity .2s,transform .2s;
 }
 
-/* ── Email chip (shown on OTP step) ── */
+/* OTP input */
+.otp-inp{
+  font-family:var(--font-m);
+  font-size:clamp(1.5rem,5vw,1.9rem);
+  font-weight:700;
+  letter-spacing:clamp(10px,3vw,18px);
+  text-align:center;
+  padding:clamp(14px,2.5vw,17px) 10px;
+  background:#fff;
+}
+
+/* ── Email chip ── */
 .email-chip{
   display:flex;align-items:center;gap:10px;
-  background:var(--card2);border:1px solid var(--b2);border-radius:7px;
-  padding:9px 12px;margin-bottom:14px;
+  background:var(--card2);
+  border:1px solid var(--b2);
+  border-radius:var(--radius-sm);
+  padding:10px 13px;margin-bottom:16px;
+  transition:border-color .2s;
 }
+.email-chip:hover{border-color:var(--b3)}
 .ec-icon{font-size:.95rem;flex-shrink:0}
-.ec-addr{font-family:var(--font-m);font-size:.75rem;color:var(--white);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ec-btn{font-family:var(--font-m);font-size:.65rem;color:var(--muted);background:none;border:none;cursor:pointer;flex-shrink:0;padding:0;transition:color var(--ease)}
+.ec-addr{
+  font-family:var(--font-m);font-size:.75rem;
+  color:var(--white);flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.ec-btn{
+  font-family:var(--font-m);font-size:.65rem;
+  color:var(--muted);background:none;border:none;
+  cursor:pointer;flex-shrink:0;padding:0;
+  transition:color var(--ease);
+}
 .ec-btn:hover{color:var(--accent)}
 
 /* ── Resend row ── */
-.resend-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.resend-timer{font-family:var(--font-m);font-size:.66rem;color:var(--muted)}
+.resend-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;margin-bottom:14px;flex-wrap:wrap;
+}
+.resend-timer{font-family:var(--font-m);font-size:.65rem;color:var(--muted)}
 .resend-timer b{color:var(--white)}
-.btn-resend{font-family:var(--font-m);font-size:.66rem;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;transition:opacity var(--ease)}
-.btn-resend:disabled{color:var(--muted);cursor:default;opacity:.6}
+.btn-resend{
+  font-family:var(--font-m);font-size:.65rem;
+  color:var(--accent);background:none;border:none;
+  cursor:pointer;padding:0;
+  transition:opacity var(--ease);
+}
+.btn-resend:disabled{color:var(--muted);cursor:default;opacity:.55}
 .btn-resend:hover:not(:disabled){opacity:.7}
 
 /* ── Buttons ── */
 .btn{
-  width:100%;padding:clamp(11px,2vw,13px) 16px;border-radius:8px;
-  font-weight:700;font-size:.9rem;border:none;cursor:pointer;
-  transition:all var(--ease);display:flex;align-items:center;
-  justify-content:center;gap:8px;font-family:var(--font-b);
-  letter-spacing:.3px;position:relative;overflow:hidden;
+  width:100%;
+  padding:clamp(12px,2vw,14px) 16px;
+  border-radius:var(--radius-sm);
+  font-weight:700;font-size:.9rem;
+  border:none;cursor:pointer;
+  transition:all var(--ease);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--font-b);
+  letter-spacing:.3px;
+  position:relative;overflow:hidden;
 }
+.btn::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 55%);
+  opacity:0;transition:opacity .22s;
+}
+.btn:hover:not(:disabled)::before{opacity:1}
 .btn:active:not(:disabled){transform:scale(.982)}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover:not(:disabled){background:#e04000;box-shadow:0 6px 22px rgba(255,77,0,.28);transform:translateY(-1px)}
-.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--b2)}
-.btn-ghost:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
-.btn-ok{background:var(--ok);color:#fff}
-.btn-ok:hover:not(:disabled){background:#1fa84e;box-shadow:0 6px 22px rgba(34,197,94,.25);transform:translateY(-1px)}
-.btn-red{background:transparent;color:var(--err);border:1.5px solid rgba(239,68,68,.25)}
-.btn-red:hover:not(:disabled){background:rgba(239,68,68,.07);border-color:var(--err)}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+
+.btn-primary{
+  background:linear-gradient(135deg,#ff4d00,#ff6b2a);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(255,77,0,.2),0 1px 4px rgba(255,77,0,.15);
+}
+.btn-primary:hover:not(:disabled){
+  background:linear-gradient(135deg,#e64400,#ff5a1f);
+  box-shadow:0 8px 28px rgba(255,77,0,.3);
+  transform:translateY(-2px);
+}
+.btn-primary:active:not(:disabled){
+  transform:translateY(0);
+  box-shadow:0 2px 8px rgba(255,77,0,.2);
+}
+
+.btn-ghost{
+  background:transparent;
+  color:var(--muted);
+  border:1.5px solid var(--b2);
+}
+.btn-ghost:hover:not(:disabled){
+  border-color:var(--accent);color:var(--accent);
+  background:var(--accent-soft);
+}
+
+.btn-ok{
+  background:linear-gradient(135deg,#16a34a,#22c55e);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(22,163,74,.2);
+}
+.btn-ok:hover:not(:disabled){
+  box-shadow:0 8px 28px rgba(22,163,74,.3);
+  transform:translateY(-2px);
+}
+
+.btn-red{
+  background:transparent;color:var(--err);
+  border:1.5px solid rgba(220,38,38,.22);
+}
+.btn-red:hover:not(:disabled){
+  background:var(--err-bg);
+  border-color:rgba(220,38,38,.4);
+}
 .btn-sm{padding:8px 14px;font-size:.82rem;width:auto}
 
-/* spinner */
-.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .65s linear infinite;flex-shrink:0}
+/* Spinner */
+.spin{
+  width:15px;height:15px;
+  border:2px solid rgba(255,255,255,.25);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:sp .65s linear infinite;
+  flex-shrink:0;
+}
 @keyframes sp{to{transform:rotate(360deg)}}
 
 /* ── Alert box ── */
 .alert{
-  border-radius:8px;padding:10px 13px;
+  border-radius:var(--radius-sm);
+  padding:10px 14px;
   font-family:var(--font-m);font-size:.72rem;line-height:1.55;
-  margin-bottom:14px;display:none;align-items:flex-start;gap:9px;
+  margin-bottom:16px;
+  display:none;align-items:flex-start;gap:9px;
+  transition:all .25s;
 }
-.alert.show{display:flex}
+.alert.show{display:flex;animation:alertIn .25s cubic-bezier(.4,0,.2,1) both}
+@keyframes alertIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .alert-icon{font-size:.85rem;flex-shrink:0;margin-top:1px}
 .alert-text{flex:1;min-width:0;word-break:break-word}
-.alert.a-info   {background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.2);color:#82aaff}
-.alert.a-ok     {background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);color:var(--ok)}
-.alert.a-err    {background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);color:#f87171}
-.alert.a-warn   {background:rgba(255,184,0,.07);border:1px solid rgba(255,184,0,.2);color:var(--gold)}
+.alert.a-info{background:rgba(37,99,235,.06);border:1px solid rgba(37,99,235,.18);color:#3b82f6}
+.alert.a-ok  {background:var(--ok-bg);border:1px solid rgba(22,163,74,.2);color:var(--ok)}
+.alert.a-err {background:var(--err-bg);border:1px solid rgba(220,38,38,.18);color:#ef4444}
+.alert.a-warn{background:rgba(255,184,0,.06);border:1px solid rgba(255,184,0,.2);color:var(--gold)}
 
 /* ── Feature pills ── */
-.features{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.features{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
 .feat{
   display:inline-flex;align-items:center;gap:5px;
-  background:rgba(255,255,255,.03);border:1px solid var(--b2);
+  background:var(--card2);
+  border:1px solid var(--b2);
   border-radius:100px;padding:4px 11px;
   font-family:var(--font-m);font-size:.6rem;color:var(--muted);
+  transition:border-color .2s,color .2s;
 }
+.feat:hover{border-color:var(--b3);color:var(--white)}
 .feat b{color:var(--white)}
 
 /* ── Logged-in panel ── */
 .li-wrap{
-  background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.14);
-  border-radius:10px;padding:clamp(16px,3vw,22px);text-align:center;
+  background:rgba(22,163,74,.04);
+  border:1px solid rgba(22,163,74,.14);
+  border-radius:var(--radius-sm);
+  padding:clamp(18px,3vw,24px);
+  text-align:center;
 }
 .li-av{
-  width:58px;height:58px;border-radius:50%;margin:0 auto 14px;
-  background:var(--a-dim);border:2px solid rgba(255,77,0,.2);
+  width:60px;height:60px;border-radius:50%;
+  margin:0 auto 16px;
+  background:var(--accent-soft);
+  border:2px solid rgba(255,77,0,.18);
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-d);font-size:1.7rem;color:var(--accent);
+  font-family:var(--font-d);font-size:1.8rem;color:var(--accent);
+  box-shadow:0 0 0 5px rgba(255,77,0,.06);
 }
-.li-name{font-family:var(--font-d);font-size:1.5rem;letter-spacing:1px;color:var(--white);margin-bottom:3px}
-.li-email{font-family:var(--font-m);font-size:.7rem;color:var(--ok);margin-bottom:18px}
+.li-name{
+  font-family:var(--font-d);font-size:1.6rem;
+  letter-spacing:1px;color:var(--white);margin-bottom:4px;
+}
+.li-email{
+  font-family:var(--font-m);font-size:.7rem;
+  color:var(--ok);margin-bottom:20px;
+}
 .li-actions{display:flex;flex-direction:column;gap:9px}
 
 /* ── Divider ── */
-.div{display:flex;align-items:center;gap:10px;margin:14px 0}
+.div{display:flex;align-items:center;gap:10px;margin:16px 0}
 .div::before,.div::after{content:'';flex:1;height:1px;background:var(--b2)}
 .div span{font-family:var(--font-m);font-size:.6rem;color:var(--m2);white-space:nowrap}
 
-/* ══ CARD FOOTER ══ */
+/* ── Card footer ── */
 .card-foot{
   border-top:1px solid var(--b2);
-  padding:10px clamp(20px,4vw,28px);
+  padding:11px clamp(22px,4vw,30px);
   display:flex;align-items:center;justify-content:center;gap:8px;
   font-family:var(--font-m);font-size:.6rem;color:var(--m2);
+  background:var(--card2);
 }
-.cf-badge{background:rgba(255,184,0,.08);border:1px solid rgba(255,184,0,.15);color:var(--gold);padding:1px 8px;border-radius:100px;font-size:.56rem}
+.cf-badge{
+  padding:2px 9px;border-radius:100px;font-size:.58rem;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.cf-badge-gold{background:rgba(255,184,0,.08);border:1px solid rgba(255,184,0,.18);color:var(--gold)}
+.cf-badge-green{background:rgba(22,163,74,.07);border:1px solid rgba(22,163,74,.18);color:var(--ok)}
 
-/* ══ FOOTER ══ */
-footer{background:var(--dark);border-top:1px solid var(--b2);padding:clamp(14px,2.5vw,22px) clamp(14px,4vw,40px)}
-.fi{max-width:440px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.fl{font-family:var(--font-d);font-size:1.1rem;letter-spacing:2px;color:var(--white)}
+/* ── Footer ── */
+footer{
+  position:relative;z-index:1;
+  background:var(--dark);border-top:1px solid var(--b2);
+  padding:clamp(14px,2.5vw,24px) clamp(16px,4vw,44px);
+}
+.fi{
+  max-width:448px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;
+}
+.fl{font-family:var(--font-d);font-size:1.15rem;letter-spacing:2px;color:var(--white)}
 .fl b{color:var(--accent);font-weight:400}
 .fc{color:var(--m2);font-size:.7rem}
-.flinks{display:flex;gap:clamp(10px,2vw,18px);list-style:none}
+.flinks{display:flex;gap:clamp(12px,2vw,20px);list-style:none}
 .flinks a{color:var(--m2);text-decoration:none;font-size:.7rem;transition:color var(--ease)}
 .flinks a:hover{color:var(--white)}
 
-/* ══ RESPONSIVE ══ */
+/* ── RESPONSIVE ── */
 @media(max-width:440px){
-  .card{border-radius:12px}
-  .otp-inp{letter-spacing:8px;font-size:1.4rem}
+  .card{border-radius:var(--radius-sm)}
+  .otp-inp{letter-spacing:8px;font-size:1.45rem}
 }
 @media(max-width:360px){
   .si-txt{display:none}
-  .otp-inp{letter-spacing:5px;font-size:1.2rem}
+  .otp-inp{letter-spacing:5px;font-size:1.25rem}
   .fi{flex-direction:column;align-items:center;text-align:center;gap:7px}
   .flinks{justify-content:center}
 }
@@ -273,7 +542,6 @@ footer{background:var(--dark);border-top:1px solid var(--b2);padding:clamp(14px,
 <div class="amb amb-1" aria-hidden="true"></div>
 <div class="amb amb-2" aria-hidden="true"></div>
 <div class="amb amb-3" aria-hidden="true"></div>
-<div class="grid"      aria-hidden="true"></div>
 
 <!-- NAV -->
 <nav class="nav" aria-label="Navigation">
@@ -378,7 +646,7 @@ footer{background:var(--dark);border-top:1px solid var(--b2);padding:clamp(14px,
           Verify &amp; Sign In →
         </button>
 
-        <div style="margin-top:9px">
+        <div style="margin-top:10px">
           <button class="btn btn-ghost" id="backBtn" type="button" style="font-size:.8rem;padding:9px">
             ← Back
           </button>
@@ -409,9 +677,9 @@ footer{background:var(--dark);border-top:1px solid var(--b2);padding:clamp(14px,
 
     <div class="card-foot">
       <span>Powered by</span>
-      <span class="cf-badge">Brevo SMTP</span>
+      <span class="cf-badge cf-badge-gold">Brevo SMTP</span>
       <span>+</span>
-      <span class="cf-badge" style="background:rgba(66,184,131,.06);border-color:rgba(66,184,131,.15);color:#42b883">Supabase DB</span>
+      <span class="cf-badge cf-badge-green">Supabase DB</span>
     </div>
   </div>
 </main>
@@ -447,42 +715,17 @@ const BREVO_KEY = p1+p2+p3+p4+p5+p6+p7+p8;
 
 'use strict';
 
-/* ─────────────────────────────────────────
-   CONFIG  — update these before deploy
-───────────────────────────────────────── */
 var CFG = {
   BREVO_KEY:     BREVO_KEY,
-   SENDER_EMAIL: 'servicebuldel@gmail.com',  // must be verified in Brevo
+  SENDER_EMAIL: 'servicebuldel@gmail.com',
   SENDER_NAME:   'CodeCraft Systems',
-  OTP_TABLE:     'email_otps',                     // Supabase table name (see schema below)
-  OTP_EXPIRE_MS: 10 * 60 * 1000,                  // 10 minutes
-  SESSION_KEY:   'cc_session',                     // localStorage key
-  RESEND_SEC:    60                                // countdown seconds
+  OTP_TABLE:     'email_otps',
+  OTP_EXPIRE_MS: 10 * 60 * 1000,
+  SESSION_KEY:   'cc_session',
+  RESEND_SEC:    60
 };
 
-/*
-  ── SUPABASE TABLE SCHEMA (run once in SQL editor) ──
-  CREATE TABLE IF NOT EXISTS email_otps (
-    id         UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    email      TEXT NOT NULL,
-    otp        TEXT NOT NULL,
-    expires_at TIMESTAMPTZ NOT NULL,
-    used       BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-  );
-  CREATE INDEX ON email_otps(email, used, expires_at);
-
-  ── ROW LEVEL SECURITY ──
-  ALTER TABLE email_otps ENABLE ROW LEVEL SECURITY;
-  -- Allow anon to insert (send otp) and select own row (verify)
-  CREATE POLICY "anon insert" ON email_otps FOR INSERT TO anon WITH CHECK (true);
-  CREATE POLICY "anon select" ON email_otps FOR SELECT TO anon USING (true);
-  CREATE POLICY "anon update" ON email_otps FOR UPDATE TO anon USING (true);
-*/
-
-/* ─────────────────────────────────────────
-   CURSOR
-───────────────────────────────────────── */
+/* ── CURSOR ── */
 (function(){
   var c=document.getElementById('cur'), r=document.getElementById('cur-r');
   var mx=0,my=0,rx=0,ry=0;
@@ -496,16 +739,12 @@ var CFG = {
 })();
 document.getElementById('yr').textContent = new Date().getFullYear();
 
-/* ─────────────────────────────────────────
-   SUPABASE CLIENT
-───────────────────────────────────────── */
+/* ── SUPABASE ── */
 var sb = null;
 try { sb = devDirectory.createClient(); }
 catch(e){ console.warn('Supabase init failed:', e.message); }
 
-/* ─────────────────────────────────────────
-   SESSION  (localStorage based)
-───────────────────────────────────────── */
+/* ── SESSION ── */
 var Session = {
   set: function(user){
     try{
@@ -518,10 +757,7 @@ var Session = {
       var raw = localStorage.getItem(CFG.SESSION_KEY);
       if(!raw) return null;
       var d = JSON.parse(raw);
-      // Optional: expire session after 7 days
-      if(Date.now() - d.loginAt > 7*24*60*60*1000){
-        Session.clear(); return null;
-      }
+      if(Date.now() - d.loginAt > 7*24*60*60*1000){ Session.clear(); return null; }
       return d;
     }catch(e){ return null; }
   },
@@ -530,9 +766,7 @@ var Session = {
   }
 };
 
-/* ─────────────────────────────────────────
-   ALERT HELPER
-───────────────────────────────────────── */
+/* ── ALERT ── */
 var Alert = {
   _show: function(id, type, icon, html){
     var el = document.getElementById(id);
@@ -545,25 +779,20 @@ var Alert = {
     var el = document.getElementById(id);
     if(el){ el.className='alert'; el.innerHTML=''; }
   },
-  info:    function(id,t){ Alert._show(id,'a-info','ℹ️',t); },
-  ok:      function(id,t){ Alert._show(id,'a-ok','✅',t); },
-  err:     function(id,t){ Alert._show(id,'a-err','❌',t); },
-  warn:    function(id,t){ Alert._show(id,'a-warn','⚠️',t); }
+  info: function(id,t){ Alert._show(id,'a-info','ℹ️',t); },
+  ok:   function(id,t){ Alert._show(id,'a-ok','✅',t); },
+  err:  function(id,t){ Alert._show(id,'a-err','❌',t); },
+  warn: function(id,t){ Alert._show(id,'a-warn','⚠️',t); }
 };
 
-/* ─────────────────────────────────────────
-   STEPS BAR
-───────────────────────────────────────── */
+/* ── STEPS ── */
 function setStep(n){
-  // n = 1, 2, or 3
-  var dots  = ['sd1','sd2','sd3'];
-  var labs  = ['sl1','sl2','sl3'];
-  var conns = ['sc1','sc2'];
+  var dots=['sd1','sd2','sd3'], labs=['sl1','sl2','sl3'], conns=['sc1','sc2'];
   for(var i=0;i<3;i++){
     var d=document.getElementById(dots[i]);
     var l=document.getElementById(labs[i]);
     d.className='si-dot'; l.className='si-txt';
-    if(i+1 < n){ d.className+=' done'; d.textContent='✓'; l.className+=' done'; }
+    if(i+1<n){ d.className+=' done'; d.textContent='✓'; l.className+=' done'; }
     else if(i+1===n){ d.className+=' act'; d.textContent=String(i+1); l.className+=' act'; }
     else{ d.textContent=String(i+1); }
   }
@@ -573,11 +802,9 @@ function setStep(n){
   }
 }
 
-/* ─────────────────────────────────────────
-   PANEL SWITCHER
-───────────────────────────────────────── */
+/* ── PANEL SWITCHER ── */
 var headConfig = {
-  email:    { icon:'✉️',  title:'SIGN IN',   sub:'Enter your email — we\'ll send a 6-digit code.' },
+  email:    { icon:'✉️',  title:'SIGN IN',    sub:'Enter your email — we\'ll send a 6-digit code.' },
   otp:      { icon:'🔐',  title:'VERIFY OTP', sub:'Check your inbox and enter the code below.' },
   loggedIn: { icon:'✅',  title:'WELCOME',    sub:'You\'re signed in to CodeCraft Systems.' }
 };
@@ -597,9 +824,7 @@ function showPanel(name, goBack){
   document.getElementById('headSub').textContent   = h.sub;
 }
 
-/* ─────────────────────────────────────────
-   BUTTON LOADING
-───────────────────────────────────────── */
+/* ── BTN LOADING ── */
 function btnLoad(id, loading, label){
   var b = document.getElementById(id);
   if(!b) return;
@@ -609,9 +834,7 @@ function btnLoad(id, loading, label){
     : label;
 }
 
-/* ─────────────────────────────────────────
-   EMAIL VALIDATION
-───────────────────────────────────────── */
+/* ── EMAIL VALIDATION ── */
 function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
 
 document.getElementById('emailInp').addEventListener('input', function(){
@@ -625,9 +848,7 @@ document.getElementById('emailInp').addEventListener('keydown',function(e){
   if(e.key==='Enter') OtpFlow.send();
 });
 
-/* ─────────────────────────────────────────
-   OTP INPUT — digits only, auto verify
-───────────────────────────────────────── */
+/* ── OTP INPUT ── */
 document.getElementById('otpInp').addEventListener('input', function(){
   this.value = this.value.replace(/\D/g,'').slice(0,6);
   this.className = 'inp otp-inp';
@@ -637,9 +858,7 @@ document.getElementById('otpInp').addEventListener('keydown',function(e){
   if(e.key==='Enter') OtpFlow.verify();
 });
 
-/* ─────────────────────────────────────────
-   COUNTDOWN TIMER
-───────────────────────────────────────── */
+/* ── COUNTDOWN ── */
 var _cdTimer = null;
 function startCountdown(secs){
   clearInterval(_cdTimer);
@@ -659,26 +878,14 @@ function startCountdown(secs){
   _cdTimer = setInterval(tick, 1000);
 }
 
-/* ─────────────────────────────────────────
-   GENERATE 6-DIGIT OTP
-───────────────────────────────────────── */
-function genOtp(){
-  return String(Math.floor(100000 + Math.random()*900000));
-}
+/* ── GENERATE OTP ── */
+function genOtp(){ return String(Math.floor(100000 + Math.random()*900000)); }
 
-/* ─────────────────────────────────────────
-   BREVO — send OTP email
-───────────────────────────────────────── */
+/* ── BREVO ── */
 async function sendBrevoMail(toEmail, otp){
-
   const payload = {
-    sender: {
-      name: CFG.SENDER_NAME,
-      email: CFG.SENDER_EMAIL
-    },
-    to: [{
-      email: toEmail
-    }],
+    sender: { name: CFG.SENDER_NAME, email: CFG.SENDER_EMAIL },
+    to: [{ email: toEmail }],
     subject: otp + " is your CodeCraft login code",
     htmlContent: `
       <div style="font-family:Arial;padding:20px">
@@ -689,86 +896,50 @@ async function sendBrevoMail(toEmail, otp){
       </div>
     `
   };
-
   const res = await fetch("https://api.brevo.com/v3/smtp/email",{
     method:"POST",
-    headers:{
-      "accept":"application/json",
-      "api-key":CFG.BREVO_KEY,
-      "content-type":"application/json"
-    },
+    headers:{ "accept":"application/json","api-key":CFG.BREVO_KEY,"content-type":"application/json" },
     body:JSON.stringify(payload)
   });
-
   const data = await res.json();
-
-  if(!res.ok){
-    console.error("Brevo error:",data);
-    throw new Error(data.message || "Email send failed");
-  }
-
+  if(!res.ok){ console.error("Brevo error:",data); throw new Error(data.message||"Email send failed"); }
   return true;
 }
 
-/* ─────────────────────────────────────────
-   SUPABASE — store OTP
-───────────────────────────────────────── */
+/* ── SUPABASE: STORE OTP ── */
 async function storeOtp(email, otp){
   if(!sb) throw new Error('Database not configured.');
-  // Invalidate old OTPs for this email first
-  await sb.from(CFG.OTP_TABLE)
-    .update({ used: true })
-    .eq('email', email)
-    .eq('used', false);
-  // Insert new OTP
+  await sb.from(CFG.OTP_TABLE).update({ used: true }).eq('email', email).eq('used', false);
   var expiresAt = new Date(Date.now() + CFG.OTP_EXPIRE_MS).toISOString();
-  var res = await sb.from(CFG.OTP_TABLE).insert({
-    email: email,
-    otp:   otp,
-    expires_at: expiresAt,
-    used: false
-  });
+  var res = await sb.from(CFG.OTP_TABLE).insert({ email, otp, expires_at: expiresAt, used: false });
   if(res.error) throw new Error('DB insert failed: ' + res.error.message);
   return true;
 }
 
-/* ─────────────────────────────────────────
-   SUPABASE — verify OTP
-───────────────────────────────────────── */
+/* ── SUPABASE: VERIFY OTP ── */
 async function checkOtp(email, inputOtp){
   if(!sb) throw new Error('Database not configured.');
   var now = new Date().toISOString();
   var res = await sb.from(CFG.OTP_TABLE)
     .select('id, otp, expires_at, used')
-    .eq('email', email)
-    .eq('used', false)
-    .gt('expires_at', now)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single();
-
+    .eq('email', email).eq('used', false).gt('expires_at', now)
+    .order('created_at', { ascending: false }).limit(1).single();
   if(res.error){
     if(res.error.code==='PGRST116') throw new Error('OTP expired or not found. Request a new one.');
     throw new Error(res.error.message);
   }
   if(!res.data) throw new Error('OTP expired or not found. Request a new one.');
   if(res.data.otp !== inputOtp) throw new Error('Incorrect code. Please try again.');
-
-  // Mark as used
   await sb.from(CFG.OTP_TABLE).update({ used: true }).eq('id', res.data.id);
   return true;
 }
 
-/* ─────────────────────────────────────────
-   MAIN FLOW
-───────────────────────────────────────── */
+/* ── MAIN FLOW ── */
 var _currentEmail = '';
 var _sending = false;
 var _verifying = false;
 
 var OtpFlow = {
-
-  /* ── STEP 1: Send OTP ── */
   send: async function(){
     var email = document.getElementById('emailInp').value.trim().toLowerCase();
     if(!validEmail(email)){
@@ -780,14 +951,10 @@ var OtpFlow = {
     _sending = true;
     Alert.hide('al1');
     btnLoad('sendBtn', true, 'Sending');
-
     try{
       var otp = genOtp();
-      // 1. Store OTP in Supabase DB
       await storeOtp(email, otp);
-      // 2. Send email via Brevo
       await sendBrevoMail(email, otp);
-      // 3. Move to OTP panel
       _currentEmail = email;
       document.getElementById('chipEmail').textContent = email;
       document.getElementById('otpInp').value = '';
@@ -796,7 +963,6 @@ var OtpFlow = {
       Alert.info('al2', 'Code sent to <strong>' + email + '</strong>. Check your inbox or spam folder.');
       startCountdown(CFG.RESEND_SEC);
       setTimeout(function(){ document.getElementById('otpInp').focus(); }, 150);
-
     }catch(err){
       var msg = err.message||'Failed to send OTP.';
       if(msg.includes('rate')||msg.includes('limit')){
@@ -812,36 +978,25 @@ var OtpFlow = {
     }
   },
 
-  /* ── STEP 2: Verify OTP ── */
   verify: async function(){
     var code = document.getElementById('otpInp').value.trim();
     if(!/^\d{6}$/.test(code)){
-      if(code.length===6){ // has 6 chars but not digits
-        Alert.err('al2','Code must be 6 digits only.');
-        document.getElementById('otpInp').className='inp otp-inp v-err';
-      }
+      if(code.length===6){ Alert.err('al2','Code must be 6 digits only.'); document.getElementById('otpInp').className='inp otp-inp v-err'; }
       return;
     }
-    if(!_currentEmail){
-      Alert.err('al2','Session lost. Please enter your email again.');
-      showPanel('email', true); return;
-    }
+    if(!_currentEmail){ Alert.err('al2','Session lost. Please enter your email again.'); showPanel('email',true); return; }
     if(_verifying) return;
     _verifying = true;
     Alert.hide('al2');
     btnLoad('verifyBtn', true, 'Verifying');
-
     try{
       await checkOtp(_currentEmail, code);
-      // OTP matched — create session
       var user = { email: _currentEmail };
       Session.set(user);
       clearInterval(_cdTimer);
       OtpFlow.showLoggedIn(user);
-      // Redirect
       var next = new URLSearchParams(window.location.search).get('next')||'../submit-profile/';
       setTimeout(function(){ window.location.href = next; }, 1400);
-
     }catch(err){
       var msg = err.message||'Verification failed.';
       document.getElementById('otpInp').className='inp otp-inp v-err';
@@ -858,7 +1013,6 @@ var OtpFlow = {
     }
   },
 
-  /* ── RESEND ── */
   resend: async function(){
     if(!_currentEmail) return;
     document.getElementById('resendBtn').disabled = true;
@@ -877,7 +1031,6 @@ var OtpFlow = {
     }
   },
 
-  /* ── Show logged-in panel ── */
   showLoggedIn: function(user){
     var email = user.email||'—';
     var initial = email.charAt(0).toUpperCase();
@@ -890,38 +1043,30 @@ var OtpFlow = {
     showPanel('loggedIn');
   },
 
-  /* ── Logout ── */
   logout: function(){
     Session.clear();
     _currentEmail = '';
     document.getElementById('emailInp').value='';
     document.getElementById('emailInp').className='inp';
     document.getElementById('emailSfx').textContent='';
-    showPanel('email', true);
+    showPanel('email',true);
     Alert.ok('al1','Signed out successfully.');
   }
 };
 
-/* ─────────────────────────────────────────
-   BUTTON BINDINGS
-───────────────────────────────────────── */
-document.getElementById('sendBtn').onclick      = function(){ OtpFlow.send(); };
-document.getElementById('verifyBtn').onclick    = function(){ OtpFlow.verify(); };
-document.getElementById('backBtn').onclick      = function(){ showPanel('email',true); };
+/* ── BINDINGS ── */
+document.getElementById('sendBtn').onclick        = function(){ OtpFlow.send(); };
+document.getElementById('verifyBtn').onclick      = function(){ OtpFlow.verify(); };
+document.getElementById('backBtn').onclick        = function(){ showPanel('email',true); };
 document.getElementById('changeEmailBtn').onclick = function(){ showPanel('email',true); };
-document.getElementById('resendBtn').onclick    = function(){ OtpFlow.resend(); };
-document.getElementById('logoutBtn').onclick    = function(){ OtpFlow.logout(); };
-document.getElementById('diffUserBtn').onclick  = function(){ OtpFlow.logout(); };
+document.getElementById('resendBtn').onclick      = function(){ OtpFlow.resend(); };
+document.getElementById('logoutBtn').onclick      = function(){ OtpFlow.logout(); };
+document.getElementById('diffUserBtn').onclick    = function(){ OtpFlow.logout(); };
 
-/* ─────────────────────────────────────────
-   CHECK SESSION ON LOAD
-───────────────────────────────────────── */
+/* ── SESSION CHECK ── */
 (function(){
   var sess = Session.get();
-  if(sess && sess.email){
-    _currentEmail = sess.email;
-    OtpFlow.showLoggedIn(sess);
-  }
+  if(sess && sess.email){ _currentEmail = sess.email; OtpFlow.showLoggedIn(sess); }
 })();
 </script>
 <script src="../assets/ui-polish.js"></script>
