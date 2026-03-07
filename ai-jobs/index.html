@@ -632,15 +632,50 @@ function scoreJob(job, profileObj) {
   return (locationHit ? 22 : 0) + (skillHits * 8) + recencyBoost;
 }
 
+function buildSearchUrl(sourceKey, role, location) {
+  const qRole = encodeURIComponent(role);
+  const qLocation = encodeURIComponent(location || 'Remote');
+  const term = encodeURIComponent(`${role} ${location || 'remote'}`);
+
+  const sourceMap = {
+    linkedin: `https://www.linkedin.com/jobs/search/?keywords=${qRole}&location=${qLocation}&f_TPR=r864000`,
+    indeed: `https://www.indeed.com/jobs?q=${qRole}&l=${qLocation}&fromage=10`,
+    glassdoor: `https://www.glassdoor.com/Job/jobs.htm?sc.keyword=${qRole}&locT=C&locId=1147401&fromAge=10`,
+    wellfound: `https://wellfound.com/jobs?query=${qRole}%20${qLocation}`,
+    ziprecruiter: `https://www.ziprecruiter.com/Jobs/${qRole}/in-${qLocation}?days=10`,
+    remoteok: `https://remoteok.com/remote-${encodeURIComponent(role.toLowerCase().replace(/\s+/g, '-'))}-jobs`,
+    google: `https://www.google.com/search?q=${term}+jobs+posted+last+10+days`
+  };
+
+  return sourceMap[sourceKey] || sourceMap.linkedin;
+}
+
+function chooseUrlSource(job) {
+  const seed = `${job.role || job.title || ''}${job.company || ''}${job.location || ''}`.toLowerCase();
+  const sources = ['linkedin', 'indeed', 'glassdoor', 'wellfound', 'ziprecruiter', 'remoteok', 'google'];
+  if (!seed) return sources[0];
+  const idx = seed.split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % sources.length;
+  return sources[idx];
+}
+
+function locationPriority(jobLocation, profileLocation) {
+  const j = String(jobLocation || '').toLowerCase();
+  const p = String(profileLocation || '').toLowerCase();
+  if (!j) return 3;
+  if (p && (j.includes(p) || p.includes(j))) return 0;
+  if (j.includes('remote') || j.includes('anywhere')) return 2;
+  return 1;
+}
+
 function normalizeJobUrl(job, profileObj) {
   const role = job.role || job.title || profileObj.title || 'Developer';
   const loc = job.location || profileObj.location || 'Remote';
   const source = [job.url, job.apply_url, job.link, job.job_url].find(v => /^https?:\/\//i.test(v || ''));
-  const fallback = `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(role)}&location=${encodeURIComponent(loc)}&f_TPR=r864000`;
+  const fallback = buildSearchUrl(chooseUrlSource(job), role, loc);
 
   if (!source) return fallback;
 
-  const isGeneric = /(linkedin\.com\/jobs\/?$|indeed\.com\/?$|wellfound\.com\/?$|remoteok\.io\/?$)/i.test(source);
+  const isGeneric = /(linkedin\.com\/jobs\/?$|indeed\.com\/?$|wellfound\.com\/?$|remoteok\.io\/?$|glassdoor\.com\/?$|ziprecruiter\.com\/?$)/i.test(source);
   if (isGeneric) return fallback;
 
   const hasAgeFilter = /[?&](fromage|f_TPR|days_ago)=/i.test(source);
@@ -648,6 +683,7 @@ function normalizeJobUrl(job, profileObj) {
 
   if (/linkedin\.com\/jobs\/search/i.test(source)) return `${source}${source.includes('?') ? '&' : '?'}f_TPR=r864000`;
   if (/indeed\./i.test(source)) return `${source}${source.includes('?') ? '&' : '?'}fromage=10`;
+  if (/glassdoor\./i.test(source)) return `${source}${source.includes('?') ? '&' : '?'}fromAge=10`;
   return source;
 }
 
@@ -797,27 +833,42 @@ Return clean JSON only.`;
     .map(({ _smartScore, ...job }) => job);
 
   const baseSkills = (p.skills || '').split(',').map(s => s.trim()).filter(Boolean);
-  const roleSeeds = [p.title || 'Developer', ...baseSkills.slice(0, 6), 'Full Stack Developer', 'Backend Developer', 'Frontend Developer', 'Remote Developer'];
-  let idx = 0;
-  while (parsed.jobs.length < 20) {
-    const seed = roleSeeds[idx % roleSeeds.length] || 'Developer';
-    const loc = p.location || 'Remote';
-    const searchUrl = `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(seed)}&location=${encodeURIComponent(loc)}&f_TPR=r864000`;
-    parsed.jobs.push({
-      role: seed,
-      company: 'LinkedIn Search',
-      location: loc,
-      match_score: Math.max(60, 92 - (idx % 20)),
-      tags: baseSkills.slice(0, 4),
-      matched_skills: baseSkills.slice(0, 2),
-      posted_days_ago: idx % 10,
-      url: searchUrl,
-      apply_url: searchUrl
-    });
-    idx++;
+  const roleSeeds = [p.title || 'Developer', ...baseSkills.slice(0, 4), 'AI Developer', 'Full Stack Developer', 'Backend Developer', 'Frontend Developer'];
+  const locationSeeds = [p.location || 'Remote', `Near ${p.location || 'your area'}`, 'Remote'];
+  const boards = ['linkedin', 'indeed', 'glassdoor', 'wellfound', 'ziprecruiter', 'google'];
+
+  if (parsed.jobs.length > 0 && parsed.jobs.length < 12) {
+    for (let i = 0; i < 12 - parsed.jobs.length; i++) {
+      const seed = roleSeeds[i % roleSeeds.length] || 'Developer';
+      const loc = locationSeeds[i % locationSeeds.length] || 'Remote';
+      const board = boards[i % boards.length];
+      const searchUrl = buildSearchUrl(board, seed, loc);
+
+      parsed.jobs.push({
+        role: seed,
+        company: `${board[0].toUpperCase()}${board.slice(1)} Search`,
+        location: loc,
+        match_score: Math.max(60, 88 - (i % 15)),
+        tags: baseSkills.slice(0, 4),
+        matched_skills: baseSkills.slice(0, 2),
+        posted_days_ago: i % 10,
+        url: searchUrl,
+        apply_url: searchUrl
+      });
+    }
   }
 
-  parsed.jobs = parsed.jobs.filter(job => Number.isFinite(job.posted_days_ago) ? job.posted_days_ago <= 10 : true).slice(0, 20);
+  parsed.jobs = parsed.jobs
+    .filter(job => Number.isFinite(job.posted_days_ago) ? job.posted_days_ago <= 10 : true)
+    .sort((a, b) => {
+      const locDiff = locationPriority(a.location, p.location) - locationPriority(b.location, p.location);
+      if (locDiff !== 0) return locDiff;
+      const daysA = Number.isFinite(a.posted_days_ago) ? a.posted_days_ago : 99;
+      const daysB = Number.isFinite(b.posted_days_ago) ? b.posted_days_ago : 99;
+      return daysA - daysB;
+    })
+    .slice(0, 20);
+
   return parsed;
 }
 
