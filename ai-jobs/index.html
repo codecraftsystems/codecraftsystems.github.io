@@ -149,6 +149,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .results-badge{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.22);color:var(--success);font-family:var(--font-m);font-size:.64rem;font-weight:700;padding:3px 10px;border-radius:100px}
 
 .job-grid{display:flex;flex-direction:column;gap:9px}
+.job-subtitle{font-family:var(--font-m);font-size:.67rem;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;margin-top:8px;margin-bottom:2px}
 .job-card{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:clamp(12px,2vw,16px);display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;transition:all .2s;text-decoration:none;color:inherit;cursor:pointer;animation:fadeUp .35s ease both}
 .job-card:hover{border-color:rgba(255,77,0,.3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.07)}
 .job-role{font-weight:700;font-size:.9rem;color:var(--white);margin-bottom:3px}
@@ -555,7 +556,11 @@ function renderJobs(jobs) {
   const section = document.getElementById('resultsSection');
   document.getElementById('resultsBadge').textContent = `${jobs.length} found`;
 
-  grid.innerHTML = jobs.map((job, i) => {
+  const topFive = jobs.slice(0, 5);
+  const moreJobs = jobs.slice(5, 20);
+
+  const sectionTitle = (title) => `<div class="job-subtitle">${esc(title)}</div>`;
+  const renderJobCard = (job, i) => {
     const pct = job.match_score || job.matchScore || Math.floor(68 + Math.random() * 27);
     const tags = (job.tags || job.skills || []).slice(0, 4);
     const matchTags = (job.matched_skills || []).slice(0, 2);
@@ -584,9 +589,51 @@ function renderJobs(jobs) {
         <div class="match-lbl">Match</div>
       </div>
     </div>`;
-  }).join('');
+  };
+
+  grid.innerHTML = [
+    topFive.length ? sectionTitle('AI Job Matches (Top 5)') + topFive.map((job, i) => renderJobCard(job, i)).join('') : '',
+    moreJobs.length ? sectionTitle('More Opportunities (Top 15)') + moreJobs.map((job, i) => renderJobCard(job, i + 5)).join('') : ''
+  ].join('');
 
   section.classList.add('on');
+}
+
+function extractJsonObject(raw) {
+  const text = String(raw || '');
+  const start = text.indexOf('{');
+  if (start === -1) return null;
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (ch === '\\') {
+        escaped = true;
+      } else if (ch === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (ch === '"') {
+      inString = true;
+      continue;
+    }
+
+    if (ch === '{') depth += 1;
+    if (ch === '}') {
+      depth -= 1;
+      if (depth === 0) return text.slice(start, i + 1);
+    }
+  }
+
+  return null;
 }
 
 function renderTips(tips) {
@@ -665,6 +712,36 @@ function locationPriority(jobLocation, profileLocation) {
   if (p && (j.includes(p) || p.includes(j))) return 0;
   if (j.includes('remote') || j.includes('anywhere')) return 2;
   return 1;
+}
+
+function ensureJobSourceMix(jobs, profileObj) {
+  const topFive = jobs.slice(0, 5).map(job => {
+    const role = job.role || job.title || profileObj.title || 'Developer';
+    const loc = job.location || profileObj.location || 'Remote';
+    const linkedInUrl = buildSearchUrl('linkedin', role, loc);
+    return {
+      ...job,
+      company: job.company || 'LinkedIn Jobs',
+      url: linkedInUrl,
+      apply_url: linkedInUrl
+    };
+  });
+
+  const boards = ['indeed', 'wellfound', 'remoteok', 'google', 'ziprecruiter', 'glassdoor'];
+  const rest = jobs.slice(5, 20).map((job, idx) => {
+    const role = job.role || job.title || profileObj.title || 'Developer';
+    const loc = job.location || profileObj.location || 'Remote';
+    const board = boards[idx % boards.length];
+    const searchUrl = buildSearchUrl(board, role, loc);
+    return {
+      ...job,
+      company: `${board[0].toUpperCase()}${board.slice(1)} Jobs`,
+      url: searchUrl,
+      apply_url: searchUrl
+    };
+  });
+
+  return [...topFive, ...rest];
 }
 
 function normalizeJobUrl(job, profileObj) {
@@ -789,9 +866,9 @@ Return clean JSON only.`;
     .filter(Boolean)
     .join('\n');
   const clean = text.replace(/```json|```/g, '').trim();
-  const jsonMatch = clean.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Could not parse AI response. Please try again.');
-  const parsed = JSON.parse(jsonMatch[0]);
+  const jsonText = extractJsonObject(clean);
+  if (!jsonText) throw new Error('Could not parse AI response. Please try again.');
+  const parsed = JSON.parse(jsonText);
 
   if (!Array.isArray(parsed.jobs)) parsed.jobs = [];
 
@@ -868,6 +945,8 @@ Return clean JSON only.`;
       return daysA - daysB;
     })
     .slice(0, 20);
+
+  parsed.jobs = ensureJobSourceMix(parsed.jobs, p);
 
   return parsed;
 }
