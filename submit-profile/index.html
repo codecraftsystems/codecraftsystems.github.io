@@ -979,6 +979,23 @@ function renderForm(profile){
 
  
  
+
+function handleIntentActions(){
+  const qp = new URLSearchParams(window.location.search || '');
+  const intent = (qp.get('intent') || '').toLowerCase();
+  if(intent !== 'find-jobs') return;
+
+  const btn = document.getElementById('findJobBtn');
+  if(!btn) return;
+
+  btn.scrollIntoView({behavior:'smooth', block:'center'});
+  setTimeout(()=>{
+    if(typeof window.findJobsWithAI === 'function'){
+      window.findJobsWithAI(btn);
+    }
+  }, 380);
+}
+
 /* boot */
 (async function boot(){
 
@@ -1016,6 +1033,7 @@ function renderForm(profile){
   }catch(e){}
 
   renderForm(EP);
+  handleIntentActions();
 
 })();
 </script>
