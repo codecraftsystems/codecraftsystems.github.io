@@ -393,38 +393,39 @@ Return clean JSON only.`;
     })
   });
 
-  if (!response.ok) {
-    let errBody = null;
-    try { errBody = await response.json(); } catch (e) {}
+  let parsed;
 
-    if (isRateLimitError(errBody, response.status)) {
+  if (response.status === 429) {
+    try {
+      parsed = await window.callBackupEndpoint(p);
+    } catch (backupError) {
       showRateLimitBanner();
-      throw new Error('You exceeded your current quota. Please try again after some time.');
+      throw new Error(backupError?.message || 'You exceeded your current quota. Please try again after some time.');
+    }
+  } else {
+    if (!response.ok) {
+      let errBody = null;
+      try { errBody = await response.json(); } catch (e) {}
+      const msg = errBody?.error?.message || `HTTP ${response.status} error`;
+      throw new Error(msg);
     }
 
-    const msg = errBody?.error?.message || `HTTP ${response.status} error`;
-    throw new Error(msg);
-  }
+    const data = await response.json();
 
-  const data = await response.json();
-
-  if (data.error) {
-    if (isRateLimitError(data)) {
-      showRateLimitBanner();
-      throw new Error('You exceeded your current quota. Please try again after some time.');
+    if (data.error) {
+      throw new Error(data.error.message || 'API error');
     }
-    throw new Error(data.error.message || 'API error');
-  }
 
-  const text = (data?.candidates || [])
-    .flatMap(c => c?.content?.parts || [])
-    .map(i => i?.text || '')
-    .filter(Boolean)
-    .join('\n');
-  const clean = text.replace(/```json|```/g, '').trim();
-  const jsonText = extractJsonObject(clean);
-  if (!jsonText) throw new Error('Could not parse AI response. Please try again.');
-  const parsed = JSON.parse(jsonText);
+    const text = (data?.candidates || [])
+      .flatMap(c => c?.content?.parts || [])
+      .map(i => i?.text || '')
+      .filter(Boolean)
+      .join('\n');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const jsonText = extractJsonObject(clean);
+    if (!jsonText) throw new Error('Could not parse AI response. Please try again.');
+    parsed = JSON.parse(jsonText);
+  }
 
   if (!Array.isArray(parsed.jobs)) parsed.jobs = [];
 
