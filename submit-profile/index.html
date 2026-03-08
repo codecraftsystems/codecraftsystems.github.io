@@ -818,17 +818,37 @@ function getSession(){
   try{
     const raw = localStorage.getItem("cc_session");
     if(!raw) return null;
+
     const s = JSON.parse(raw);
-    if(Date.now() - s.loginAt > 7*24*60*60*1000){
+
+    if(!s.email || !s.user_id || !s.loginAt){
       localStorage.removeItem("cc_session");
       return null;
     }
+
+    // UUID validation
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if(!uuidRegex.test(s.user_id)){
+      localStorage.removeItem("cc_session");
+      return null;
+    }
+
+    const maxAge = 7 * 24 * 60 * 60 * 1000;
+
+    if(Date.now() - s.loginAt > maxAge){
+      localStorage.removeItem("cc_session");
+      return null;
+    }
+
     return s;
+
   }catch(e){
+    localStorage.removeItem("cc_session");
     return null;
   }
 }
-
 /* init supabase */
 try{if(typeof devDirectory!=='undefined'&&devDirectory.createClient)SB=devDirectory.createClient();}catch(e){}
 
@@ -1393,14 +1413,24 @@ function handleIntentActions(){
 /* boot */
 (async function boot(){
   const sess = getSession();
-  if(!sess){ renderWall(); return; }
-  CU = { id: sess.email, email: sess.email };
+ 
+if(!sess){
+  const next = encodeURIComponent('/submit-profile/');
+  window.location.href = '../auth/?next=' + next;
+  return;
+}
+CU = { 
+  id: sess.user_id,
+  email: sess.email 
+};
   document.getElementById('nvLogin').style.display='none';
   document.getElementById('nvLogout').style.display='';
   try{
     const {data,error} = await SB
       .from('developers').select('*')
-      .eq('email', sess.email).maybeSingle();
+      .eq('email', sess.email)
+      .eq('user_id', sess.user_id)
+      .maybeSingle();
     if(!error && data){
       EP = data;
       document.getElementById('nvView').href = '../developer/?slug='+encodeURIComponent(data.slug||'');

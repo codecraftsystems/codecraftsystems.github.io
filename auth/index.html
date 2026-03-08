@@ -745,22 +745,51 @@ try { sb = devDirectory.createClient(); }
 catch(e){ console.warn('Supabase init failed:', e.message); }
 
 /* ── SESSION ── */
+/* ── SESSION ── */
 var Session = {
   set: function(user){
     try{
-      var data = { email: user.email, loginAt: Date.now() };
+      var data = {
+        user_id: user.id,
+        email: user.email,
+        loginAt: Date.now()
+      };
+
       localStorage.setItem(CFG.SESSION_KEY, JSON.stringify(data));
     }catch(e){}
   },
-  get: function(){
-    try{
-      var raw = localStorage.getItem(CFG.SESSION_KEY);
-      if(!raw) return null;
-      var d = JSON.parse(raw);
-      if(Date.now() - d.loginAt > 7*24*60*60*1000){ Session.clear(); return null; }
-      return d;
-    }catch(e){ return null; }
-  },
+get: function(){
+  try{
+    var raw = localStorage.getItem(CFG.SESSION_KEY);
+    if(!raw) return null;
+
+    var d = JSON.parse(raw);
+
+    if(!d.email || !d.user_id || !d.loginAt){
+      Session.clear();
+      return null;
+    }
+
+    var uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if(!uuidRegex.test(d.user_id)){
+      Session.clear();
+      return null;
+    }
+
+    if(Date.now() - d.loginAt > 7*24*60*60*1000){
+      Session.clear();
+      return null;
+    }
+
+    return d;
+
+  }catch(e){
+    Session.clear();
+    return null;
+  }
+},
   clear: function(){
     try{ localStorage.removeItem(CFG.SESSION_KEY); }catch(e){}
   }
@@ -991,8 +1020,23 @@ var OtpFlow = {
     btnLoad('verifyBtn', true, 'Verifying');
     try{
       await checkOtp(_currentEmail, code);
-      var user = { email: _currentEmail };
-      Session.set(user);
+ // get user from developers table
+var res = await sb
+  .from('developers')
+  .select('user_id,email')
+  .eq('email', _currentEmail)
+  .single();
+
+if(!res.data){
+  throw new Error("User not found.");
+}
+
+var user = {
+  id: res.data.user_id,
+  email: res.data.email
+};
+
+Session.set(user);
       clearInterval(_cdTimer);
       OtpFlow.showLoggedIn(user);
       var next = new URLSearchParams(window.location.search).get('next')||'../submit-profile/';
