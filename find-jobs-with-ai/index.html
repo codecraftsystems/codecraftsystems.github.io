@@ -1269,6 +1269,42 @@ function extractJsonObject(raw) {
   return null;
 }
 
+function parseAiJobsPayload(rawText) {
+  const clean = String(rawText || '').replace(/```json|```/g, '').trim();
+  const direct = extractJsonObject(clean);
+
+  const candidates = [];
+  if (direct) candidates.push(direct);
+
+  const jobsStart = clean.search(/"jobs"\s*:/i);
+  if (jobsStart !== -1) {
+    const beforeJobs = clean.slice(0, jobsStart);
+    const openAt = beforeJobs.lastIndexOf('{');
+    if (openAt !== -1) {
+      const maybeJobsObj = extractJsonObject(clean.slice(openAt));
+      if (maybeJobsObj) candidates.push(maybeJobsObj);
+    }
+  }
+
+  for (const chunk of candidates) {
+    try {
+      const parsed = JSON.parse(chunk);
+      if (Array.isArray(parsed?.jobs)) return parsed;
+
+      const nested = parsed?.choices?.[0]?.message?.content || parsed?.choices?.[0]?.text;
+      if (typeof nested === 'string') {
+        const nestedObj = extractJsonObject(nested.replace(/```json|```/g, '').trim());
+        if (nestedObj) {
+          const nestedParsed = JSON.parse(nestedObj);
+          if (Array.isArray(nestedParsed?.jobs)) return nestedParsed;
+        }
+      }
+    } catch (e) {}
+  }
+
+  return null;
+}
+
 function renderTips(tips) {
   const card = document.getElementById('tipsCard');
   const body = document.getElementById('tipsBody');
@@ -1461,10 +1497,11 @@ Return clean JSON only.`;
       throw new Error(cloudData?.error?.message || `HTTP ${cloudResponse.status} error`);
     }
 
-    return cloudData?.choices?.[0]?.message?.content || cloudData?.choices?.[0]?.text || '';
+    return cloudData?.choices?.[0]?.message?.content || cloudData?.choices?.[0]?.text || cloudData?.content || cloudData?.response || JSON.stringify(cloudData);
   };
 
   let text = '';
+  let usedCloudFallback = false;
 
   try {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
@@ -1502,13 +1539,19 @@ Return clean JSON only.`;
 
     if (!text.trim()) throw new Error('Primary AI returned empty response');
   } catch (error) {
+    usedCloudFallback = true;
     text = await callCloudAi(prompt);
   }
 
-  const clean = text.replace(/```json|```/g, '').trim();
-  const jsonText = extractJsonObject(clean);
-  if (!jsonText) throw new Error('Could not parse AI response. Please try again.');
-  const parsed = JSON.parse(jsonText);
+  let parsed = parseAiJobsPayload(text);
+
+  if (!parsed && !usedCloudFallback) {
+    usedCloudFallback = true;
+    text = await callCloudAi(prompt);
+    parsed = parseAiJobsPayload(text);
+  }
+
+  if (!parsed) throw new Error('Could not parse AI response. Please try again.');
 
   if (!Array.isArray(parsed.jobs)) parsed.jobs = [];
 
