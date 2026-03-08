@@ -81,7 +81,7 @@ const AI_PROFILE_GENERATOR = {
     let res = null;
     try {
       res = await fetch(endpoint, {
-        method: 'GET',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: payload
       });
@@ -89,7 +89,7 @@ const AI_PROFILE_GENERATOR = {
 
     if (!res || !res.ok) {
       const qp = encodeURIComponent(prompt);
-      res = await fetch(`${endpoint}?prompt=${qp}`, { method: 'GET' });
+      res = await fetch(`${endpoint}?prompt=${qp}`, { method: 'POST' });
     }
 
     const data = await res.json();

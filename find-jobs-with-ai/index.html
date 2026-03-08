@@ -1446,14 +1446,14 @@ Return clean JSON only.`;
     let cloudResponse = null;
     try {
       cloudResponse = await fetch(endpoint, {
-        method: 'GET',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: payload
       });
     } catch (error) {}
 
     if (!cloudResponse || !cloudResponse.ok) {
-      cloudResponse = await fetch(`${endpoint}?prompt=${encodeURIComponent(fallbackPrompt)}`, { method: 'GET' });
+      cloudResponse = await fetch(`${endpoint}?prompt=${encodeURIComponent(fallbackPrompt)}`, { method: 'POST' });
     }
 
     const cloudData = await cloudResponse.json();
