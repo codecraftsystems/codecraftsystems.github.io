@@ -345,6 +345,10 @@ function normalizeJobUrl(job, profileObj) {
 
 /* ─────────── AI Job Search ─────────── */
 async function aiJobSearch(p) {
+
+    const backup = await aiJobSearchBackup(p);
+    return backup;
+
   const skills = (p.skills || '').split(',').map(s => s.trim()).filter(Boolean).join(', ');
 
   const prompt = `You are a career assistant AI. A developer has this profile:
