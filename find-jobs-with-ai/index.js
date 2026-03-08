@@ -577,15 +577,42 @@ async function runJobSearch() {
 }
 
 /* ─────────── Session ─────────── */
-function getSession() {
-  try {
-    const raw = localStorage.getItem('cc_session');
-    if (!raw) return null;
+function getSession(){
+  try{
+    const raw = localStorage.getItem("cc_session");
+    if(!raw) return null;
+
     const s = JSON.parse(raw);
-    if (!s?.email || !s?.loginAt) return null;
-    if (Date.now() - s.loginAt > 7 * 24 * 60 * 60 * 1000) { localStorage.removeItem('cc_session'); return null; }
-    return s;
-  } catch (e) { return null; }
+
+    // required fields
+    if(!s.email || !s.user_id || !s.loginAt){
+      localStorage.removeItem("cc_session");
+      return null;
+    }
+
+    // session expiry (7 days)
+    const maxAge = 7 * 24 * 60 * 60 * 1000;
+    if(Date.now() - s.loginAt > maxAge){
+      localStorage.removeItem("cc_session");
+      return null;
+    }
+
+    // basic validation
+    if(typeof s.email !== "string" || typeof s.user_id !== "string"){
+      localStorage.removeItem("cc_session");
+      return null;
+    }
+
+    return {
+      email: s.email,
+      user_id: s.user_id,
+      loginAt: s.loginAt
+    };
+
+  }catch(e){
+    localStorage.removeItem("cc_session");
+    return null;
+  }
 }
 
 /* ─────────── Boot ─────────── */
@@ -609,7 +636,7 @@ function getSession() {
   }
 
   try {
-    const { data, error } = await SB.from('developers').select('*').eq('email', session.email).maybeSingle();
+    const { data, error } = await SB.from('developers').select('*').eq('email', session.email).eq('user_id', session.user_id).maybeSingle();
     if (error) throw error;
     profile = data || null;
 
