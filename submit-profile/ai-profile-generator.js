@@ -54,7 +54,7 @@ const AI_PROFILE_GENERATOR = {
 
 
   isRateLimitResponse(statusCode, data) {
-    return statusCode === 429 || data?.error?.code === 429 || data?.error?.status === 'RESOURCE_EXHAUSTED' ||
+    return statusCode === 429 || statusCode === 439 || data?.error?.code === 429 || data?.error?.code === 439 || data?.error?.status === 'RESOURCE_EXHAUSTED' ||
       (typeof data?.error?.message === 'string' && data.error.message.toLowerCase().includes('quota'));
   },
 
@@ -68,6 +68,51 @@ const AI_PROFILE_GENERATOR = {
 
   buildPrompt(userPrompt) {
     return `You are an expert developer profile generator for hiring marketplaces. Return ONLY valid JSON. No markdown, no explanations.\n\nExtract or generate a complete developer profile with these EXACT fields:\n{\n  "name":"", "title":"", "location":"", "bio":"",\n  "skills":[], "experience_years":0,\n  "github_url":"", "linkedin_url":"", "portfolio_url":"",\n  "experience":[{"role":"","company":"","period":"","description":""}],\n  "certifications":[{"name":"","issuer":"","year":""}],\n  "seo_focus_keywords":["laravel developer","vue.js developer","full stack developer"]\n}\n\nRules for quality:\n- Write a professional bio of 80-140 words, clear and recruiter-friendly.\n- Mention strengths, achievements, tech stack, and preferred role type.\n- Make the bio naturally SEO-friendly using role and stack keywords without keyword stuffing.\n- Keep skills practical and specific (frameworks, tools, cloud, testing).\n\nDescription from user: "${userPrompt}"`;
+  },
+
+  extractCloudAiText(data) {
+    return data?.choices?.[0]?.message?.content || data?.choices?.[0]?.text || '';
+  },
+
+  async callCloudAi(prompt) {
+    const endpoint = 'https://ai.buldel.com/cloud-ai';
+    const payload = JSON.stringify({ prompt });
+
+    let res = null;
+    try {
+      res = await fetch(endpoint, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload
+      });
+    } catch (error) {}
+
+    if (!res || !res.ok) {
+      const qp = encodeURIComponent(prompt);
+      res = await fetch(`${endpoint}?prompt=${qp}`, { method: 'GET' });
+    }
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error?.message || `Cloud AI failed (${res.status})`);
+    return this.extractCloudAiText(data);
+  },
+
+  async generateAiTextWithFallback(prompt, model) {
+    const req = { contents: [{ parts: [{ text: prompt }] }] };
+
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.API_KEY}`,
+        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(req) }
+      );
+      const data = await res.json();
+      if (!res.ok || this.isRateLimitResponse(res.status, data)) throw new Error(data?.error?.message || 'Primary AI failed');
+      const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      if (!raw.trim()) throw new Error('Primary AI returned empty response');
+      return raw;
+    } catch (error) {
+      return this.callCloudAi(prompt);
+    }
   },
 
   async generate(prompt, button) {
@@ -88,18 +133,7 @@ const AI_PROFILE_GENERATOR = {
       const textPrompt = (cfg?.promptTemplate || this.buildPrompt(prompt)).replace('{{userPrompt}}', prompt);
       const model = cfg?.model || 'gemini-2.5-flash-lite';
 
-      const req = { contents: [{ parts: [{ text: textPrompt }] }] };
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.API_KEY}`,
-        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(req) }
-      );
-
-      const data = await res.json();
-      if (!res.ok || this.isRateLimitResponse(res.status, data)) {
-        throw new Error(this.getRateLimitMessage(data));
-      }
-
-      const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      const raw = await this.generateAiTextWithFallback(textPrompt, model);
       const profile = this.extractJson(raw);
       this.fillFields(profile);
       this.showToast('ts', '✅ Profile Generated', 'All fields were auto-filled successfully.');
@@ -209,17 +243,25 @@ AI_PROFILE_GENERATOR.generateFromResumeFile = async function(file, button) {
       }]
     };
 
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.API_KEY}`,
-      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(req) }
-    );
+    let raw = '';
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.API_KEY}`,
+        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(req) }
+      );
 
-    const data = await res.json();
-    if (!res.ok || this.isRateLimitResponse(res.status, data)) {
-      throw new Error(this.getRateLimitMessage(data));
+      const data = await res.json();
+      if (!res.ok || this.isRateLimitResponse(res.status, data)) {
+        throw new Error(this.getRateLimitMessage(data));
+      }
+
+      raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      if (!raw.trim()) throw new Error('Primary AI returned empty response');
+    } catch (error) {
+      const fallbackPrompt = `${prompt}\n\nResume MIME type: ${file.type || 'application/octet-stream'}\nResume base64:\n${b64}`;
+      raw = await this.callCloudAi(fallbackPrompt);
     }
 
-    const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const profile = this.extractJson(raw);
     this.fillFields(profile);
     this.showToast('ts', 'Resume Imported', 'Your fields were auto-filled from resume with AI.');
@@ -294,19 +336,7 @@ AI_PROFILE_GENERATOR.findJobs = async function(button) {
     const defaultPrompt = `You are a job matching assistant. Return ONLY JSON with this shape: {\"jobs\":[{\"title\":\"\",\"company\":\"\",\"location\":\"\",\"summary\":\"\",\"source\":\"\",\"posted_at\":\"${new Date().toISOString()}\",\"url\":\"https://...\"}]}. Give up to 8 relevant jobs from the last 30 days. Developer profile: {{profilePayload}}`;
     const prompt = (cfg?.promptTemplate || defaultPrompt).replace('{{profilePayload}}', JSON.stringify(profilePayload));
 
-    const req = { contents: [{ parts: [{ text: prompt }] }] };
-
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${this.API_KEY}`,
-      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(req) }
-    );
-
-    const data = await res.json();
-    if (!res.ok || this.isRateLimitResponse(res.status, data)) {
-      throw new Error(this.getRateLimitMessage(data));
-    }
-
-    const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const raw = await this.generateAiTextWithFallback(prompt, model);
     const parsed = this.extractJson(raw);
     const rawJobs = Array.isArray(parsed.jobs) ? parsed.jobs.slice(0, 8) : [];
     const jobs = await this.sanitizeAndVerifyJobs(rawJobs, profilePayload);
