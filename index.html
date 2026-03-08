@@ -211,6 +211,19 @@
   }
   .nav-links a:hover { color: var(--white); }
 
+  .nav-links a.nav-feature {
+    color: var(--accent);
+    border: 1px solid rgba(255, 77, 0, 0.35);
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: rgba(255, 77, 0, 0.08);
+  }
+  .nav-links a.nav-feature:hover {
+    color: var(--white);
+    border-color: var(--accent);
+    background: rgba(255, 77, 0, 0.2);
+  }
+
   .nav-cta {
     background: var(--accent) !important;
     color: var(--white) !important;
@@ -834,6 +847,13 @@
     transition: color 0.2s;
   }
   .mobile-menu a:hover { color: var(--accent); }
+  .mobile-menu a.nav-feature {
+    color: var(--accent);
+    border: 1px solid rgba(255, 77, 0, 0.35);
+    border-radius: 999px;
+    padding: 10px 26px;
+    background: rgba(255, 77, 0, 0.08);
+  }
   .close-btn {
     position: absolute;
     top: 24px; right: 40px;
@@ -953,6 +973,388 @@
 input, select, textarea {
   font-size: 16px !important;
 }
+ 
+/* ── DevCareer AI Section ── */
+#devcareer {
+  background: var(--dark);
+  padding: 100px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background grid accent */
+#devcareer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.18;
+  mask-image: radial-gradient(ellipse 70% 60% at 80% 50%, black, transparent);
+}
+
+/* Glowing orb */
+.dc-glow {
+  position: absolute;
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255,77,0,0.10) 0%, transparent 70%);
+  pointer-events: none;
+  animation: dcOrb 6s ease-in-out infinite alternate;
+}
+@keyframes dcOrb {
+  from { transform: translateY(-50%) scale(1); opacity: 0.7; }
+  to   { transform: translateY(-55%) scale(1.15); opacity: 1; }
+}
+
+.dc-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  align-items: center;
+}
+
+/* ── LEFT TEXT BLOCK ── */
+.dc-left {}
+
+.dc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,77,0,0.08);
+  border: 1px solid rgba(255,77,0,0.25);
+  padding: 5px 14px 5px 8px;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+.dc-badge-dot {
+  width: 6px; height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #22c55e;
+  animation: pulse 1.5s infinite;
+}
+.dc-version {
+  background: rgba(255,77,0,0.15);
+  color: var(--accent);
+  font-size: 0.65rem;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+.dc-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5.5vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: 2px;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+.dc-title .dc-accent { color: var(--accent); }
+.dc-title .dc-outline {
+  -webkit-text-stroke: 1px var(--white);
+  color: transparent;
+}
+
+.dc-desc {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.75;
+  margin-bottom: 32px;
+  max-width: 440px;
+}
+
+/* Stack pills */
+.dc-stacks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 36px;
+}
+.dc-stack {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--black);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  color: var(--white);
+  transition: all 0.25s;
+  cursor: default;
+}
+.dc-stack:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+  background: rgba(255,77,0,0.04);
+}
+
+/* CTA Buttons */
+.dc-btns {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.dc-btn-main {
+  background: var(--accent);
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.dc-btn-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+.dc-btn-main:hover {
+  background: #e04400;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,77,0,0.3);
+}
+.dc-btn-main .arrow {
+  transition: transform 0.2s;
+}
+.dc-btn-main:hover .arrow { transform: translateX(4px); }
+
+.dc-btn-ghost {
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 14px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s;
+}
+.dc-btn-ghost:hover {
+  border-color: var(--white);
+  color: var(--white);
+}
+
+/* ── RIGHT VISUAL BLOCK ── */
+.dc-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Feature cards grid */
+.dc-feat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.dc-feat {
+  background: var(--black);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: default;
+}
+.dc-feat::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.dc-feat:hover::before { transform: scaleX(1); }
+.dc-feat:hover {
+  border-color: rgba(255,77,0,0.3);
+  transform: translateY(-3px);
+  background: rgba(255,77,0,0.02);
+}
+
+.dc-feat-emoji {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+  display: block;
+}
+.dc-feat-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 5px;
+}
+.dc-feat-desc {
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* Endpoint card */
+.dc-endpoint {
+  background: var(--black);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.dc-endpoint-bar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 11px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dc-method {
+  background: rgba(255,77,0,0.12);
+  border: 1px solid rgba(255,77,0,0.3);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.dc-url {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: #2f855a;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dc-free-badge {
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.25);
+  color: #22c55e;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.dc-endpoint-body {
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  line-height: 1.8;
+  color: #4b5563;
+  display: flex;
+  gap: 24px;
+}
+.dc-endpoint-col { flex: 1; }
+.dc-k { color: #6b46c1; }
+.dc-s { color: #2f855a; }
+.dc-c { color: #9ca3af; font-style: italic; }
+
+/* Stats row */
+.dc-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--black);
+}
+.dc-stat {
+  padding: 18px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.dc-stat:last-child { border-right: none; }
+.dc-stat::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+.dc-stat:hover::after { transform: scaleX(1); }
+.dc-stat-num {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--accent);
+  line-height: 1;
+  display: block;
+}
+.dc-stat-lbl {
+  font-size: 0.68rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Animated typing line */
+.dc-typing-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.dc-typing-dot { color: var(--accent); font-weight: 700; }
+#dc-typewriter {
+  color: var(--white);
+  border-right: 2px solid var(--accent);
+  animation: dcBlink 0.7s step-end infinite;
+  white-space: nowrap;
+  overflow: hidden;
+}
+@keyframes dcBlink {
+  0%, 100% { border-color: var(--accent); }
+  50%       { border-color: transparent; }
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .dc-inner { grid-template-columns: 1fr; gap: 48px; }
+  #devcareer { padding: 70px 24px; }
+  .dc-endpoint-body { flex-direction: column; gap: 8px; }
+}
 
 
 </style>
@@ -973,7 +1375,7 @@ input, select, textarea {
    <a href="#certifications" onclick="closeMobile()">Certs</a>
   <a href="#contact" onclick="closeMobile()">Contact</a>
   <a href="./developers/" onclick="closeMobile()">Developers</a>
-  <a href="./find-jobs-with-ai/" onclick="closeMobile()">Find Jobs with AI</a>
+  <a href="./find-jobs-with-ai/" class="nav-feature" onclick="closeMobile()">Find Jobs with AI</a>
 </div>
 
 <!-- NAV -->
@@ -986,7 +1388,7 @@ input, select, textarea {
     <li><a href="#why">Why Us</a></li>
      <li><a href="#certifications">Certs</a></li>
     <li><a href="./developers/">Developers</a></li>
-    <li><a href="./find-jobs-with-ai/">Find Jobs with AI</a></li>
+    <li><a href="./find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
     <li><a href="#contact" class="nav-cta">Hire Us</a></li>
  
   </ul>
@@ -1349,6 +1751,130 @@ input, select, textarea {
 </section>
 
 
+
+<!-- ============ SECTION HTML ============ -->
+<section style="background: var(--dark);" id="devcareer">
+  <div class="dc-glow"></div>
+  <div class="dc-inner">
+
+    <!-- LEFT -->
+    <div class="dc-left reveal">
+      <div class="section-label">Our AI Tool</div>
+
+    <div class="dc-badge">
+  <span class="dc-badge-dot"></span>
+  Live API
+  <span class="dc-version">v1.5</span>
+</div>
+
+      <h2 class="dc-title">
+        DEV<span class="dc-accent">CAREER</span><br>
+        <span class="dc-outline">AI</span><br>
+        STUDIO
+      </h2>
+
+      <p class="dc-desc">
+        AI-powered career growth for every developer — whether you're a <strong style="color:var(--white)">Laravel</strong>, <strong style="color:var(--white)">React</strong>, <strong style="color:var(--white)">Python</strong> or <strong style="color:var(--white)">DevOps</strong> engineer. Get tailored profiles, resume help &amp; job-switch guidance — powered by GPT-4o and local LLMs via Ollama.
+      </p>
+
+      <!-- Stack pills -->
+      <div class="dc-stacks">
+        <span class="dc-stack">🔥 Laravel</span>
+        <span class="dc-stack">⚛️ React</span>
+        <span class="dc-stack">🐍 Python</span>
+        <span class="dc-stack">☁️ DevOps</span>
+        <span class="dc-stack">📄 Resume</span>
+        <span class="dc-stack">🎯 Career Path</span>
+      </div>
+
+      <!-- CTA -->
+      <div class="dc-btns">
+        <a href="https://ai.buldel.com/" target="_blank" class="dc-btn-main">
+          Launch DevCareer AI
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://ai.buldel.com/" target="_blank" class="dc-btn-ghost">
+          📡 API Docs
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="dc-right reveal">
+
+      <!-- Feature cards -->
+      <div class="dc-feat-grid">
+        <div class="dc-feat">
+          <span class="dc-feat-emoji">🌐</span>
+          <div class="dc-feat-title">All Dev Stacks</div>
+          <div class="dc-feat-desc">Laravel, Vue, React, Python, DevOps &amp; more supported out of the box.</div>
+        </div>
+        <div class="dc-feat">
+          <span class="dc-feat-emoji">📄</span>
+          <div class="dc-feat-title">Resume Builder</div>
+          <div class="dc-feat-desc">AI-crafted resumes tailored for your tech stack and target role.</div>
+        </div>
+        <div class="dc-feat">
+          <span class="dc-feat-emoji">💼</span>
+          <div class="dc-feat-title">Job Switch Help</div>
+          <div class="dc-feat-desc">Guidance on positioning yourself for your next career move.</div>
+        </div>
+        <div class="dc-feat">
+          <span class="dc-feat-emoji">🎯</span>
+          <div class="dc-feat-title">Career Guidance</div>
+          <div class="dc-feat-desc">Personalized paths, skill gaps &amp; level-up strategies.</div>
+        </div>
+      </div>
+
+      <!-- Endpoint card -->
+      <div class="dc-endpoint">
+        <div class="dc-endpoint-bar">
+          <span class="dc-method">POST</span>
+          <span class="dc-url">https://ai.buldel.com/cloud-ai</span>
+          <span class="dc-free-badge">Self Hosted</span>
+        </div>
+        <div class="dc-endpoint-body">
+          <div class="dc-endpoint-col">
+            <div class="dc-c">// Request</div>
+            <div>{<span class="dc-k">"prompt"</span>:</div>
+            <div>&nbsp;<span class="dc-s">"Senior Laravel dev..."</span>}</div>
+          </div>
+          <div class="dc-endpoint-col">
+            <div class="dc-c">// Response</div>
+            <div>{<span class="dc-k">"success"</span>: <span style="color:#e04400">true</span>,</div>
+            <div>&nbsp;<span class="dc-k">"response"</span>: <span class="dc-s">"..."</span>}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="dc-stats">
+        <div class="dc-stat">
+          <span class="dc-stat-num">60</span>
+          <span class="dc-stat-lbl">Req/hr Free</span>
+        </div>
+        <div class="dc-stat">
+          <span class="dc-stat-num">GPT</span>
+          <span class="dc-stat-lbl">4o Powered</span>
+        </div>
+        <div class="dc-stat">
+          <span class="dc-stat-num">0</span>
+          <span class="dc-stat-lbl">Auth Needed</span>
+        </div>
+      </div>
+
+      <!-- Animated typing line -->
+      <div class="dc-typing-wrap">
+        <span class="dc-typing-dot">▸</span>
+        <span id="dc-typewriter"></span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
 <!-- CONTACT -->
 <section id="contact">
   <div class="container">
@@ -1525,6 +2051,35 @@ document.getElementById('contactForm').addEventListener('submit', function() {
       if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
     });
   });
+</script>
+
+
+<!-- Typewriter Script for DevCareer section -->
+<script>
+(function() {
+  const lines = [
+    'Create a senior Laravel developer job profile',
+    'Help me switch from React to DevOps role',
+    'Build a Python data scientist resume',
+    'Career path for a Vue.js frontend developer',
+    'Job change strategy for a full-stack engineer',
+  ];
+  let li = 0, ci = 0, deleting = false;
+  const el = document.getElementById('dc-typewriter');
+  if (!el) return;
+  function type() {
+    const line = lines[li];
+    if (!deleting) {
+      el.textContent = line.slice(0, ++ci);
+      if (ci === line.length) { deleting = true; setTimeout(type, 1800); return; }
+    } else {
+      el.textContent = line.slice(0, --ci);
+      if (ci === 0) { deleting = false; li = (li + 1) % lines.length; setTimeout(type, 400); return; }
+    }
+    setTimeout(type, deleting ? 28 : 48);
+  }
+  setTimeout(type, 800);
+})();
 </script>
 
 </body>
