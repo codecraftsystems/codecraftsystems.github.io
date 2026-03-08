@@ -121,6 +121,18 @@ body::after{
 .nav-links a:hover{color:var(--white)}
 .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
 .nav-links a.active{color:var(--accent)}
+.nav-links a.nav-feature{
+  color:var(--accent);
+  border:1px solid rgba(255,77,0,.3);
+  border-radius:999px;
+  padding:7px 14px;
+  background:var(--accent-soft);
+}
+.nav-links a.nav-feature::after{display:none}
+.nav-links a.nav-feature:hover{
+  border-color:var(--accent);
+  background:rgba(255,77,0,.16);
+}
 .nav-cta{
   background:var(--accent)!important;
   color:#fff!important;
@@ -154,6 +166,14 @@ body::after{
   transition:color .2s,transform .2s;
 }
 .mob a:hover{color:var(--accent);transform:translateX(6px)}
+.mob a.nav-feature{
+  color:var(--accent);
+  border:1px solid rgba(255,77,0,.35);
+  border-radius:999px;
+  padding:8px 18px;
+  background:var(--accent-soft);
+}
+.mob a.nav-feature:hover{transform:none;background:rgba(255,77,0,.16)}
 .mob-x{
   position:absolute;top:22px;right:clamp(16px,4vw,38px);
   font-size:1.6rem;background:none;border:none;color:var(--muted);cursor:pointer;
