@@ -211,6 +211,19 @@
   }
   .nav-links a:hover { color: var(--white); }
 
+  .nav-links a.nav-feature {
+    color: var(--accent);
+    border: 1px solid rgba(255, 77, 0, 0.35);
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: rgba(255, 77, 0, 0.08);
+  }
+  .nav-links a.nav-feature:hover {
+    color: var(--white);
+    border-color: var(--accent);
+    background: rgba(255, 77, 0, 0.2);
+  }
+
   .nav-cta {
     background: var(--accent) !important;
     color: var(--white) !important;
@@ -834,6 +847,13 @@
     transition: color 0.2s;
   }
   .mobile-menu a:hover { color: var(--accent); }
+  .mobile-menu a.nav-feature {
+    color: var(--accent);
+    border: 1px solid rgba(255, 77, 0, 0.35);
+    border-radius: 999px;
+    padding: 10px 26px;
+    background: rgba(255, 77, 0, 0.08);
+  }
   .close-btn {
     position: absolute;
     top: 24px; right: 40px;
@@ -973,7 +993,7 @@ input, select, textarea {
    <a href="#certifications" onclick="closeMobile()">Certs</a>
   <a href="#contact" onclick="closeMobile()">Contact</a>
   <a href="./developers/" onclick="closeMobile()">Developers</a>
-  <a href="./find-jobs-with-ai/" onclick="closeMobile()">Find Jobs with AI</a>
+  <a href="./find-jobs-with-ai/" class="nav-feature" onclick="closeMobile()">Find Jobs with AI</a>
 </div>
 
 <!-- NAV -->
@@ -986,7 +1006,7 @@ input, select, textarea {
     <li><a href="#why">Why Us</a></li>
      <li><a href="#certifications">Certs</a></li>
     <li><a href="./developers/">Developers</a></li>
-    <li><a href="./find-jobs-with-ai/">Find Jobs with AI</a></li>
+    <li><a href="./find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
     <li><a href="#contact" class="nav-cta">Hire Us</a></li>
  
   </ul>
