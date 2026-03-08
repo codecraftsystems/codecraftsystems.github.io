@@ -169,11 +169,19 @@ function renderJobs(jobs) {
       </div>
     </div>`;
   };
+ 
+grid.innerHTML = [
+  topFive.length 
+    ? sectionTitle(`AI-Recommended Job Matches (Top ${topFive.length})`) + 
+      topFive.map((job, i) => renderJobCard(job, i)).join('') 
+    : '',
 
-  grid.innerHTML = [
-    topFive.length ? sectionTitle('AI Job Matches (Top 5)') + topFive.map((job, i) => renderJobCard(job, i)).join('') : '',
-    moreJobs.length ? sectionTitle('More Opportunities (Top 15)') + moreJobs.map((job, i) => renderJobCard(job, i + 5)).join('') : ''
-  ].join('');
+  moreJobs.length 
+    ? sectionTitle(`More Jobs Found by AI (${moreJobs.length})`) + 
+      moreJobs.map((job, i) => renderJobCard(job, i + topFive.length)).join('') 
+    : ''
+].join('');
+ 
 
   section.classList.add('on');
 }
