@@ -34,10 +34,15 @@ async function aiJobSearchBackup(profile) {
 }
 
 // Enhanced prompt for complete responses
-function getEnhancedPrompt(profile) {
+function getEnhancedPrompt(profile, options = {}) {
   const { primarySkill, secondarySkill, city, isIndia, isRemote, exp, level } = profile;
+  const jobCount = Math.max(3, Math.min(8, options.jobCount || 5));
+  const compactMode = Boolean(options.compactMode);
+  const extraRules = compactMode
+    ? '- Keep each value concise to avoid truncation\n- Prefer short role and company names\n'
+    : '- Include realistic skills and salary ranges\n';
   
-  return `You are a job search assistant. Return ONLY a valid JSON with 5 REALISTIC jobs.
+  return `You are a job search assistant. Return ONLY valid JSON with ${jobCount} realistic jobs.
 
 CONTEXT:
 - Role: ${primarySkill} ${secondarySkill} Developer
@@ -47,10 +52,11 @@ CONTEXT:
 
 REQUIREMENTS:
 1. Return COMPLETE JSON (don't cut off mid-response)
-2. Include 5 jobs minimum
+2. Include exactly ${jobCount} jobs
 3. All fields must be filled
 4. Use REAL company names (not "Example" or "Test")
 5. URLs must be working job portals
+${extraRules}
 
 JSON FORMAT:
 {
@@ -75,63 +81,69 @@ IMPORTANT:
 - Return ONLY the JSON, no other text
 - Don't truncate the response
 - Use real Indian companies if location is India
-- Complete all 5 jobs before finishing
+- Complete all ${jobCount} jobs before finishing
 
 Generate jobs now:`;
 }
 
+function getContinuationPrompt(profile, existingJobs, targetCount) {
+  const slimExisting = (existingJobs || []).map(job => ({
+    role: job.role,
+    company: job.company,
+    location: job.location
+  }));
+
+  return `Continue the job list in JSON.
+Return ONLY: {"jobs":[...]} with ${targetCount} NEW jobs.
+Do not repeat these existing jobs: ${JSON.stringify(slimExisting)}
+
+Context:
+- Candidate skills: ${profile.topSkills.join(', ') || profile.primarySkill}
+- Location preference: ${profile.location}
+- Experience: ${profile.exp} years
+
+Required fields per job:
+role, company, location, match_score, tags, matched_skills, url, apply_url, days_ago, salary_range, job_type`;
+}
+
 // Try AI search with enhanced prompt
 async function tryAISearch(profile) {
-  const prompt = getEnhancedPrompt(profile);
-  
   console.log('📤 Sending enhanced prompt to AI...');
 
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout for complete response
+    // First try: full detailed response
+    const firstAttempt = await requestAIPayload(getEnhancedPrompt(profile, { jobCount: 5 }), 2200);
+    const firstParse = extractAIResponse(firstAttempt, profile);
 
-    const response = await fetch("https://ai.buldel.com/cloud-ai", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        prompt: prompt,
-        temperature: 0.7,
-        max_tokens: 2000, // Increased token limit for complete response
-        top_p: 0.9
-      }),
-      signal: controller.signal
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+    if (firstParse?.parsed?.jobs?.length >= 5 && !firstParse.incomplete) {
+      return firstParse.parsed;
     }
 
-    const data = await response.json();
-    
-    // Check if we got a valid response
-    if (data?.choices?.[0]?.message?.content) {
-      const content = data.choices[0].message.content;
-      
-      // Check if response was cut off (finish_reason = "length")
-      const finishReason = data.choices[0]?.finish_reason;
-      const isIncomplete = finishReason === "length" || content.includes('...') || content.length < 500;
-      
-      if (isIncomplete) {
-        console.log('⚠️ AI response incomplete (finish_reason: length)');
-        const partialResult = parseAIResponse(content, profile);
-        if (partialResult) {
-          partialResult._incomplete = true;
-          return partialResult;
-        }
-        return null;
+    const partial = firstParse?.parsed || { jobs: [] };
+    const haveCount = partial.jobs?.length || 0;
+
+    // If truncated, request only missing jobs in compact mode for reliability.
+    if (haveCount < 5) {
+      const missing = 5 - haveCount;
+      console.log(`⚠️ AI response incomplete, requesting ${missing} additional jobs...`);
+      const continuationPrompt = getContinuationPrompt(profile, partial.jobs || [], missing);
+      const continuationAttempt = await requestAIPayload(continuationPrompt, 1200, 0.5);
+      const continuationParse = extractAIResponse(continuationAttempt, profile);
+      if (continuationParse?.parsed?.jobs?.length) {
+        const mergedJobs = mergeJobs(partial.jobs || [], continuationParse.parsed.jobs);
+        return { jobs: mergedJobs.slice(0, 8), _incomplete: firstParse?.incomplete || continuationParse.incomplete };
       }
-      
-      return parseAIResponse(content, profile);
     }
-    
-    return null;
+
+    // Final fallback: smaller compact response to avoid token-length truncation
+    const compactAttempt = await requestAIPayload(getEnhancedPrompt(profile, { jobCount: 4, compactMode: true }), 1000, 0.4);
+    const compactParse = extractAIResponse(compactAttempt, profile);
+    if (compactParse?.parsed?.jobs?.length) {
+      compactParse.parsed._incomplete = compactParse.incomplete;
+      return compactParse.parsed;
+    }
+
+    return partial.jobs?.length ? { ...partial, _incomplete: true } : null;
     
   } catch (error) {
     if (error.name === 'AbortError') {
@@ -141,6 +153,50 @@ async function tryAISearch(profile) {
     }
     return null;
   }
+}
+
+async function requestAIPayload(prompt, maxTokens = 1600, temperature = 0.7) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const response = await fetch("https://ai.buldel.com/cloud-ai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt,
+        temperature,
+        max_tokens: maxTokens,
+        top_p: 0.9
+      }),
+      signal: controller.signal
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    return await response.json();
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function extractAIResponse(data, profile) {
+  const content = data?.choices?.[0]?.message?.content || '';
+  const finishReason = data?.choices?.[0]?.finish_reason;
+  const incomplete = finishReason === 'length' || looksTruncated(content);
+  const parsed = parseAIResponse(content, profile);
+  return { parsed, incomplete, finishReason };
+}
+
+function looksTruncated(content) {
+  if (!content || content.length < 120) return true;
+  const trimmed = content.trim();
+  if (trimmed.endsWith('...')) return true;
+  const opens = (trimmed.match(/[\{\[]/g) || []).length;
+  const closes = (trimmed.match(/[\}\]]/g) || []).length;
+  return opens > closes;
 }
 
 // Fix incomplete AI response
@@ -176,6 +232,14 @@ async function fixIncompleteAIResponse(partialResult, profile) {
 // Parse AI response with better error handling
 function parseAIResponse(content, profile) {
   try {
+    if (!content) return null;
+
+    // Sometimes assistant content itself contains the full API payload JSON.
+    const envelope = tryParseJson(content);
+    if (envelope?.choices?.[0]?.message?.content) {
+      return parseAIResponse(envelope.choices[0].message.content, profile);
+    }
+
     // Clean the content - remove markdown code blocks if present
     let cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
     
@@ -183,19 +247,12 @@ function parseAIResponse(content, profile) {
     const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
     if (!jsonMatch) return null;
     
-    let parsed;
-    try {
-      parsed = JSON.parse(jsonMatch[0]);
-    } catch (e) {
-      // Try to fix truncated JSON
-      console.log('⚠️ JSON parse failed, attempting to fix...');
-      const fixedJson = fixTruncatedJson(jsonMatch[0]);
-      parsed = JSON.parse(fixedJson);
-    }
+    const parsed = tryParseJson(jsonMatch[0]) || tryParseJson(fixTruncatedJson(jsonMatch[0]));
     
     if (parsed.jobs && Array.isArray(parsed.jobs) && parsed.jobs.length > 0) {
       // Validate and fix each job
       parsed.jobs = parsed.jobs.map(job => validateAndFixJob(job, profile));
+      parsed.jobs = mergeJobs([], parsed.jobs);
       return parsed;
     }
     
@@ -206,24 +263,41 @@ function parseAIResponse(content, profile) {
   }
 }
 
+function tryParseJson(value) {
+  try {
+    return JSON.parse(value);
+  } catch (error) {
+    return null;
+  }
+}
+
 // Fix truncated JSON
 function fixTruncatedJson(truncated) {
+  let output = String(truncated || '').trim();
+
+  // Remove trailing comma before object/array close if present.
+  output = output.replace(/,\s*([}\]])/g, '$1');
+
   // Count opening and closing braces
-  const openBraces = (truncated.match(/\{/g) || []).length;
-  const closeBraces = (truncated.match(/\}/g) || []).length;
+  const openBraces = (output.match(/\{/g) || []).length;
+  const closeBraces = (output.match(/\}/g) || []).length;
+  const openBrackets = (output.match(/\[/g) || []).length;
+  const closeBrackets = (output.match(/\]/g) || []).length;
   
   // If we have more opens than closes, add missing closing braces
   if (openBraces > closeBraces) {
-    truncated += '}'.repeat(openBraces - closeBraces);
+    output += '}'.repeat(openBraces - closeBraces);
+  }
+  if (openBrackets > closeBrackets) {
+    output += ']'.repeat(openBrackets - closeBrackets);
   }
   
-  // Check if last job is cut off
-  if (truncated.includes('"jobs":') && !truncated.trim().endsWith(']}')) {
-    // Add closing for jobs array and main object
-    truncated += ']}';
+  // Ensure we close root object at least once.
+  if (!output.endsWith('}')) {
+    output += '}';
   }
   
-  return truncated;
+  return output;
 }
 
 // Validate and fix individual job
@@ -249,9 +323,9 @@ function validateAndFixJob(job, profile) {
     }
   });
   
-  // Generate proper URLs
-  fixedJob.url = generateSmartUrl(fixedJob, profile);
-  fixedJob.apply_url = fixedJob.url;
+  // Keep AI URL if valid, otherwise generate smart URL.
+  fixedJob.url = normalizeOrGenerateUrl(fixedJob.url, fixedJob, profile);
+  fixedJob.apply_url = normalizeOrGenerateUrl(fixedJob.apply_url || fixedJob.url, fixedJob, profile);
   
   // Generate salary if missing
   if (!fixedJob.salary_range) {
@@ -270,44 +344,56 @@ function enhanceJob(job, profile) {
 
 // Generate smart URL based on job and profile
 function generateSmartUrl(job, profile) {
-  const primarySkill = profile.primarySkill.toLowerCase();
+  const primarySkill = (profile.primarySkill || 'developer').toLowerCase();
   const role = (job.role || '').toLowerCase();
-  const searchTerms = encodeURIComponent(`${primarySkill} ${role} developer`);
+  const company = (job.company || '').trim();
+  const searchTerms = encodeURIComponent(`${role || primarySkill} ${company}`.trim());
   const city = profile.city ? encodeURIComponent(profile.city) : '';
   
   // India-specific URLs with proper formatting
   if (profile.isIndia) {
-    const platforms = [
-      `https://www.naukri.com/${primarySkill}-jobs-in-${profile.city?.toLowerCase().replace(/\s+/g, '-') || 'india'}`,
-      `https://www.indeed.co.in/jobs?q=${searchTerms}&l=${city}%2C+India`,
-      `https://in.linkedin.com/jobs/${primarySkill}-developer-jobs-${profile.city?.toLowerCase().replace(/\s+/g, '-')}`,
-      `https://www.timesjobs.com/candidate/job-search.html?txtKeywords=${searchTerms}&txtLocation=${city}`,
-      `https://www.monsterindia.com/search/${primarySkill}-jobs-in-${profile.city?.toLowerCase().replace(/\s+/g, '-') || 'india'}`
-    ];
-    return platforms[Math.floor(Math.random() * platforms.length)];
+    return `https://www.naukri.com/${primarySkill}-jobs-in-${profile.city?.toLowerCase().replace(/\s+/g, '-') || 'india'}`;
   }
   
   // Remote URLs
   if (profile.isRemote) {
-    const platforms = [
-      `https://remoteok.com/remote-${primarySkill}-jobs`,
-      `https://weworkremotely.com/remote-jobs/search?term=${searchTerms}`,
-      `https://remotive.com/remote-jobs/${primarySkill}`,
-      `https://wellfound.com/role/${primarySkill}-developer?remote=true`,
-      `https://www.linkedin.com/jobs/search/?keywords=${searchTerms}&f_WT=2`
-    ];
-    return platforms[Math.floor(Math.random() * platforms.length)];
+    return `https://www.linkedin.com/jobs/search/?keywords=${searchTerms}&f_WT=2`;
   }
   
   // International URLs
-  const platforms = [
-    `https://www.linkedin.com/jobs/search/?keywords=${searchTerms}&location=${city}`,
-    `https://www.indeed.com/jobs?q=${searchTerms}&l=${city}`,
-    `https://www.glassdoor.com/Job/jobs.htm?sc.keyword=${searchTerms}&locKeyword=${city}`,
-    `https://www.careerbuilder.com/jobs?keywords=${searchTerms}&location=${city}`,
-    `https://www.dice.com/jobs?q=${searchTerms}&l=${city}`
-  ];
-  return platforms[Math.floor(Math.random() * platforms.length)];
+  return `https://www.linkedin.com/jobs/search/?keywords=${searchTerms}&location=${city}`;
+}
+
+function normalizeOrGenerateUrl(candidateUrl, job, profile) {
+  if (typeof candidateUrl === 'string' && /^https?:\/\//i.test(candidateUrl)) {
+    return candidateUrl.trim();
+  }
+  return generateSmartUrl(job, profile);
+}
+
+function mergeJobs(baseJobs, incomingJobs) {
+  const merged = [...(baseJobs || []), ...(incomingJobs || [])]
+    .filter(Boolean)
+    .map(job => ({ ...job, _sortScore: computeTalentScore(job) }));
+
+  const seen = new Set();
+  const unique = merged.filter(job => {
+    const key = `${(job.role || '').toLowerCase()}|${(job.company || '').toLowerCase()}`;
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  unique.sort((a, b) => b._sortScore - a._sortScore);
+  unique.forEach(job => delete job._sortScore);
+  return unique;
+}
+
+function computeTalentScore(job) {
+  const score = Number(job.match_score) || 0;
+  const matched = Array.isArray(job.matched_skills) ? job.matched_skills.length * 2 : 0;
+  const freshness = Math.max(0, 15 - (Number(job.days_ago) || 15));
+  return score + matched + freshness;
 }
 
 // Generate smart jobs without AI
@@ -517,7 +603,7 @@ function generateSmartStrategy(profile, topJob) {
   strategy += "• Keep applying while waiting for responses\n\n";
   
   // Weekly Goals
-  strategy += "**🎯 This Week's Goals (${currentDate})**\n";
+  strategy += `**🎯 This Week's Goals (${currentDate})**\n`;
   strategy += "• Apply to 20+ relevant positions\n";
   strategy += "• Update LinkedIn profile with recent projects\n";
   strategy += "• Complete 5 coding challenges on LeetCode\n";
