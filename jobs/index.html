@@ -129,7 +129,23 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .ap-x:hover{opacity:1}
 
 /* MAIN */
-.main{flex:1;min-width:0;padding:clamp(10px,2vw,18px) clamp(16px,3vw,32px) 80px clamp(10px,2vw,16px)}
+.main{
+  flex:1;
+  min-width:0;
+  padding:clamp(10px,2vw,18px) clamp(16px,3vw,32px) 80px clamp(10px,2vw,16px);
+}
+
+/* All mobile devices */
+@media (max-width: 767px){
+  .main{
+    margin-top:100px;
+  }
+}
+@media (max-width: 1024px){
+  .main{
+    margin-top:100px;
+  }
+}
 .pg-bc{display:flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:.6rem;color:var(--muted2);margin-bottom:14px}
 .pg-bc a{color:var(--muted2);text-decoration:none;transition:color .2s}
 .pg-bc a:hover{color:var(--accent)}
