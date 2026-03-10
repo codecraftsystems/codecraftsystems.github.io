@@ -707,12 +707,23 @@ function selectPreset(el,name){
   el.classList.add('active');
 }
 function saveLocation(){
-  const v=document.getElementById('locInput').value.trim().toLowerCase();
-  if(!v)return;
-  localStorage.setItem('ccs_geo',JSON.stringify({country:v,ts:Date.now()}));
+
+  const v = document.getElementById('locInput').value.trim().toLowerCase();
+  if(!v) return;
+
+  localStorage.setItem('ccs_geo', JSON.stringify({country:v, ts:Date.now()}));
+
   applyGeo(v,false);
+
+  localStorage.removeItem("ccs_muse_count");
+
   toast(`📍 Location set to ${cap(v)}`,'ti',2500);
+
   closeLocModal();
+
+  fetchAllJobs();
+
+ window.location.href = window.location.pathname + '?r=' + Date.now();
 }
 
 /* ══ NAV / UI ══ */
@@ -795,7 +806,59 @@ function normROK(d){
 }
 function normARN(d){return(Array.isArray(d)?d:(d&&Array.isArray(d.data)?d.data:[])).map(j=>({id:`arn_${j.slug||j.id||Math.random()}`,source:'arbeitnow',title:j.title||'Position',company:j.company_name||'Company',logo:'',  description: j.description || '',location:j.location||'Germany',remote:Boolean(j.remote),tags:Array.isArray(j.tags)?j.tags.slice(0,6):[],date:safeDate(j.created_at,j.created_at),epoch:Number(j.created_at)||0,url:j.url||'#',salary:'',type:(Array.isArray(j.job_types)&&j.job_types.length)?j.job_types.join(', '):'Full-Time',level:''}));}
 function normJCY(d){return(Array.isArray(d)?d:(d&&Array.isArray(d.jobs)?d.jobs:[])).map(j=>({id:`jcy_${j.id||Math.random()}`,source:'jobicy',title:j.jobTitle||'Developer',company:j.companyName||'Company',logo:j.companyLogo||'',description:j.jobDescription || '',location:j.jobGeo||'Remote',remote:true,tags:(Array.isArray(j.jobIndustry)?j.jobIndustry:[]).concat(Array.isArray(j.jobType)?j.jobType:[]).slice(0,6),date:safeDate(j.pubDate),epoch:j.pubDate?new Date(j.pubDate).getTime()/1000:0,url:j.url||'#',salary:'',type:(Array.isArray(j.jobType)&&j.jobType[0])||'Full-Time',level:j.jobLevel||''}));}
-function normMUSE(d){return(Array.isArray(d)?d:(d&&Array.isArray(d.results)?d.results:[])).map(j=>({id:`mus_${j.id||Math.random()}`,source:'themuse',title:j.name||'Position',company:(j.company&&j.company.name)||'Company',logo:'',location:(Array.isArray(j.locations)&&j.locations[0]&&j.locations[0].name)||'Remote',description:j.contents || '',remote:false,tags:(Array.isArray(j.categories)?j.categories.map(c=>c.name):[]).concat(Array.isArray(j.levels)?j.levels.map(l=>l.name):[]).slice(0,5),date:safeDate(j.publication_date),epoch:j.publication_date?new Date(j.publication_date).getTime()/1000:0,url:(j.refs&&j.refs.landing_page)||'#',salary:'',type:'Full-Time',level:(Array.isArray(j.levels)&&j.levels[0]&&j.levels[0].name)||''}));}
+
+
+async function normMUSE(firstData){
+
+  let allMuse = [];
+
+  const normalize = (jobs)=>jobs.map(j=>({
+    id:`mus_${j.id||Math.random()}`,
+    source:'themuse',
+    title:j.name||'Position',
+    company:(j.company&&j.company.name)||'Company',
+    logo:'',
+    location:(Array.isArray(j.locations)&&j.locations[0]?.name)||'Remote',
+    description:j.contents||'',
+    remote:false,
+    tags:(Array.isArray(j.categories)?j.categories.map(c=>c.name):[])
+      .concat(Array.isArray(j.levels)?j.levels.map(l=>l.name):[])
+      .slice(0,5),
+    date:safeDate(j.publication_date),
+    epoch:j.publication_date?new Date(j.publication_date).getTime()/1000:0,
+    url:(j.refs&&j.refs.landing_page)||'#',
+    salary:'',
+    type:'Full-Time',
+    level:(Array.isArray(j.levels)&&j.levels[0]?.name)||''
+  }));
+
+  allMuse = normalize(firstData.results || []);
+
+  const totalPages = firstData.page_count || 1;
+const loc = getMuseLocation();
+  for(let p=2;p<=totalPages;p++){
+
+    try{
+
+      const url=`https://www.themuse.com/api/public/jobs?page=${p}&descending=true&category=IT&category=Computer%20and%20IT&category=Software%20Engineer&category=Software%20Engineering&location=${loc}`;
+
+      const d = await fetchProxy(url);
+
+      allMuse = allMuse.concat(normalize(d.results || []));
+
+    }catch(e){}
+
+  }
+
+  const now = Date.now();
+  const maxAge = 30*24*60*60*1000;
+
+  return allMuse.filter(j=>{
+    const pub = new Date(j.date).getTime();
+    return (now-pub)<=maxAge;
+  });
+
+}
 
 async function fetchAllJobs(){
   allJobs=[];filteredJobs=[];currentPage=1;
@@ -807,7 +870,50 @@ async function fetchAllJobs(){
   animLD(1);try{const d=await fetchJson('https://remoteok.com/api');const j=normROK(d);allJobs=allJobs.concat(j);sc.remoteok=j.length;}catch(e){errs.push('RemoteOK');}
   animLD(2);try{const d=await fetchJson('https://arbeitnow.com/api/job-board-api');const j=normARN(d);allJobs=allJobs.concat(j);sc.arbeitnow=j.length;}catch(e){errs.push('Arbeitnow');}
   animLD(3);try{const d=await fetchJson('https://jobicy.com/api/v2/remote-jobs');const j=normJCY(d);allJobs=allJobs.concat(j);sc.jobicy=j.length;}catch(e){errs.push('Jobicy');}
-  animLD(4);try{const d=await fetchJson('https://www.themuse.com/api/public/jobs?page=1');const j=normMUSE(d);allJobs=allJobs.concat(j);sc.themuse=j.length;}catch(e){errs.push('The Muse');}
+
+
+  // animLD(4);try{const d=await fetchJson('https://www.themuse.com/api/public/jobs?page=1&descending=true&category=IT&category=Computer%20and%20IT&category=Software%20Engineer&category=Software%20Engineering&location=India');const j=normMUSE(d);allJobs=allJobs.concat(j);sc.themuse=j.length;}catch(e){errs.push('The Muse');}
+
+
+animLD(4);
+try{
+const loc = getMuseLocation();
+ const museUrl =
+`https://www.themuse.com/api/public/jobs?page=1&descending=true&category=IT&category=Computer%20and%20IT&category=Software%20Engineer&category=Software%20Engineering&location=${loc}`;
+
+  const firstMuse = await fetchJson(museUrl);
+
+  const firstJobs = firstMuse.results || [];
+
+  const j = firstJobs.map(x=>({
+    id:`mus_${x.id}`,
+    source:'themuse',
+    title:x.name||'Position',
+    company:(x.company&&x.company.name)||'Company',
+    logo:'',
+    location:(x.locations&&x.locations[0]?.name)||'Remote',
+    description:x.contents||'',
+    remote:false,
+    tags:(x.categories||[]).map(c=>c.name),
+    date:safeDate(x.publication_date),
+    epoch:x.publication_date?new Date(x.publication_date).getTime()/1000:0,
+    url:(x.refs&&x.refs.landing_page)||'#',
+    salary:'',
+    type:'Full-Time',
+    level:(x.levels&&x.levels[0]?.name)||''
+  }));
+
+ allJobs = allJobs.concat(j);
+
+ sc.themuse = getMuseCount(j.length);
+
+// background pages
+loadMuseMore(firstMuse.page_count);
+}catch(e){
+
+  errs.push('The Muse');
+
+}
   animLD(5);
   await new Promise(r=>setTimeout(r,500));
   hide('loaderWrap');
@@ -829,6 +935,106 @@ async function fetchAllJobs(){
 //   localStorage.setItem('ccs_all_jobs', JSON.stringify(allJobs));
   updTypeCounts();buildTagCloud();updateLocalCounts();applyFilters();
 
+
+}
+
+function getMuseCount(apiCount){
+
+  const museLocal = localStorage.getItem("ccs_muse_count");
+
+  if(museLocal){
+    return parseInt(museLocal);
+  }
+
+  localStorage.setItem("ccs_muse_count", apiCount);
+
+  return apiCount;
+}
+
+
+function getMuseLocation(){
+  const geo = JSON.parse(localStorage.getItem("ccs_geo") || "{}");
+
+  if(!geo.country) return "India";
+
+  return encodeURIComponent(
+    geo.country
+      .split(" ")
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ")
+  );
+}
+
+async function loadMuseMore(totalPages){
+
+  const loc = getMuseLocation();
+
+  for(let p=2;p<=totalPages;p++){
+
+    try{
+
+      const url=`https://www.themuse.com/api/public/jobs?page=${p}&descending=true&category=IT&category=Computer%20and%20IT&category=Software%20Engineer&category=Software%20Engineering&location=${loc}`;
+
+      const d = await fetchProxy(url);
+
+      const more = (d.results||[]).map(x=>({
+        id:`mus_${x.id}`,
+        source:'themuse',
+        title:x.name||'Position',
+        company:(x.company&&x.company.name)||'Company',
+        logo:'',
+        location:(x.locations&&x.locations[0]?.name)||'Remote',
+        description:x.contents||'',
+        remote:false,
+        tags:(x.categories||[]).map(c=>c.name),
+        date:safeDate(x.publication_date),
+        epoch:x.publication_date?new Date(x.publication_date).getTime()/1000:0,
+        url:(x.refs&&x.refs.landing_page)||'#',
+        salary:'',
+        type:'Full-Time',
+        level:(x.levels&&x.levels[0]?.name)||''
+      }));
+
+      allJobs = allJobs.concat(more);
+
+const museCount = allJobs.filter(j=>j.source==='themuse').length;
+const rokCount = allJobs.filter(j=>j.source==='remoteok').length;
+const arnCount = allJobs.filter(j=>j.source==='arbeitnow').length;
+const jcyCount = allJobs.filter(j=>j.source==='jobicy').length;
+
+const finalMuseCount = getMuseCount(museCount);
+
+setSC('themuse', finalMuseCount);
+localStorage.setItem("ccs_muse_count", museCount);
+setSC('remoteok', rokCount);
+setSC('arbeitnow', arnCount);
+setSC('jobicy', jcyCount);
+setSC('all', allJobs.length);
+
+document.getElementById('totalJobs').textContent = allJobs.length;
+
+if(p === totalPages){
+
+  // recalc stats
+  const remote=allJobs.filter(j=>j.remote).length;
+  const today=allJobs.filter(j=>isToday(j.date)).length;
+  const wsal=allJobs.filter(j=>j.salary).length;
+
+  document.getElementById('remoteCountStat').textContent=remote;
+  document.getElementById('cnt-remote').textContent=remote;
+  document.getElementById('cnt-today').textContent=today;
+  document.getElementById('cnt-salary').textContent=wsal;
+
+  updTypeCounts();
+  buildTagCloud();
+  updateLocalCounts();
+
+  applyFilters();
+}
+
+    }catch(e){}
+
+  }
 
 }
 
@@ -901,6 +1107,9 @@ function applyFilters(){
   const q=document.getElementById('searchInput').value.toLowerCase().trim();
   const sort=document.getElementById('sortSelect').value;
   filteredJobs=allJobs.filter(j=>{
+
+    // if(userCountry && userCountry !== "all" && !matchCountry(j)) return false;
+
     if(activeSource!=='all'&&j.source!==activeSource)return false;
     if(activeTag&&!(j.tags||[]).some(t=>t.toLowerCase().replace(/[^a-z0-9\/\-\.]/g,'').slice(0,20)===activeTag))return false;
     if(activeType&&!j.type.toLowerCase().includes(activeType))return false;
@@ -919,7 +1128,28 @@ function applyFilters(){
   else if(sort==='oldest')filteredJobs.sort((a,b)=>a.epoch-b.epoch);
   else filteredJobs.sort((a,b)=>a.title.localeCompare(b.title));
   document.getElementById('resultsCount').innerHTML=`<strong>${filteredJobs.length}</strong> job${filteredJobs.length!==1?'s':''} found`;
-  renderPills();renderPage();
+  renderPills();updateCounts();renderPage();
+}
+
+function updateCounts(){
+
+  const total = filteredJobs.length;
+
+  const remote = filteredJobs.filter(j => j.remote).length;
+
+  const today = filteredJobs.filter(j => isToday(j.date)).length;
+
+  const salary = filteredJobs.filter(j => j.salary).length;
+
+  document.getElementById('totalJobs').textContent = total;
+
+  document.getElementById('remoteCountStat').textContent = remote;
+  document.getElementById('cnt-remote').textContent = remote;
+
+  document.getElementById('cnt-today').textContent = today;
+
+  document.getElementById('cnt-salary').textContent = salary;
+
 }
 
 /* ══ RENDER PAGE ══ */
@@ -1097,7 +1327,34 @@ document.getElementById('localOpt').classList.add('active');
 document.getElementById('locToggleBtn').classList.add('on');
 
 detectGeo();
+// show cached muse count instantly
+const museCache = localStorage.getItem("ccs_muse_count");
+if(museCache){
+  setSC('themuse', museCache);
+}
 fetchAllJobs();
+
+
+function matchCountry(job){
+
+  // ALL selected → show all jobs
+  if(!userCountry || userCountry === "" || userCountry === "all"){
+    return true;
+  }
+
+  const country = userCountry.toLowerCase();
+
+  const loc = (job.location || "").toLowerCase();
+  const geo = (job.jobGeo || "").toLowerCase();
+
+  // match location text
+  if(loc.includes(country)) return true;
+
+  // match jobicy geo
+  if(geo.includes(country)) return true;
+
+  return false;
+}
 </script>
 </body>
 </html>
