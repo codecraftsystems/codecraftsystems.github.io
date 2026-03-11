@@ -659,6 +659,7 @@ function getSession(){
       setStatus('ok', 'Profile ready!', `Logged in as ${esc(session.email)} · Click below to find AI jobs`);
       setBtn('💼 Find My Jobs', false, false);
       document.getElementById('findJobBtn').onclick = runJobSearch;
+      if (window.enableSmartJobBtn) window.enableSmartJobBtn();
     }
 
   } catch (e) {
