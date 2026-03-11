@@ -177,11 +177,15 @@
   </div>
 
   <!-- ACTION CARD -->
-  <div class="action-card">
-    <button class="find-btn" id="findJobBtn" disabled>
-      <span id="btnLabel">Check Profile</span>
-    </button>
-
+<div style="display:flex;gap:12px;width:100%;">
+  <button class="find-btn" id="findJobBtn" disabled style="flex:1;min-width:0;">
+    <span id="btnLabel">Check Profile</span>
+  </button>
+  <button class="find-btn" id="smartJobBtn" disabled
+    style="flex:1;min-width:0;background:linear-gradient(135deg,#6366f1,#8b5cf6);opacity:0.6;cursor:not-allowed;">
+    <span id="smartBtnLabel">🤖 Smart Job Search</span>
+  </button>
+</div>
     <!-- LOADING -->
     <div class="loading-area" id="loadingArea">
       <div class="loading-track-wrap">
@@ -227,7 +231,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/supabase-config.js"></script>
 <script src="../assets/developers.js"></script> 
-<script src="./index.js?v=7" defer></script>
-<script src="./ai-backup.js?v=3"></script>
+<script src="./ai-job-search.js?v=9"></script>
+<script src="./index.js?v=8" defer></script>
+<script src="./ai-backup.js?v=4"></script>
+
+
 </body>
 </html>
