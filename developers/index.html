@@ -549,6 +549,7 @@ async function loadDevs(){
     const { data, error } = await sb
       .from('developers')
       .select('id,name,slug,title,skills,experience_years,profile_image,open_to_work,location,created_at')
+      .eq('profile_public', true)
       .order('open_to_work', { ascending: false })
       .order('created_at', { ascending: false });
     

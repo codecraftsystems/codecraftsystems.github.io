@@ -575,6 +575,7 @@ const DEMO=[
     const{data,error}=await SB
       .from('developers')
       .select('id,name,slug,title,skills,experience_years,profile_image,location,open_to_work,created_at')
+      .eq('profile_public', true)
       .eq('open_to_work',true)
       .order('created_at',{ascending:false});
     if(error)throw error;

@@ -1149,6 +1149,7 @@ async function doSave(e){
   };
 
   try{
+    payload.profile_public = true;
     if(SB&&CU.id!=='demo'){
       const{error}=await SB.from('developers').upsert(payload,{onConflict:'user_id'});
       if(error)throw error;
