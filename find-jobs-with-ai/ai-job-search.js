@@ -1,7 +1,25 @@
 'use strict';
 
-const CLOUD_AI_URL = 'https://ai.buldel.com/cloud-ai';
-const JOB_SEARCH_AI_URL = 'https://ai.buldel.com/job-search-ai';
+window.CLOUD_AI_URL = window.CLOUD_AI_URL || 'https://ai.buldel.com/cloud-ai';
+window.JOB_SEARCH_AI_URL = window.JOB_SEARCH_AI_URL || 'https://ai.buldel.com/job-search-ai';
+
+
+function locationPriority(jobLocation, profileLocation) {
+
+  const j = String(jobLocation || '').toLowerCase();
+  const p = String(profileLocation || '').toLowerCase();
+
+  if (!j) return 3;
+
+  if (p && (j.includes(p) || p.includes(j))) return 0;
+
+  if (j.includes('remote') || j.includes('anywhere')) return 2;
+
+  return 1;
+
+}
+
+
 
 /* ─────────── pageno: 1, 2, 3, 4, 5 ... forever ─────────── */
 let _smartPageNo = 0;
@@ -14,7 +32,7 @@ window.enableSmartJobBtn = function () {
   btn.style.opacity = '1';
   btn.style.cursor = 'pointer';
   btn.onclick = runSmartJobSearch;
-  document.getElementById('smartBtnLabel').innerHTML = '🤖 Smart Job Search';
+  document.getElementById('smartBtnLabel').innerHTML = '⚡ Smart Job Search';
 };
 
 /* ─────────── Set Smart Button State ─────────── */
@@ -75,7 +93,7 @@ Profile Summary: ${(p.bio || '').substring(0,300)}
 
 /* ─────────── Step 2: Fetch jobs ─────────── */
 async function fetchJobsFromAI(keyword, location, pageno) {
-  const city = (location || 'india').split(',')[0].trim().toLowerCase().replace(/\s+/g, '-');
+  
   const q = encodeURIComponent(`${keyword}`);
   const url = `${JOB_SEARCH_AI_URL}?q=${q}&pages=1&pageno=${pageno}&categories=jobs`;
   const res = await fetch(url);
@@ -195,7 +213,7 @@ async function runSmartJobSearch() {
       setStatus('err', 'Search failed', '⚠️ Technical error. Please try after some time.');
       toast('te', 'Technical Error', 'Please try after some time.');
     }
-    setSmartBtn(_smartPageNo === 0 ? '🤖 Smart Job Search' : '🔍 Find More Jobs', false, false);
+    setSmartBtn(_smartPageNo === 0 ? '⚡ Smart Job Search' : '🔍 Find More Jobs', false, false);
   } finally {
     smartSearchRunning = false;
   }

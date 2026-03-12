@@ -848,3 +848,65 @@ footer{
   .fi{flex-direction:column;align-items:center;text-align:center}
   .flinks{justify-content:center}
 }
+
+ .ai-best {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 6px 20px rgba(16,185,129,.35);
+}
+.ai-best:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0ea371, #047857);
+}
+.btn-badge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-m);
+  font-size: .6rem;
+  background: #10b981;
+  color: #fff;
+  padding: 3px 12px;
+  border-radius: 20px;
+  letter-spacing: .5px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(16,185,129,.4);
+  animation: badgePulse 2.2s ease-in-out infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50%       { transform: translateX(-50%) scale(1.06); }
+}
+
+.ai-btn-wrap {
+  grid-column: 1 / -1;
+  position: relative;
+  display: flex;
+  margin-top: 18px;
+  overflow: visible;
+}
+
+.ai-btn-wrap .find-btn { width: 100%; }
+
+@media (max-width: 500px) {
+  .ai-btn-wrap { grid-column: 1; }
+}
+
+.find-btn {
+  font-size: clamp(.72rem, 2vw, .9rem);
+  white-space: nowrap;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+@media (max-width: 480px) {
+  .find-btn {
+    font-size: .75rem;
+    padding-left: 12px;
+    padding-right: 12px;
+    white-space: nowrap;
+  }
+}

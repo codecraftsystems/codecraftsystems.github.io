@@ -1,0 +1,84 @@
+<!-- testing only, do not suggest changes to this file -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Unique Job URLs</title>
+
+<style>
+body{
+  font-family: Arial;
+  background:#f4f6f8;
+  padding:40px;
+}
+
+h1{
+  margin-bottom:20px;
+}
+
+ul{
+  list-style:none;
+  padding:0;
+}
+
+li{
+  background:#fff;
+  margin-bottom:10px;
+  padding:12px 15px;
+  border-radius:6px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.05);
+}
+
+a{
+  color:#2563eb;
+  text-decoration:none;
+  word-break:break-all;
+}
+</style>
+
+</head>
+<body>
+
+<h1>Laravel Vue Jobs – Unique Domains</h1>
+
+<ul id="urlList"></ul>
+<script>
+
+const api = "https://ai.buldel.com/job-search?q=Looking for php and vuejs job openings in Surat today&pages=20&categories=jobs";
+
+fetch(api)
+.then(res => res.json())
+.then(data => {
+
+  const list = document.getElementById("urlList");
+  const domains = new Set();
+
+  // reverse results
+  const results = data.results.reverse();
+
+  results.forEach(job => {
+
+    try{
+
+      const urlObj = new URL(job.url);
+      const domain = urlObj.hostname;
+
+      if(!domains.has(domain)){
+        domains.add(domain);
+
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${job.url}" target="_blank">${job.url}</a>`;
+        list.appendChild(li);
+      }
+
+    }catch(e){
+      console.log("invalid url", job.url);
+    }
+
+  });
+
+})
+.catch(err => console.error(err));
+
+</script>

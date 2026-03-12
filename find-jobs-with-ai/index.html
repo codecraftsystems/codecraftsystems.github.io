@@ -60,6 +60,8 @@
   }
 }
 </script>
+
+
 <meta name="robots" content="index, follow">
 <!-- FAVICON — GitHub Avatar -->
 <!-- FAVICON -->
@@ -75,6 +77,57 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles.css">
 
+<style>
+  /* AI URL Finder highlight */
+
+.ai-best{
+  background:linear-gradient(135deg,#10b981,#059669);
+  box-shadow:0 6px 20px rgba(16,185,129,.35);
+}
+
+.ai-best:hover:not(:disabled){
+  background:linear-gradient(135deg,#0ea371,#047857);
+}
+
+/* Recommended badge */
+
+.btn-badge{
+  position:absolute; 
+  font-family:var(--font-m);
+  font-size:.55rem;
+  background:#10b981;
+  color:#fff;
+  padding:3px 8px;
+  border-radius:20px;
+  letter-spacing:.5px;
+  font-weight:600;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+  animation:badgePulse 2s infinite;
+  z-index:2;
+}
+
+/* subtle pulse */
+
+@keyframes badgePulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+  100%{transform:scale(1)}
+}
+
+/* AI button wrapper */
+ 
+.ai-btn-wrap{ 
+  min-width:0;
+  position:relative;
+  display:flex;
+}
+
+/* ensure button fills wrapper */
+
+.ai-btn-wrap .find-btn{
+  width:100%;
+}
+</style>
 </head>
 <body>
 
@@ -177,15 +230,32 @@
   </div>
 
   <!-- ACTION CARD -->
-<div style="display:flex;gap:12px;width:100%;">
-  <button class="find-btn" id="findJobBtn" disabled style="flex:1;min-width:0;">
+ 
+
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;">
+
+  <button class="find-btn" id="findJobBtn" disabled>
     <span id="btnLabel">Check Profile</span>
   </button>
+
   <button class="find-btn" id="smartJobBtn" disabled
-    style="flex:1;min-width:0;background:linear-gradient(135deg,#6366f1,#8b5cf6);opacity:0.6;cursor:not-allowed;">
-    <span id="smartBtnLabel">🤖 Smart Job Search</span>
+    style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">
+    <span id="smartBtnLabel">⚡ Smart Job Search</span>
   </button>
+
+  <div class="ai-btn-wrap" style="grid-column:1/-1;">
+    <span class="btn-badge">Recommended</span>
+    <button class="find-btn ai-best" id="aiUrlBtn" disabled>
+      🤖 AI URL Finder
+    </button>
+  </div>
+
 </div>
+
+
+
+
     <!-- LOADING -->
     <div class="loading-area" id="loadingArea">
       <div class="loading-track-wrap">
@@ -206,6 +276,65 @@
       </div>
       <div class="job-grid" id="jobGrid"></div>
     </div>
+
+    <!-- AI URL RESULTS -->
+ 
+
+    <div class="results-section" id="aiUrlResults">
+
+<div class="results-header">
+<div class="results-title">AI Job Discovery</div>
+<div class="results-badge" id="aiUrlCount">0 found</div>
+</div>
+
+<div id="aiProcess" style="display:none;margin-bottom:14px">
+
+<div class="job-subtitle">AI Search Progress</div>
+
+<div id="aiStep1" class="loading-step active">
+<span class="ls-ico">1</span>
+Reading your developer profile
+</div>
+
+<div id="aiStep2" class="loading-step">
+<span class="ls-ico">2</span>
+AI generating search keyword
+</div>
+
+<div id="aiStep3" class="loading-step">
+<span class="ls-ico">3</span>
+Searching internet for jobs
+</div>
+
+<div id="aiStep4" class="loading-step">
+<span class="ls-ico">4</span>
+AI refining job URLs
+</div>
+
+</div>
+
+
+ 
+
+<div id="directSection" style="display:none">
+
+<div class="job-subtitle">🏢 Direct Company Career Pages</div>
+<div class="job-grid" id="directUrls"></div>
+
+</div>
+
+
+<div id="boardSection" style="display:none">
+
+<div class="job-subtitle">📋 Job Boards</div>
+<div class="job-grid" id="boardUrls"></div>
+
+</div>
+
+
+
+</div>
+
 
     <!-- STRATEGY TIPS -->
     <div class="tips-card" id="tipsCard">
@@ -229,11 +358,15 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../assets/supabase-config.js"></script>
-<script src="../assets/developers.js"></script> 
-<script src="./ai-job-search.js?v=9"></script>
-<script src="./index.js?v=8" defer></script>
-<script src="./ai-backup.js?v=4"></script>
+
+<script src="../assets/supabase-config.js" defer></script>
+<script src="../assets/developers.js" defer></script>
+
+<script src="./ai-job-url-filter.js" defer></script>
+<script src="./ai-job-search.js?v=9" defer></script>
+<script src="./ai-backup.js?v=4" defer></script>
+
+<script src="./index.js?v=9" defer></script>
 
 
 </body>
