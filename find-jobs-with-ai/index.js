@@ -648,6 +648,7 @@ function getSession(){
     }
 
     renderProfile(profile);
+     if (window.enableAiUrlBtn) window.enableAiUrlBtn();
     const missing = getMissingFields(profile);
 
     if (missing.length) {
@@ -659,7 +660,10 @@ function getSession(){
       setStatus('ok', 'Profile ready!', `Logged in as ${esc(session.email)} · Click below to find AI jobs`);
       setBtn('💼 Find My Jobs', false, false);
       document.getElementById('findJobBtn').onclick = runJobSearch;
-      if (window.enableSmartJobBtn) window.enableSmartJobBtn();
+    setTimeout(()=>{
+  if (window.enableSmartJobBtn) window.enableSmartJobBtn();
+},50);
+     
     }
 
   } catch (e) {

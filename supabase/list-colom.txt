@@ -1,0 +1,1 @@
+id, user_id, email, name, slug, title, skills, experience_years, github_url, linkedin_url, portfolio_url, bio, profile_image, open_to_work, verified, created_at, location, experience (jsonb), profile_public
