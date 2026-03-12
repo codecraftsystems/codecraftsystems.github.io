@@ -30,14 +30,34 @@ function setSmartBtn(label, disabled, loading) {
 
 /* ─────────── Step 1: Ask cloud-ai for search keyword ─────────── */
 async function getJobKeyword(p) {
-  const prompt = `You are a job search assistant. Based on this developer profile, return ONLY a single job search keyword or short phrase (2-5 words max) that would best find relevant jobs on job boards like LinkedIn, Indeed, Naukri. No explanation, no punctuation, just the keyword.
+ const prompt = `You are a job discovery assistant.
 
-- Title: ${p.title || ''}
-- Skills: ${(p.skills || '').split(',').slice(0, 6).join(', ')}
-- Experience: ${p.experience_years || 0} years
-- Location: ${p.location || 'India'}
+Based on the professional profile below, generate ONE short search phrase (3–6 words) that helps find the LATEST or TODAY jobs posted directly on company career pages or company hiring websites.
 
-Return ONLY the keyword. Example: senior laravel developer`;
+The phrase MUST include the professional's location.
+
+STRICT RULES:
+- Do NOT target job boards such as LinkedIn, Indeed, Naukri, Glassdoor, Monster, or similar sites.
+- The search phrase should help discover jobs directly on company career pages or startup hiring pages.
+- Prefer keywords like today, latest, recent, hiring, careers, join team so search engines return fresh job postings.
+- Focus on the person's role, core skills, experience level, and location.
+- Each time you generate a phrase, vary the wording so results are not always identical.
+
+Return ONLY the search phrase
+No explanation
+No punctuation
+
+Current Date: ${new Date().toLocaleDateString('en-GB')}
+
+Professional Profile:
+Name: ${p.name || ''}
+Title: ${p.title || ''}
+Primary Role: ${p.experience?.[0]?.role || ''}
+Skills: ${(p.skills || '').split(',').slice(0,6).join(' ')}
+Experience: ${p.experience_years || 0} years
+Location: ${p.location || 'India'}
+Profile Summary: ${(p.bio || '').substring(0,300)}
+`;
 
   const res = await fetch(CLOUD_AI_URL, {
     method: 'POST',
@@ -56,7 +76,7 @@ Return ONLY the keyword. Example: senior laravel developer`;
 /* ─────────── Step 2: Fetch jobs ─────────── */
 async function fetchJobsFromAI(keyword, location, pageno) {
   const city = (location || 'india').split(',')[0].trim().toLowerCase().replace(/\s+/g, '-');
-  const q = encodeURIComponent(`${keyword} ${city}`);
+  const q = encodeURIComponent(`${keyword}`);
   const url = `${JOB_SEARCH_AI_URL}?q=${q}&pages=1&pageno=${pageno}&categories=jobs`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`job-search-ai error: HTTP ${res.status}`);
