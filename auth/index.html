@@ -911,27 +911,419 @@ function startCountdown(secs){
 function genOtp(){ return String(Math.floor(100000 + Math.random()*900000)); }
 
 /* ── BREVO ── */
-async function sendBrevoMail(toEmail, otp){
+ async function sendBrevoMail(toEmail, otp) {
+
+  const year   = new Date().getFullYear();
+  const digits = String(otp).split('');
+  const d      = digits; // shorthand
+
+  const htmlContent = `<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no">
+  <title>${otp} — CodeCraft Sign-In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html,body{margin:0;padding:0;width:100%!important;
+      -webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+    table{border-collapse:collapse!important;
+      mso-table-lspace:0pt;mso-table-rspace:0pt;}
+    img{border:0;height:auto;outline:none;text-decoration:none;}
+    a{text-decoration:none;}
+    body{background:#eef2f7;font-family:'DM Sans',Arial,sans-serif;margin:0;padding:0;}
+
+    /* tap-to-select */
+    .tap-code{
+      -webkit-user-select:all;
+      -moz-user-select:all;
+      -ms-user-select:all;
+      user-select:all;
+      cursor:pointer;
+    }
+
+    @media only screen and (max-width:540px){
+      .ow  { padding:16px 10px!important }
+      .hdr { padding:20px 20px 18px!important }
+      .bdy { padding:22px 20px 20px!important }
+      .ftr { padding:14px 20px!important }
+      .h1  { font-size:22px!important }
+      .otp-num { font-size:36px!important; letter-spacing:14px!important; padding-left:14px!important }
+      .pill{ display:none!important }
+      .ic2 { padding-top:8px!important }
+    }
+    @media only screen and (max-width:380px){
+      .otp-num { font-size:28px!important; letter-spacing:10px!important; padding-left:10px!important }
+    }
+  </style>
+</head>
+<body>
+
+<table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+  style="background:#eef2f7;width:100%;">
+<tr>
+<td class="ow" align="center" style="padding:32px 16px;">
+
+  <!-- CARD -->
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+    style="max-width:520px;width:100%;background:#ffffff;border-radius:20px;
+           overflow:hidden;border:1px solid #c8d4e3;
+           box-shadow:0 16px 48px rgba(0,0,0,0.08),0 3px 12px rgba(0,0,0,0.05);">
+
+    <!-- STRIPE -->
+    <tr>
+      <td style="height:3px;font-size:0;line-height:0;
+           background:linear-gradient(90deg,#ff4d00 0%,#ff7a30 30%,#ffb800 60%,#16a34a 100%);">&nbsp;</td>
+    </tr>
+
+    <!-- ══ HEADER ══ -->
+    <tr>
+      <td class="hdr" style="padding:24px 32px 20px;border-bottom:1px solid #d4dde9;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+          <tr>
+            <!-- Mark -->
+            <td style="width:40px;vertical-align:middle;padding:0;">
+              <div style="width:40px;height:40px;
+                   background:linear-gradient(135deg,#ff4d00,#ff6b2a);
+                   border-radius:10px;text-align:center;line-height:40px;
+                   mso-line-height-rule:exactly;
+                   font-family:'Bebas Neue','Arial Black',Arial,sans-serif;
+                   font-size:16px;color:#fff;
+                   box-shadow:0 3px 10px rgba(255,77,0,0.28);">CC</div>
+            </td>
+            <!-- Wordmark -->
+            <td style="vertical-align:middle;padding:0 0 0 11px;">
+              <span style="font-family:'Bebas Neue','Arial Black',Arial,sans-serif;
+                    font-size:21px;letter-spacing:2.5px;color:#111827;line-height:1;">
+                Code<span style="color:#ff4d00;">Craft</span>
+              </span>
+            </td>
+            <td style="width:100%;"></td>
+            <!-- Pill -->
+            <td class="pill" style="vertical-align:middle;padding:0;">
+              <table cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td style="background:rgba(255,77,0,0.07);
+                       border:1px solid rgba(255,77,0,0.2);
+                       border-radius:100px;padding:5px 13px 5px 9px;">
+                    <table cellpadding="0" cellspacing="0" role="presentation">
+                      <tr>
+                        <td style="vertical-align:middle;padding:0 6px 0 0;">
+                          <div style="width:5px;height:5px;background:#ff4d00;
+                               border-radius:50%;"></div>
+                        </td>
+                        <td style="vertical-align:middle;">
+                          <span style="font-family:'JetBrains Mono','Courier New',monospace;
+                                font-size:9px;letter-spacing:1px;color:#ff4d00;
+                                text-transform:uppercase;line-height:1;white-space:nowrap;">
+                            Login OTP
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ══ BODY ══ -->
+    <tr>
+      <td class="bdy" style="padding:28px 32px 24px;">
+
+        <!-- Label + Title -->
+        <p style="font-family:'JetBrains Mono','Courier New',monospace;
+                  font-size:9px;letter-spacing:2.5px;color:#94a3b8;
+                  text-transform:uppercase;margin:0 0 5px;line-height:1;">
+          One-Time Password
+        </p>
+        <h1 class="h1"
+          style="font-family:'Bebas Neue','Arial Black',Arial,sans-serif;
+                 font-size:28px;letter-spacing:1.5px;color:#111827;
+                 margin:0 0 10px;line-height:1.05;">
+          Your Sign-In Code
+        </h1>
+        <p style="font-family:'DM Sans',Arial,sans-serif;font-size:13px;
+                  color:#4b5563;margin:0 0 24px;line-height:1.7;">
+          Login requested for
+          <strong style="color:#111827;">${toEmail}</strong>.
+          Valid for <strong style="color:#111827;">10&nbsp;minutes</strong>.
+        </p>
+
+        <!-- ══ OTP BLOCK — single display, tap-to-select ══ -->
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+          style="margin:0 0 22px;">
+          <tr>
+            <td style="background:#f7f9fc;
+                 border:1.5px solid #d4dde9;
+                 border-radius:16px;
+                 overflow:hidden;
+                 padding:0;">
+
+              <!-- Top accent stripe inside box -->
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td style="height:3px;font-size:0;line-height:0;
+                       background:linear-gradient(90deg,#ff4d00,#ffb800);">&nbsp;</td>
+                </tr>
+              </table>
+
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td style="padding:28px 24px 24px;text-align:center;">
+
+                    <!-- Label -->
+                    <p style="font-family:'JetBrains Mono','Courier New',monospace;
+                              font-size:9px;letter-spacing:2.5px;color:#94a3b8;
+                              text-transform:uppercase;margin:0 0 20px;line-height:1;">
+                      Verification Code
+                    </p>
+
+                    <!-- ── THE ONE OTP — tap-to-select dashed box ── -->
+                    <table cellpadding="0" cellspacing="0" role="presentation"
+                      style="margin:0 auto 14px;">
+                      <tr>
+                        <td class="tap-code"
+                          style="background:#ffffff;
+                                 border:2px dashed #ff4d00;
+                                 border-radius:14px;
+                                 padding:16px 28px 16px 20px;
+                                 -webkit-user-select:all;
+                                 -moz-user-select:all;
+                                 -ms-user-select:all;
+                                 user-select:all;
+                                 cursor:pointer;">
+                          <span class="otp-num"
+                            style="font-family:'JetBrains Mono','Courier New',monospace;
+                                   font-size:44px;
+                                   font-weight:700;
+                                   letter-spacing:18px;
+                                   color:#111827;
+                                   line-height:1;
+                                   /* letter-spacing pushes right — offset with padding-left */
+                                   padding-left:18px;
+                                   display:block;
+                                   -webkit-user-select:all;
+                                   -moz-user-select:all;
+                                   user-select:all;">
+                            ${otp}
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Tap hint -->
+                    <p style="font-family:'DM Sans',Arial,sans-serif;
+                              font-size:12px;color:#94a3b8;
+                              margin:0 0 20px;line-height:1.4;">
+                      👆 Tap to select &amp; copy your code
+                    </p>
+
+                    <!-- Divider glow -->
+                    <table cellpadding="0" cellspacing="0" role="presentation"
+                      style="margin:0 auto 20px;">
+                      <tr>
+                        <td style="width:80px;height:2px;font-size:0;line-height:0;
+                             background:linear-gradient(90deg,transparent,#ff4d00,transparent);
+                             border-radius:2px;">&nbsp;</td>
+                      </tr>
+                    </table>
+
+                    <!-- Expire badge -->
+                    <table cellpadding="0" cellspacing="0" role="presentation"
+                      style="margin:0 auto;">
+                      <tr>
+                        <td style="background:rgba(255,184,0,0.09);
+                             border:1px solid rgba(255,184,0,0.30);
+                             border-radius:100px;
+                             padding:7px 18px;
+                             white-space:nowrap;">
+                          <span style="font-family:'JetBrains Mono','Courier New',monospace;
+                                font-size:10px;color:#92400e;letter-spacing:0.3px;">
+                            &#9201;&nbsp; Expires in 10 minutes
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+        <!-- DIVIDER -->
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+          style="margin:0 0 20px;">
+          <tr>
+            <td style="height:1px;background:#e5eaf2;font-size:0;line-height:0;">&nbsp;</td>
+          </tr>
+        </table>
+
+        <!-- INFO CARDS -->
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+          style="margin:0 0 18px;">
+          <tr>
+            <td style="width:48%;vertical-align:top;
+                 background:#f7f9fc;border:1px solid #d4dde9;
+                 border-radius:12px;padding:14px 16px;">
+              <p style="font-family:'JetBrains Mono','Courier New',monospace;
+                        font-size:8px;letter-spacing:1.5px;color:#94a3b8;
+                        text-transform:uppercase;margin:0 0 5px;">Security</p>
+              <p style="font-family:'DM Sans',Arial,sans-serif;font-size:13px;
+                        font-weight:700;color:#111827;margin:0 0 3px;">Single-Use Only</p>
+              <p style="font-family:'DM Sans',Arial,sans-serif;font-size:12px;
+                        color:#64748b;margin:0;line-height:1.6;">
+                Expires after use or 10&nbsp;min.
+              </p>
+            </td>
+            <td style="width:10px;padding:0;"></td>
+            <td class="ic2" style="width:48%;vertical-align:top;
+                 background:#f7f9fc;border:1px solid #d4dde9;
+                 border-radius:12px;padding:14px 16px;">
+              <p style="font-family:'JetBrains Mono','Courier New',monospace;
+                        font-size:8px;letter-spacing:1.5px;color:#94a3b8;
+                        text-transform:uppercase;margin:0 0 5px;">No Password</p>
+              <p style="font-family:'DM Sans',Arial,sans-serif;font-size:13px;
+                        font-weight:700;color:#111827;margin:0 0 3px;">Passwordless Auth</p>
+              <p style="font-family:'DM Sans',Arial,sans-serif;font-size:12px;
+                        color:#64748b;margin:0;line-height:1.6;">
+                Brevo&nbsp;SMTP&nbsp;+&nbsp;Supabase.
+              </p>
+            </td>
+          </tr>
+        </table>
+
+        <!-- SECURITY NOTICE -->
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+          style="background:#fef2f2;border:1px solid rgba(220,38,38,0.16);
+                 border-radius:12px;overflow:hidden;">
+          <tr>
+            <td style="height:3px;background:#dc2626;font-size:0;line-height:0;">&nbsp;</td>
+          </tr>
+          <tr>
+            <td style="padding:14px 18px;">
+              <p style="font-family:'JetBrains Mono','Courier New',monospace;
+                        font-size:8px;letter-spacing:1.5px;color:#dc2626;
+                        text-transform:uppercase;font-weight:700;margin:0 0 6px;">
+                Security Notice
+              </p>
+              <p style="font-family:'DM Sans',Arial,sans-serif;font-size:13px;
+                        color:#374151;line-height:1.75;margin:0;">
+                <strong style="color:#111827;">Never share this code.</strong>
+                CodeCraft will never ask for it via phone, chat, or email.
+                Didn't request this? Ignore this email &#8212; your account is safe.
+              </p>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+
+    <!-- ══ FOOTER ══ -->
+    <tr>
+      <td class="ftr"
+        style="padding:16px 32px;background:#f7f9fc;border-top:1px solid #d4dde9;">
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+          <tr>
+            <td style="vertical-align:middle;">
+              <p style="font-family:'Bebas Neue','Arial Black',Arial,sans-serif;
+                        font-size:13px;letter-spacing:2px;color:#94a3b8;margin:0 0 3px;">
+                Code<span style="color:#ff4d00;">Craft</span>
+              </p>
+              <p style="font-family:'JetBrains Mono','Courier New',monospace;
+                        font-size:8px;color:#b0bfcf;margin:0;line-height:1.9;">
+                &copy; ${year} CodeCraft Systems.<br>
+                Brevo&nbsp;SMTP &middot; Supabase&nbsp;Auth
+              </p>
+            </td>
+            <td style="vertical-align:middle;text-align:right;">
+              <table cellpadding="0" cellspacing="0" role="presentation"
+                style="margin-left:auto;">
+                <tr>
+                  <td style="background:rgba(255,184,0,0.08);
+                       border:1px solid rgba(255,184,0,0.22);
+                       border-radius:100px;padding:3px 10px;white-space:nowrap;">
+                    <span style="font-family:'JetBrains Mono','Courier New',monospace;
+                          font-size:8px;color:#92400e;">Brevo</span>
+                  </td>
+                  <td style="width:5px;padding:0;"></td>
+                  <td style="background:rgba(22,163,74,0.07);
+                       border:1px solid rgba(22,163,74,0.22);
+                       border-radius:100px;padding:3px 10px;white-space:nowrap;">
+                    <span style="font-family:'JetBrains Mono','Courier New',monospace;
+                          font-size:8px;color:#15803d;">Supabase</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+  </table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>`;
+
+  /* PLAIN TEXT */
+  const bar = '─'.repeat(36);
+  const textContent =
+`CodeCraft Systems — Login Code
+${bar}
+
+Your sign-in code:
+
+  ${otp}
+
+${bar}
+Expires : 10 minutes
+Account : ${toEmail}
+${bar}
+Never share this code with anyone.
+Didn't request this? Ignore this email.
+
+— CodeCraft Systems
+  ${year} · Brevo SMTP + Supabase Auth`;
+
   const payload = {
-    sender: { name: CFG.SENDER_NAME, email: CFG.SENDER_EMAIL },
-    to: [{ email: toEmail }],
-    subject: otp + " is your CodeCraft login code",
-    htmlContent: `
-      <div style="font-family:Arial;padding:20px">
-        <h2>CodeCraft Systems</h2>
-        <p>Your login OTP:</p>
-        <h1 style="letter-spacing:8px;color:#ff4d00">${otp}</h1>
-        <p>This code expires in 10 minutes.</p>
-      </div>
-    `
+    sender:  { name: CFG.SENDER_NAME, email: CFG.SENDER_EMAIL },
+    to:      [{ email: toEmail }],
+    subject: `${otp} \u2014 Your CodeCraft Sign-In Code`,
+    htmlContent,
+    textContent
   };
-  const res = await fetch("https://api.brevo.com/v3/smtp/email",{
-    method:"POST",
-    headers:{ "accept":"application/json","api-key":CFG.BREVO_KEY,"content-type":"application/json" },
-    body:JSON.stringify(payload)
+
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method:  'POST',
+    headers: {
+      'accept':       'application/json',
+      'api-key':      CFG.BREVO_KEY,
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(payload)
   });
+
   const data = await res.json();
-  if(!res.ok){ console.error("Brevo error:",data); throw new Error(data.message||"Email send failed"); }
+  if (!res.ok) {
+    console.error('Brevo error:', data);
+    throw new Error(data.message || 'Email send failed');
+  }
   return true;
 }
 
