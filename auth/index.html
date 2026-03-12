@@ -1021,20 +1021,52 @@ var OtpFlow = {
     try{
       await checkOtp(_currentEmail, code);
  // get user from developers table
-var res = await sb
+ 
+
+ var res = await sb
   .from('developers')
   .select('user_id,email')
   .eq('email', _currentEmail)
-  .single();
+  .maybeSingle();
+
+var user;
 
 if(!res.data){
-  throw new Error("User not found.");
-}
 
-var user = {
-  id: res.data.user_id,
-  email: res.data.email
-};
+  var name = _currentEmail.split('@')[0];
+  var slug = createSlug(name,_currentEmail);
+
+  const insert = await sb
+    .from('developers')
+    .insert({
+      user_id: crypto.randomUUID(),
+      email: _currentEmail,
+      name: name,
+      slug: slug,
+      title: "Developer",
+      skills: "",
+      experience_years: 0
+    })
+    .select()
+    .single();
+
+  if(insert.error){
+    throw new Error(insert.error.message);
+  }
+
+  user = {
+    id: insert.data.user_id,
+    email: insert.data.email
+  };
+
+}else{
+
+  user = {
+    id: res.data.user_id,
+    email: res.data.email
+  };
+
+}
 
 Session.set(user);
       clearInterval(_cdTimer);
@@ -1112,6 +1144,18 @@ document.getElementById('diffUserBtn').onclick    = function(){ OtpFlow.logout()
   var sess = Session.get();
   if(sess && sess.email){ _currentEmail = sess.email; OtpFlow.showLoggedIn(sess); }
 })();
+
+function createSlug(name,email){
+
+  let base = name || email.split('@')[0];
+
+  return base
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'');
+
+}
+
 </script>
 <script src="../assets/ui-polish.js"></script>
 </body>
