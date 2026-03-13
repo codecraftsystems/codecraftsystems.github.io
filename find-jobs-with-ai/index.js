@@ -544,7 +544,7 @@ window.isJobButtonsCooldownActive = function () {
   return Date.now() < cooldownEndsAt;
 };
 
-window.startJobButtonsCooldown = function (seconds = 60) {
+window.startJobButtonsCooldown = function (seconds = 180) {
   cooldownEndsAt = Date.now() + (seconds * 1000);
   if (cooldownInterval) clearInterval(cooldownInterval);
 
@@ -576,7 +576,7 @@ window.startJobButtonsCooldown = function (seconds = 60) {
 
 async function runJobSearch() {
   if (window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive()) {
-    toast('tw', 'Please wait', 'Cooldown is active for 1 minute after empty results.', 3000);
+    toast('tw', 'Please wait', 'Cooldown is active for 3 minutes.', 3000);
     return;
   }
    lockJobButtons("findJobBtn");
@@ -592,7 +592,7 @@ async function runJobSearch() {
   }
 
   searchRunning = true;
-  if (window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
+  if (window.startJobButtonsCooldown) window.startJobButtonsCooldown(180);
   setStatus('info', 'AI is working…', 'Analyzing your profile and scanning the job market');
 
   document.getElementById('resultsSection').classList.remove('on');

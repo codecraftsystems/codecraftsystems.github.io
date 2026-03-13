@@ -256,7 +256,7 @@ return data.jobs || [];
 
 async function runJsearchJobs(){
 if(window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive()){
-  toast('tw','Please wait','Cooldown is active for 1 minute after empty results.',3000);
+  toast('tw','Please wait','Cooldown is active for 3 minutes.',3000);
   return;
 }
 lockJobButtons("smartJobBtn");
@@ -271,7 +271,7 @@ if(step3) step3.innerHTML=`<span class="ls-ico">3</span> Fetching jobs from job 
 if(jsearchRunning) return;
 
 jsearchRunning=true;
-if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
+if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(180);
 
 const btn=document.getElementById("smartJobBtn");
 
