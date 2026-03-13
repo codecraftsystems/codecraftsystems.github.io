@@ -264,25 +264,28 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(2
 
 <!-- Mobile menu -->
 <div class="mob-menu" id="mob">
-  <button class="mob-close" onclick="closeMob()">✕</button>
-  <a href="../" onclick="closeMob()">Home</a>
+    <a href="../" onclick="closeMob()">Home</a>
   <a href="../#services" onclick="closeMob()">Services</a>
-  <a href="./" onclick="closeMob()" >Developers</a>
-  <a href="../developers-open-to-work/" onclick="closeMob()">Open to Work</a>
-  <a href="../submit-profile/" onclick="closeMob()">Add Profile</a>
+  <a href="../blog/" onclick="closeMob()">Blog</a>
+  <a href="../developers/" onclick="closeMob()">Developers</a>
+  <a href="../jobs/" onclick="closeMob()">Job Board</a>
   <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMob()">Find Jobs with AI</a>
-  <a href="../#contact" onclick="closeMob()">Contact</a>
+  <a href="../submit-profile/" data-nav-add-profile onclick="closeMob()">Add Profile</a>
+  <a href="#" data-nav-view-profile onclick="closeMob()" style="display:none">View Profile</a>
 </div>
 
 <!-- Nav -->
 <nav class="nav" id="nav">
   <a href="../" class="nav-logo">Code<em>Craft</em></a>
-  <ul class="nav-links">
+      <ul class="nav-links">
     <li><a href="../">Home</a></li>
-    <li><a href="./">Developers</a></li>
-    <li><a href="../developers-open-to-work/">Open to Work</a></li>
+    <li><a href="../#services">Services</a></li>
+    <li><a href="../blog/">Blog</a></li>
+    <li><a href="../developers/">Developers</a></li>
+    <li><a href="../jobs/">Job Board</a></li>
     <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
-    <li><a href="../submit-profile/" class="btn-nav">Add Profile</a></li>
+    <li><a href="../submit-profile/" class="btn-nav" data-nav-add-profile>Add Profile</a></li>
+    <li style="display:none"><a href="#" class="btn-nav" data-nav-view-profile>View Profile</a></li>
   </ul>
   <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
@@ -337,7 +340,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(2
 <main class="main">
 
   <!-- CTA banner -->
-  <div class="cta-banner">
+  <div class="cta-banner" data-hide-when-logged>
     <div class="cta-banner-text">
       <h3>ARE YOU A DEVELOPER?</h3>
       <p>Add your profile for free — get discovered by employers in UK, USA & globally.</p>
@@ -372,11 +375,16 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(2
   <div class="footer-inner">
     <div class="footer-logo">Code<em>Craft</em></div>
     <p class="footer-copy">© <span id="yr"></span> CodeCraft Studio · Sonu Sahani</p>
-    <ul class="footer-links">
+            <ul class="footer-links">
       <li><a href="../">Home</a></li>
-      <li><a href="./">Developers</a></li>
+      <li><a href="../#services">Services</a></li>
+      <li><a href="../blog/">Blog</a></li>
+      <li><a href="../developers/">Developers</a></li>
+      <li><a href="../developers-open-to-work/">Open to Work</a></li>
       <li><a href="../submit-profile/">Add Profile</a></li>
-      <li><a href="../#contact">Contact</a></li>
+      <li><a href="../jobs/">Job Board</a></li>
+      <li><a href="../find-jobs-with-ai/">Find Jobs with AI</a></li>
+      <li><a href="../#contact">Hire Us</a></li>
     </ul>
   </div>
 </footer>
@@ -399,6 +407,8 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 
 /* ══ STATE ══ */
 let allDevs=[],filteredDevs=[],currentFilter='all',currentSort='otw',searchTerm='',pageSize=12,pageShown=12;
+let dbOffset=0,dbTotal=0,dbHasMore=true;
+const DB_PAGE_SIZE=24;
 
 /* ══ SKILL TAG COLOR ══ */
 function skillClass(s){
@@ -502,10 +512,17 @@ function renderGrid(){
   }
   count.innerHTML=`<span>${filteredDevs.length}</span> developer${filteredDevs.length!==1?'s':''} found`;
   grid.innerHTML=shown.map((d,i)=>renderCard(d,i)).join('');
-  lmw.style.display=filteredDevs.length>pageShown?'block':'none';
+  lmw.style.display=dbHasMore?'block':'none';
 }
 
-function loadMore(){pageShown+=pageSize;renderGrid()}
+async function loadMore(){
+  if(dbHasMore){
+    await loadDevs(false);
+    return;
+  }
+  pageShown+=pageSize;
+  renderGrid();
+}
 
 /* ══ FILTER CLICK ══ */
 function setFilter(f,el){
@@ -514,19 +531,19 @@ function setFilter(f,el){
     p.classList.remove('on');
     if(p.dataset.filter===f) p.classList.add('on');
   });
-  applyFilters();
+  resetAndReload();
 }
 
 /* ══ SORT ══ */
-function applySort(){currentSort=document.getElementById('sortSel').value;applyFilters()}
+function applySort(){currentSort=document.getElementById('sortSel').value;resetAndReload()}
 
 /* ══ SEARCH ══ */
 document.getElementById('searchInput').addEventListener('input',function(){
   searchTerm=this.value.trim();
   document.getElementById('searchClear').style.display=searchTerm?'block':'none';
-  applyFilters();
+  resetAndReload();
 });
-function clearSearch(){searchTerm='';document.getElementById('searchInput').value='';document.getElementById('searchClear').style.display='none';applyFilters()}
+function clearSearch(){searchTerm='';document.getElementById('searchInput').value='';document.getElementById('searchClear').style.display='none';resetAndReload()}
 
 /* ══ LOAD DATA - USING DEV DIRECTORY HELPERS ══ */
 async function loadDevs(){
@@ -546,12 +563,20 @@ async function loadDevs(){
       throw new Error('Could not create Supabase client');
     }
 
-    const { data, error } = await sb
+    let q = sb
       .from('developers')
-      .select('id,name,slug,title,skills,experience_years,profile_image,open_to_work,location,created_at')
-      .eq('profile_public', true)
-      .order('open_to_work', { ascending: false })
-      .order('created_at', { ascending: false });
+      .select('id,name,slug,title,skills,experience_years,profile_image,open_to_work,location,created_at', { count:'exact' })
+      .eq('profile_public', true);
+
+    if(currentFilter==='open') q=q.eq('open_to_work', true);
+    else if(currentFilter!=='all') q=q.ilike('skills', `%${currentFilter}%`);
+    if(searchTerm) q=q.or(`name.ilike.%${searchTerm}%,title.ilike.%${searchTerm}%,skills.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%`);
+
+    if(currentSort==='exp') q=q.order('experience_years', { ascending:false, nullsFirst:false });
+    else if(currentSort==='name') q=q.order('name', { ascending:true });
+    else q=q.order('created_at', { ascending:false });
+
+    const { data, error, count } = await q.range(dbOffset, dbOffset + DB_PAGE_SIZE - 1);
     
     if(error) throw error;
     
@@ -564,9 +589,15 @@ async function loadDevs(){
       return;
     }
     
-    allDevs=data;
-    updateStats(data);
-    applyFilters();
+    if(dbOffset===0) allDevs=[];
+    allDevs = allDevs.concat(data||[]);
+    dbOffset = allDevs.length;
+    dbTotal = Number(count||allDevs.length);
+    dbHasMore = dbOffset < dbTotal;
+    updateStats(allDevs);
+    filteredDevs=[...allDevs];
+    pageShown=allDevs.length;
+    renderGrid();
     
   }catch(e){
     console.error('Failed to load developers:', e);
@@ -578,6 +609,11 @@ async function loadDevs(){
   }
 }
 
+function resetAndReload(){
+  dbOffset=0;dbTotal=0;dbHasMore=true;
+  loadDevs(true);
+}
+
 function updateStats(data){
   document.getElementById('stat-total').textContent=data.length;
   document.getElementById('stat-otw').textContent=data.filter(d=>d.open_to_work).length;
@@ -586,7 +622,10 @@ function updateStats(data){
 }
 
 // Initialize
-loadDevs();
+if(window.devDirectory && typeof devDirectory.applyTalentNav==='function'){
+  devDirectory.applyTalentNav({profilePathPrefix:'../developer/?slug='});
+}
+loadDevs(true);
 </script>
 </body>
 </html>

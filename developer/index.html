@@ -514,6 +514,10 @@ footer{
   .qs-grid{grid-template-columns:1fr 1fr}
   .flinks{gap:9px}
 }
+
+  .nav-links a.nav-feature{color:var(--accent)!important;border:1px solid rgba(255,77,0,.35);border-radius:999px;padding:7px 18px;background:rgba(255,77,0,.08)}
+  .nav-links a.nav-feature::after{display:none!important}
+  .mobile-menu a.nav-feature,.mob a.nav-feature,.mob-menu a.nav-feature{color:var(--accent);border:1px solid rgba(255,77,0,.35);border-radius:999px;padding:10px 26px;background:rgba(255,77,0,.08)}
 </style>
 </head>
 <body>
@@ -523,22 +527,26 @@ footer{
 
 <!-- Mobile menu -->
 <div class="mob" id="mob">
-  <button class="mob-x" onclick="closeMob()">✕</button>
-  <a href="https://codecraftsystems.github.io/" onclick="closeMob()">Home</a>
-  <a href="../developers/" onclick="closeMob()">All Developers</a>
-  <a href="../developers-open-to-work/" onclick="closeMob()">Open to Work</a>
+  <a href="../" onclick="closeMob()">Home</a>
+  <a href="../#services" onclick="closeMob()">Services</a>
+  <a href="../blog/" onclick="closeMob()">Blog</a>
+  <a href="../developers/" onclick="closeMob()">Developers</a>
+  <a href="../jobs/" onclick="closeMob()">Job Board</a>
+  <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMob()">Find Jobs with AI</a>
   <a href="../submit-profile/" onclick="closeMob()">Add Profile</a>
-  <a href="https://codecraftsystems.github.io/#contact" onclick="closeMob()">Contact</a>
 </div>
 
 <!-- Nav -->
 <nav class="nav" id="nav">
-  <a href="https://codecraftsystems.github.io/" class="nav-logo">Code<b>Craft</b></a>
-  <ul class="nav-links">
-    <li><a href="https://codecraftsystems.github.io/">Home</a></li>
-    <li><a href="../developers/">← Developers</a></li>
-    <li><a href="../developers-open-to-work/">Open to Work</a></li>
-    <li><a href="../submit-profile/" class="nav-cta">Add Profile</a></li>
+  <a href="../" class="nav-logo">Code<b>Craft</b></a>
+      <ul class="nav-links">
+    <li><a href="../">Home</a></li>
+    <li><a href="../#services">Services</a></li>
+    <li><a href="../blog/">Blog</a></li>
+    <li><a href="../developers/">Developers</a></li>
+    <li><a href="../jobs/">Job Board</a></li>
+    <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
+    <li><a href="../submit-profile/" class="btn-nav">Add Profile</a></li>
   </ul>
   <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -552,11 +560,16 @@ footer{
   <div class="fi">
     <div class="fl">Code<b>Craft</b></div>
     <p class="fc">© <span id="yr"></span> CodeCraft Systems · Laravel &amp; Vue.js Developer Network</p>
-    <ul class="flinks">
-      <li><a href="../developers/">All Developers</a></li>
+        <ul class="flinks">
+      <li><a href="../">Home</a></li>
+      <li><a href="../#services">Services</a></li>
+      <li><a href="../blog/">Blog</a></li>
+      <li><a href="../developers/">Developers</a></li>
       <li><a href="../developers-open-to-work/">Open to Work</a></li>
       <li><a href="../submit-profile/">Add Profile</a></li>
-      <li><a href="https://codecraftsystems.github.io/#contact">Contact</a></li>
+      <li><a href="../jobs/">Job Board</a></li>
+      <li><a href="../find-jobs-with-ai/">Find Jobs with AI</a></li>
+      <li><a href="../#contact">Hire Us</a></li>
     </ul>
   </div>
 </footer>
