@@ -66,86 +66,65 @@ return {};
 
 
 /* ─────────── MARK JOB VIEWED ─────────── */
+ function markJobViewed(url) {
+  const viewed = getViewedJobs();
+  viewed[url] = Date.now();
+  localStorage.setItem("viewedJobs", JSON.stringify(viewed));
 
-function markJobViewed(url){
+  const card = document.querySelector(`[data-job="${url}"]`);
+  if (card) {
+    card.classList.add("jc-seen");
 
-const viewed = getViewedJobs();
+    // ← updated selectors for new HTML
+    const btns = card.querySelectorAll(".jc-btn");
+    if (btns[0]) btns[0].textContent = "👁 Viewed";
+    if (btns[1]) btns[1].textContent = "✓ Seen";
 
-viewed[url] = Date.now();
-
-localStorage.setItem("viewedJobs", JSON.stringify(viewed));
-
-/* update UI instantly */
-
-const card = document.querySelector(`[data-job="${url}"]`);
-
-if(card){
-
-card.classList.add("job-viewed");
-
-const viewBtn = card.querySelector(".view-btn");
-const applyBtn = card.querySelector(".apply-btn");
-
-if(viewBtn) viewBtn.innerHTML="👁 Viewed";
-if(applyBtn) applyBtn.innerHTML="✓ Seen";
-
+    // badge update
+    const badge = card.querySelector(".jc-viewed-badge");
+    if (badge) badge.textContent = "Viewed";
+  }
 }
 
-}
+ function createJsearchCard(job) {
+  const url = job.apply_link || job.url || "";
+  const viewed = getViewedJobs();
+  const isViewed = !!viewed[url];
+  const safeUrl = url.replace(/'/g, "\\'");
+  const displayUrl = url.replace(/^https?:\/\//i, "");
 
+  return `
+<div class="jc ${isViewed ? 'jc-seen' : ''}" data-job="${url}">
 
-/* ─────────── JOB CARD ─────────── */
+  <div class="jc-top">
+    <p class="jc-title">${job.title || 'Developer'}</p>
+    <span class="jc-viewed-badge">${isViewed ? 'Viewed' : 'New'}</span>
+  </div>
 
-function createJsearchCard(job){
+  <div class="jc-meta">
+    <span><span class="jc-meta-icon">🏢</span>${job.company || 'Unknown Company'}</span>
+    <span><span class="jc-meta-icon">📍</span>${job.location || 'Location not specified'}</span>
+    ${job.posted ? `<span><span class="jc-meta-icon">🕐</span>${job.posted}</span>` : ''}
+  </div>
 
-const url = job.apply_link || job.url || "";
+  ${url ? `<div class="jc-url">${displayUrl}</div>` : ''}
 
-const viewed = getViewedJobs();
+  <div class="jc-divider"></div>
 
-const isViewed = viewed[url];
+  <div class="jc-actions">
+    <a class="jc-btn ${isViewed ? 'seen' : ''}"
+       href="${url}" target="_blank"
+       onclick="markJobViewed('${safeUrl}')">
+      ${isViewed ? '👁 Viewed' : 'View Job'}
+    </a>
+    <a class="jc-btn primary ${isViewed ? 'seen' : ''}"
+       href="${url}" target="_blank"
+       onclick="markJobViewed('${safeUrl}')">
+      ${isViewed ? '✓ Seen' : '⚡ Apply Now'}
+    </a>
+  </div>
 
-return `
-<div class="job-card ${isViewed ? 'job-viewed':''}" data-job="${url}">
-
-<div class="job-role">${job.title || 'Developer'}</div>
-
-<div class="job-company">
-🏢 ${job.company || 'Unknown Company'}
-</div>
-
-<div class="job-location">
-📍 ${job.location || 'Location not specified'}
-</div>
-
-<div class="job-posted">
-⏱ ${job.posted || ''}
-</div>
-
-<div class="job-url">
-${url}
-</div>
-
-<div class="job-actions">
-
-<a class="job-link-btn view-btn"
-href="${url}"
-target="_blank"
-onclick="markJobViewed('${url}')">
-${isViewed ? "👁 Viewed" : "View Job"}
-</a>
-
-<a class="job-link-btn apply apply-btn"
-href="${url}"
-target="_blank"
-onclick="markJobViewed('${url}')">
-${isViewed ? "✓ Seen" : "⚡ Apply Now"}
-</a>
-
-</div>
-
-</div>
-`;
-
+</div>`;
 }
 
 
@@ -161,7 +140,7 @@ let country = "IN";
 const prompt = `Generate ONE short job search keyword phrase.
 
 Rules:
-- Maximum 3 words
+- Maximum (2 - 4) words
 - Focus on role + main skill
 - Slightly vary wording each time
 - Do NOT repeat previous keyword: "${lastKeyword}"
@@ -340,16 +319,26 @@ return;
 
 }
 
-/* SHOW JOBS */
+/* SHOW JOBS */ 
 
-directSection.style.display="block";
+directSection.style.display = "block";
 
-jobs.forEach(job=>{
-listDirect.innerHTML += createJsearchCard(job);
+const sorted = jobs.sort((a, b) => {
+  const parseAge = s => {
+    if (!s) return 9999;
+    const n = parseInt(s);
+    if (s.includes('hour'))  return n / 24;
+    if (s.includes('day'))   return n;
+    if (s.includes('week'))  return n * 7;
+    if (s.includes('month')) return n * 30;
+    return 9999;
+  };
+  return parseAge(a.posted) - parseAge(b.posted);
 });
 
-document.getElementById("aiUrlCount").innerText =
-`${jobs.length} jobs found`;
+listDirect.innerHTML = sorted.map(job => createJsearchCard(job)).join('');
+
+document.getElementById("aiUrlCount").innerText = `${jobs.length} jobs found`;
 
 }
 catch(e){
