@@ -515,11 +515,12 @@ footer{
 .fl{font-family:var(--font-d);font-size:1.15rem;letter-spacing:2px;color:var(--white)}
 .fl b{color:var(--accent);font-weight:400}
 .fc{color:var(--m2);font-size:.7rem}
-.flinks{display:flex;gap:clamp(12px,2vw,20px);list-style:none}
+.flinks{display:flex;gap:clamp(12px,2vw,20px);list-style:none;flex-wrap:wrap}
 .flinks a{color:var(--m2);text-decoration:none;font-size:.7rem;transition:color var(--ease)}
 .flinks a:hover{color:var(--white)}
 
 /* ── RESPONSIVE ── */
+@media(max-width:520px){footer{padding:16px 12px}.fi{flex-direction:column;align-items:center;text-align:center;gap:8px}.flinks{justify-content:center;gap:10px}.flinks a,.fc{font-size:.72rem}}
 @media(max-width:440px){
   .card{border-radius:var(--radius-sm)}
   .otp-inp{letter-spacing:8px;font-size:1.45rem}
