@@ -347,45 +347,90 @@
 
   .hero-right {
     animation: fadeUp 0.6s 0.4s ease both;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
-  .hero-code-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+  /* ── GLOBE CARD ── */
+  .globe-card {
+    background: #060810;
+    border: 1px solid rgba(255,77,0,0.25);
+    border-radius: 16px;
     overflow: hidden;
+    position: relative;
+    height: 400px;
+    box-shadow: 0 0 60px rgba(255,77,0,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
   }
-  .code-topbar {
-    background: var(--dark);
-    padding: 12px 16px;
+  .globe-topbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    padding: 14px 18px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(6,8,16,0.98) 0%, rgba(6,8,16,0.6) 60%, transparent 100%);
+  }
+  .globe-topbar-left { display: flex; align-items: center; gap: 10px; }
+  .globe-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #22c55e; box-shadow: 0 0 10px #22c55e, 0 0 20px #22c55e44;
+    animation: pulse 2s infinite;
+  }
+  .globe-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .globe-badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--accent);
+    border: 1px solid rgba(255,77,0,0.35);
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: rgba(255,77,0,0.1);
+    letter-spacing: 1px;
+  }
+  #globeCanvas {
+    width: 100%; height: 100%;
+    display: block;
+    cursor: grab;
+  }
+  #globeCanvas:active { cursor: grabbing; }
+  .globe-countries {
+    position: absolute;
+    bottom: 14px; left: 0; right: 0;
+    display: flex;
+    justify-content: center;
     gap: 8px;
-    border-bottom: 1px solid var(--border);
+    z-index: 10;
+    padding: 0 12px;
   }
-  .code-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .code-dot.r { background: #ff5f57; }
-  .code-dot.y { background: #febc2e; }
-  .code-dot.g { background: #28c840; }
-  .code-filename {
+  .globe-country {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-left: 8px;
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.55);
+    background: rgba(6,8,16,0.75);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 4px 10px;
+    border-radius: 100px;
+    backdrop-filter: blur(8px);
+    letter-spacing: 0.5px;
+    transition: all 0.25s;
   }
-  .code-body {
-    padding: 24px;
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    line-height: 1.8;
-    color: #2c3e50;
-  }
-  .code-line { display: block; }
-  .code-key { color: #6b46c1; }
-  .code-str { color: #2f855a; }
-  .code-fn { color: #2b6cb0; }
-  .code-comment { color: #718096; font-style: italic; }
-  .code-num { color: var(--accent2); }
+  .globe-country:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+  .globe-country-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .globe-country-dot.usa { background: #ff4d00; box-shadow: 0 0 6px #ff4d00; }
+  .globe-country-dot.uk  { background: #60a5fa; box-shadow: 0 0 6px #60a5fa; }
+  .globe-country-dot.de  { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+  .globe-country-dot.in  { background: #34d399; box-shadow: 0 0 6px #34d399; }
 
   .hero-stats {
     display: grid;
@@ -1312,6 +1357,9 @@
     .hero-h1 { font-size: 3rem; }
     .services-grid { grid-template-columns: 1fr; }
     .about-skills { grid-template-columns: 1fr; }
+    .globe-card { height: 280px; }
+    .globe-countries { gap: 6px; }
+    .globe-country { font-size: 0.58rem; padding: 2px 6px; }
 
     /* Footer mobile */
     footer {
@@ -1389,25 +1437,24 @@
       </div>
     </div>
     <div class="hero-right">
-      <div class="hero-code-card">
-        <div class="code-topbar">
-          <div class="code-dot r"></div>
-          <div class="code-dot y"></div>
-          <div class="code-dot g"></div>
-          <span class="code-filename">api.php · Laravel</span>
+      <!-- 3D GLOBE -->
+      <div class="globe-card">
+        <div class="globe-topbar">
+          <div class="globe-topbar-left">
+            <span class="globe-dot"></span>
+            <span class="globe-title">GLOBAL CLIENTS</span>
+          </div>
+          <span class="globe-badge">LIVE</span>
         </div>
-        <div class="code-body">
-<span class="code-line"><span class="code-comment">// Real-time Chat API — Pusher + Laravel</span></span>
-<span class="code-line"><span class="code-key">Route</span>::<span class="code-fn">post</span>(<span class="code-str">'/send-message'</span>, <span class="code-key">fn</span>() => {</span>
-<span class="code-line">  <span class="code-key">$msg</span> = Message::<span class="code-fn">create</span>($request->all());</span>
-<span class="code-line">  <span class="code-fn">broadcast</span>(<span class="code-key">new</span> <span class="code-fn">MessageSent</span>($msg));</span>
-<span class="code-line">  <span class="code-key">return</span> <span class="code-fn">response</span>()->json([</span>
-<span class="code-line">    <span class="code-str">'status'</span> => <span class="code-str">'sent'</span>,</span>
-<span class="code-line">    <span class="code-str">'latency'</span> => <span class="code-num">12</span> . <span class="code-str">'ms'</span></span>
-<span class="code-line">  ]);</span>
-<span class="code-line">});</span>
+        <canvas id="globeCanvas"></canvas>
+        <div class="globe-countries">
+          <span class="globe-country"><span class="globe-country-dot usa"></span>USA</span>
+          <span class="globe-country"><span class="globe-country-dot uk"></span>UK</span>
+          <span class="globe-country"><span class="globe-country-dot de"></span>Germany</span>
+          <span class="globe-country"><span class="globe-country-dot in"></span>India</span>
         </div>
       </div>
+      <!-- STATS -->
       <div class="hero-stats">
         <div class="stat-item">
           <div class="stat-num">6+</div>
@@ -1418,7 +1465,7 @@
           <div class="stat-label">Projects</div>
         </div>
         <div class="stat-item">
-          <div class="stat-num">3</div>
+          <div class="stat-num">4</div>
           <div class="stat-label">Countries</div>
         </div>
       </div>
@@ -1814,9 +1861,9 @@
         <h2 class="section-title">LET'S BUILD<br><span style="color:var(--accent)">TOGETHER</span></h2>
         <p style="color:var(--muted); font-size:0.95rem; line-height:1.7;">Tell us about your project and we'll get back to you within 24 hours. UK, USA, Australia, India — all welcome.</p>
         <div class="contact-info-items">
-          <a href="mailto:sonusahani086@gmail.com" class="contact-info-item">
+          <a href="/cdn-cgi/l/email-protection#3e4d51504b4d5f565f50570e06087e59535f5752105d5153" class="contact-info-item">
             <span class="contact-info-icon">✉️</span>
-            sonusahani086@gmail.com
+            <span class="__cf_email__" data-cfemail="51223e3f24223039303f3861696711363c30383d7f323e3c">[email&#160;protected]</span>
           </a>
           <a href="tel:+917897954794" class="contact-info-item">
             <span class="contact-info-icon">📱</span>
@@ -1906,7 +1953,7 @@
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   document.getElementById("year").textContent = new Date().getFullYear();
 
   document.getElementById('contactForm').addEventListener('submit', function() {
@@ -1940,6 +1987,416 @@
   });
 </script>
 
+<!-- ═══════════════════════════════════════════
+     GLOBE v2 — Cinematic dot-matrix Earth
+     Starfield · Continent dots · Glowing arcs
+     Particle trails · Mouse/Touch drag + inertia
+═══════════════════════════════════════════ -->
+<script>
+(function() {
+  const canvas = document.getElementById('globeCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  /* ══ CONFIG ══ */
+  const CFG = {
+    RADIUS_RATIO : 0.40,
+    DOT_R        : 1.1,
+    DOT_STEP     : 5.5,
+    AUTO_SPEED   : 0.0015,
+    INERTIA      : 0.88,
+    STARS        : 220,
+    ARC_STEPS    : 80,
+    TRAIL_LEN    : 14,
+  };
+
+  /* ══ PINS ══ */
+  const PINS = [
+    { name:'USA',     flag:'🇺🇸', lat: 39.5,  lon:-98.4,  col:'#ff4d00' },
+    { name:'UK',      flag:'🇬🇧', lat: 51.5,  lon: -0.1,  col:'#60a5fa' },
+    { name:'Germany', flag:'🇩🇪', lat: 51.2,  lon: 10.4,  col:'#fbbf24' },
+    { name:'India',   flag:'🇮🇳', lat: 22.0,  lon: 78.0,  col:'#34d399' },
+  ];
+
+  /* ══ ARC PAIRS — each has its own animated traveler offset ══ */
+  const ARCS = [
+    { a:0, b:3, offset:0.00 },
+    { a:1, b:3, offset:0.25 },
+    { a:2, b:3, offset:0.50 },
+    { a:0, b:1, offset:0.12 },
+    { a:1, b:2, offset:0.65 },
+  ];
+
+  /* ══ REAL APPROXIMATE CONTINENT DOTS (lat/lon cloud) ══ */
+  const LAND = buildLand();
+  function buildLand() {
+    const pts = [];
+    // North America
+    addRegion(pts, 25,72,  -120,-60, 180);
+    // South America
+    addRegion(pts, -55,12, -80,-34,  120);
+    // Europe
+    addRegion(pts, 36,70,  -10, 40,  110);
+    // Africa
+    addRegion(pts, -35,37, -18, 52,  160);
+    // Asia
+    addRegion(pts, 5, 75,  40, 145,  350);
+    // Australia
+    addRegion(pts, -40,-10, 114,155,  80);
+    // Greenland
+    addRegion(pts, 60, 84, -55,-18,   30);
+    return pts;
+  }
+  function addRegion(pts, latMin, latMax, lonMin, lonMax, n) {
+    for (let i = 0; i < n; i++) {
+      pts.push({
+        lat: latMin + Math.random()*(latMax-latMin),
+        lon: lonMin + Math.random()*(lonMax-lonMin),
+      });
+    }
+  }
+
+  /* ══ STATE ══ */
+  let W, H, R;
+  let rotY = 0.5, rotX = 0.28;
+  let dragging = false, lastX=0, lastY=0, velX=0, velY=0;
+  let stars = [];
+  let dotGrid = [];
+  let landXYZ = [];
+  let pinXYZ  = [];
+  let arcCache = [];  // precomputed arc paths per arc
+
+  /* ══ RESIZE ══ */
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = canvas.width  = rect.width  * window.devicePixelRatio;
+    H = canvas.height = rect.height * window.devicePixelRatio;
+    canvas.style.width  = rect.width  + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    const cW = rect.width, cH = rect.height;
+    W = cW; H = cH;
+    R = Math.min(W, H) * CFG.RADIUS_RATIO;
+    buildGeometry();
+    buildStars();
+  }
+
+  /* ══ GEOMETRY ══ */
+  function ll2xyz(lat, lon, r) {
+    const ph = (90-lat)*Math.PI/180;
+    const th = (lon+180)*Math.PI/180;
+    return { x: r*Math.sin(ph)*Math.cos(th), y: r*Math.cos(ph), z: r*Math.sin(ph)*Math.sin(th) };
+  }
+
+  function rot(p, ry, rx) {
+    let x =  p.x*Math.cos(ry) + p.z*Math.sin(ry);
+    let z = -p.x*Math.sin(ry) + p.z*Math.cos(ry);
+    let y = p.y;
+    let y2 = y*Math.cos(rx) - z*Math.sin(rx);
+    let z2 = y*Math.sin(rx) + z*Math.cos(rx);
+    return { x, y:y2, z:z2 };
+  }
+
+  function proj(p) { return { x:W/2+p.x, y:H/2-p.y, vis:p.z>-R*0.08 }; }
+
+  function slerp(p1, p2, t, lift) {
+    const dot = Math.min(1,Math.max(-1,(p1.x*p2.x+p1.y*p2.y+p1.z*p2.z)/(R*R)));
+    const om = Math.acos(dot);
+    let x,y,z;
+    if (Math.abs(om)<0.001){ x=p1.x;y=p1.y;z=p1.z; }
+    else {
+      const s=Math.sin(om);
+      x=(Math.sin((1-t)*om)/s)*p1.x+(Math.sin(t*om)/s)*p2.x;
+      y=(Math.sin((1-t)*om)/s)*p1.y+(Math.sin(t*om)/s)*p2.y;
+      z=(Math.sin((1-t)*om)/s)*p1.z+(Math.sin(t*om)/s)*p2.z;
+    }
+    const lf = 1 + lift * Math.sin(Math.PI*t);
+    return { x:x*lf, y:y*lf, z:z*lf };
+  }
+
+  function buildGeometry() {
+    // Grid dots
+    dotGrid = [];
+    const step = CFG.DOT_STEP;
+    for (let lat=-85; lat<=85; lat+=step) {
+      const rr = Math.cos(Math.abs(lat)*Math.PI/180);
+      const n  = Math.max(1, Math.floor(360*rr/step));
+      for (let i=0; i<n; i++) {
+        dotGrid.push(ll2xyz(lat, (i/n)*360-180, R));
+      }
+    }
+    // Land dots
+    landXYZ = LAND.map(p => ll2xyz(p.lat, p.lon, R * 1.001));
+    // Pin positions
+    pinXYZ = PINS.map(p => ll2xyz(p.lat, p.lon, R));
+    // Precompute arc points
+    arcCache = ARCS.map(arc => {
+      const p1 = pinXYZ[arc.a], p2 = pinXYZ[arc.b];
+      return Array.from({length: CFG.ARC_STEPS+1}, (_,i) => slerp(p1, p2, i/CFG.ARC_STEPS, 0.28));
+    });
+  }
+
+  function buildStars() {
+    stars = Array.from({length: CFG.STARS}, () => ({
+      x: Math.random()*W, y: Math.random()*H,
+      r: Math.random()*1.2+0.3,
+      a: Math.random()*0.6+0.1,
+      tw: Math.random()*Math.PI*2,
+    }));
+  }
+
+  /* ══ DRAW ══ */
+  function draw() {
+    const now = Date.now();
+    ctx.clearRect(0,0,W,H);
+
+    /* Stars */
+    for (const s of stars) {
+      s.tw += 0.012;
+      const a = s.a * (0.6 + 0.4*Math.sin(s.tw));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(200,210,255,${a})`;
+      ctx.fill();
+    }
+
+    /* Deep space atmosphere — outer halo */
+    const halo = ctx.createRadialGradient(W/2,H/2, R*0.7, W/2,H/2, R*1.35);
+    halo.addColorStop(0,   'rgba(255,77,0,0)');
+    halo.addColorStop(0.7, 'rgba(255,77,0,0.07)');
+    halo.addColorStop(1,   'rgba(20,40,100,0.12)');
+    ctx.beginPath(); ctx.arc(W/2,H/2, R*1.35,0,Math.PI*2);
+    ctx.fillStyle = halo; ctx.fill();
+
+    /* Globe shadow (dark side) */
+    ctx.save();
+    ctx.beginPath(); ctx.arc(W/2,H/2,R,0,Math.PI*2);
+    const shadowG = ctx.createRadialGradient(W/2-R*0.25, H/2-R*0.25, R*0.1, W/2+R*0.3, H/2+R*0.3, R*1.1);
+    shadowG.addColorStop(0, 'rgba(15,22,45,0.0)');
+    shadowG.addColorStop(1, 'rgba(0,0,10,0.72)');
+    ctx.fillStyle = shadowG;
+    ctx.fill();
+    ctx.restore();
+
+    /* Globe base */
+    ctx.beginPath(); ctx.arc(W/2,H/2,R,0,Math.PI*2);
+    ctx.fillStyle = '#07090f';
+    ctx.fill();
+
+    /* Globe rim glow */
+    ctx.beginPath(); ctx.arc(W/2,H/2,R,0,Math.PI*2);
+    ctx.strokeStyle = 'rgba(255,77,0,0.3)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(W/2,H/2,R+2,0,Math.PI*2);
+    ctx.strokeStyle = 'rgba(60,120,255,0.1)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    /* Latitude / longitude grid */
+    ctx.lineWidth = 0.4;
+    for (let lat=-60; lat<=60; lat+=30) {
+      ctx.beginPath(); let sv=false;
+      for (let lo=-180; lo<=180; lo+=2) {
+        const rp = rot(ll2xyz(lat,lo,R),rotY,rotX), pp=proj(rp);
+        if (!pp.vis){sv=false;continue;}
+        sv ? ctx.lineTo(pp.x,pp.y) : (ctx.moveTo(pp.x,pp.y),sv=true);
+      }
+      ctx.strokeStyle = lat===0 ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.03)';
+      ctx.stroke();
+    }
+    for (let lo=-180; lo<180; lo+=30) {
+      ctx.beginPath(); let sv=false;
+      for (let la=-88; la<=88; la+=3) {
+        const rp = rot(ll2xyz(la,lo,R),rotY,rotX), pp=proj(rp);
+        if (!pp.vis){sv=false;continue;}
+        sv ? ctx.lineTo(pp.x,pp.y) : (ctx.moveTo(pp.x,pp.y),sv=true);
+      }
+      ctx.strokeStyle = lo===0 ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.03)';
+      ctx.stroke();
+    }
+
+    /* Dot grid */
+    for (const d of dotGrid) {
+      const rp = rot(d, rotY, rotX), pp = proj(rp);
+      if (!pp.vis) continue;
+      const depth = (rp.z/R);
+      const alpha = 0.06 + 0.18*depth;
+      ctx.beginPath(); ctx.arc(pp.x,pp.y, CFG.DOT_R,0,Math.PI*2);
+      ctx.fillStyle = `rgba(80,120,220,${alpha})`;
+      ctx.fill();
+    }
+
+    /* Land dots — brighter, slightly greenish-blue */
+    for (const d of landXYZ) {
+      const rp = rot(d, rotY, rotX), pp = proj(rp);
+      if (!pp.vis) continue;
+      const depth = Math.max(0,(rp.z/R));
+      const alpha = 0.18 + 0.55*depth;
+      ctx.beginPath(); ctx.arc(pp.x,pp.y, CFG.DOT_R*1.3,0,Math.PI*2);
+      ctx.fillStyle = `rgba(90,180,255,${alpha})`;
+      ctx.fill();
+    }
+
+    /* ── ARCS ── */
+    const globalT = (now/1000)*0.18; // slow global phase
+    for (let ai=0; ai<ARCS.length; ai++) {
+      const arc = ARCS[ai];
+      const pts = arcCache[ai];
+      const colA = PINS[arc.a].col, colB = PINS[arc.b].col;
+
+      // Project all points once
+      const proj2d = pts.map(p => {
+        const rp = rot(p, rotY, rotX);
+        return { ...proj(rp), z: rp.z };
+      });
+
+      // Full arc — dim base line
+      ctx.beginPath(); let sv=false;
+      for (const pp of proj2d) {
+        if (!pp.vis){sv=false;continue;}
+        sv ? ctx.lineTo(pp.x,pp.y) : (ctx.moveTo(pp.x,pp.y),sv=true);
+      }
+      const first  = proj2d.find(p=>p.vis);
+      const last   = [...proj2d].reverse().find(p=>p.vis);
+      if (first && last) {
+        const gBase = ctx.createLinearGradient(first.x,first.y,last.x,last.y);
+        gBase.addColorStop(0, colA+'40');
+        gBase.addColorStop(0.5, '#ffffff18');
+        gBase.addColorStop(1, colB+'40');
+        ctx.strokeStyle = gBase;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+
+      // Bright glowing moving segment (trail)
+      const trav = ((globalT + arc.offset) % 1);
+      const trailEnd   = Math.floor(trav * CFG.ARC_STEPS);
+      const trailStart = Math.max(0, trailEnd - CFG.TRAIL_LEN);
+
+      ctx.beginPath(); sv=false;
+      for (let ti=trailStart; ti<=trailEnd; ti++) {
+        if (!proj2d[ti] || !proj2d[ti].vis){sv=false;continue;}
+        sv ? ctx.lineTo(proj2d[ti].x,proj2d[ti].y) : (ctx.moveTo(proj2d[ti].x,proj2d[ti].y),sv=true);
+      }
+      const trailAlpha = sv ? 1 : 0;
+      if (trailAlpha && proj2d[trailStart] && proj2d[trailEnd]) {
+        const gTrail = ctx.createLinearGradient(proj2d[trailStart].x,proj2d[trailStart].y,proj2d[trailEnd].x,proj2d[trailEnd].y);
+        gTrail.addColorStop(0, colA+'00');
+        gTrail.addColorStop(1, colA+'ff');
+        ctx.strokeStyle = gTrail;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      }
+
+      // Head particle
+      const headPt = proj2d[trailEnd];
+      if (headPt && headPt.vis) {
+        // Outer bloom
+        const bloom = ctx.createRadialGradient(headPt.x,headPt.y,0,headPt.x,headPt.y,10);
+        bloom.addColorStop(0, colA+'cc');
+        bloom.addColorStop(1, colA+'00');
+        ctx.beginPath(); ctx.arc(headPt.x,headPt.y,10,0,Math.PI*2);
+        ctx.fillStyle = bloom; ctx.fill();
+        // Core
+        ctx.beginPath(); ctx.arc(headPt.x,headPt.y,2.5,0,Math.PI*2);
+        ctx.fillStyle = '#fff'; ctx.fill();
+      }
+    }
+
+    /* ── PINS ── */
+    for (let i=0; i<PINS.length; i++) {
+      const pin = PINS[i];
+      const rp  = rot(pinXYZ[i], rotY, rotX);
+      const pp  = proj(rp);
+      if (!pp.vis) continue;
+
+      const phase = ((now/1600) + i*0.28) % 1;
+
+      // Pulse ring 1
+      ctx.beginPath(); ctx.arc(pp.x,pp.y, 6+phase*16,0,Math.PI*2);
+      ctx.strokeStyle = pin.col + Math.floor((1-phase)*90).toString(16).padStart(2,'0');
+      ctx.lineWidth = 1; ctx.stroke();
+
+      // Pulse ring 2 (offset)
+      const phase2 = (phase+0.5)%1;
+      ctx.beginPath(); ctx.arc(pp.x,pp.y, 6+phase2*16,0,Math.PI*2);
+      ctx.strokeStyle = pin.col + Math.floor((1-phase2)*50).toString(16).padStart(2,'0');
+      ctx.lineWidth = 0.7; ctx.stroke();
+
+      // Fill halo
+      const pinGrd = ctx.createRadialGradient(pp.x,pp.y,0,pp.x,pp.y,9);
+      pinGrd.addColorStop(0, pin.col+'55'); pinGrd.addColorStop(1, pin.col+'00');
+      ctx.beginPath(); ctx.arc(pp.x,pp.y,9,0,Math.PI*2);
+      ctx.fillStyle=pinGrd; ctx.fill();
+
+      // Core dot
+      ctx.beginPath(); ctx.arc(pp.x,pp.y,3.8,0,Math.PI*2);
+      ctx.fillStyle=pin.col; ctx.fill();
+      ctx.beginPath(); ctx.arc(pp.x,pp.y,1.8,0,Math.PI*2);
+      ctx.fillStyle='#fff'; ctx.fill();
+
+      // Label box
+      const lbl = pin.name;
+      ctx.font = 'bold 8.5px JetBrains Mono, monospace';
+      const tw = ctx.measureText(lbl).width;
+      const lx = pp.x - tw/2 - 5, ly = pp.y - 28;
+      const lw = tw + 10, lh = 15;
+      ctx.fillStyle='rgba(6,8,16,0.82)';
+      ctx.beginPath(); ctx.roundRect(lx,ly,lw,lh,3); ctx.fill();
+      ctx.strokeStyle=pin.col+'66'; ctx.lineWidth=0.7;
+      ctx.beginPath(); ctx.roundRect(lx,ly,lw,lh,3); ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,0.82)';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(lbl, pp.x, ly+lh/2);
+      ctx.textBaseline='alphabetic';
+    }
+
+    /* Specular highlight — top-left */
+    const spec = ctx.createRadialGradient(W/2-R*0.4,H/2-R*0.35, 0, W/2-R*0.2,H/2-R*0.2, R*0.55);
+    spec.addColorStop(0,'rgba(255,255,255,0.06)');
+    spec.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.save(); ctx.beginPath(); ctx.arc(W/2,H/2,R,0,Math.PI*2);
+    ctx.clip(); ctx.fillStyle=spec; ctx.fillRect(0,0,W,H); ctx.restore();
+  }
+
+  /* ══ LOOP ══ */
+  function tick() {
+    if (!dragging) {
+      rotY += CFG.AUTO_SPEED;
+      velX *= CFG.INERTIA; velY *= CFG.INERTIA;
+      rotX += velX; rotY += velY;
+      rotX = Math.max(-1.1, Math.min(1.1, rotX));
+    }
+    draw();
+    requestAnimationFrame(tick);
+  }
+
+  /* ══ INPUT ══ */
+  function startDrag(x,y){ dragging=true; lastX=x; lastY=y; velX=velY=0; }
+  function moveDrag(x,y){
+    if(!dragging)return;
+    velY=(x-lastX)*0.006; velX=(y-lastY)*0.006;
+    rotY+=velY; rotX+=velX;
+    rotX=Math.max(-1.1,Math.min(1.1,rotX));
+    lastX=x; lastY=y;
+  }
+  function endDrag(){ dragging=false; }
+
+  canvas.addEventListener('mousedown', e=>startDrag(e.clientX,e.clientY));
+  window.addEventListener('mousemove', e=>moveDrag(e.clientX,e.clientY));
+  window.addEventListener('mouseup',   endDrag);
+  canvas.addEventListener('touchstart', e=>{startDrag(e.touches[0].clientX,e.touches[0].clientY); e.preventDefault();},{passive:false});
+  canvas.addEventListener('touchmove',  e=>{moveDrag(e.touches[0].clientX,e.touches[0].clientY);  e.preventDefault();},{passive:false});
+  canvas.addEventListener('touchend',   endDrag);
+
+  /* ══ INIT ══ */
+  resize();
+  tick();
+  window.addEventListener('resize', resize);
+})();
+</script>
+
 <script>
 (function() {
   const lines = [
@@ -1958,7 +2415,7 @@
       el.textContent = line.slice(0, ++ci);
       if (ci === line.length) { deleting = true; setTimeout(type, 1800); return; }
     } else {
-      el.textContent = line.slice(0, --ci);
+            el.textContent = line.slice(0, --ci);
       if (ci === 0) { deleting = false; li = (li + 1) % lines.length; setTimeout(type, 400); return; }
     }
     setTimeout(type, deleting ? 28 : 48);
