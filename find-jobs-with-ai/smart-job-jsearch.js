@@ -255,6 +255,10 @@ return data.jobs || [];
 /* ─────────── RUN SMART SEARCH ─────────── */
 
 async function runJsearchJobs(){
+if(window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive()){
+  toast('tw','Please wait','Cooldown is active for 3 minutes. Please wait.',3000);
+  return;
+}
 lockJobButtons("smartJobBtn");
 const step1=document.getElementById("aiStep1");
 const step2=document.getElementById("aiStep2");
@@ -267,11 +271,9 @@ if(step3) step3.innerHTML=`<span class="ls-ico">3</span> Fetching jobs from job 
 if(jsearchRunning) return;
 
 jsearchRunning=true;
+if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(180);
 
 const btn=document.getElementById("smartJobBtn");
-
-btn.disabled=true;
-btn.innerHTML=`<span class="spin-ico"></span> Searching`;
 
 const listDirect=document.getElementById("directUrls");
 const directSection=document.getElementById("directSection");
@@ -279,6 +281,7 @@ const directSection=document.getElementById("directSection");
 const section=document.getElementById("aiUrlResults");
 
 section.classList.add("on");
+section.scrollIntoView({behavior:"smooth", block:"start"});
 
 document.getElementById("aiProcess").style.display="block";
 
@@ -366,13 +369,16 @@ listDirect.innerHTML=`
 }
 finally{
 
-  unlockJobButtons();
 jsearchRunning=false;
 
 document.getElementById("aiProcess").style.display="none";
 
-btn.disabled=false;
-btn.innerHTML="⚡ Smart Job Search";
+const cooldownActive = window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive();
+if(!cooldownActive){
+  unlockJobButtons();
+  btn.disabled=false;
+  btn.innerHTML="⚡ Smart Job Search";
+}
 
 }
 
