@@ -229,7 +229,7 @@ async function fetchJsearch(keyword,country){
 
 const q = encodeURIComponent(keyword);
 
-const url=`${JSEARCH_API}?query=${q}&page=1&num_pages=3&country=${country}&date_posted=month`;
+const url=`${JSEARCH_API}?query=${q}&page=1&num_pages=2&country=${country}&date_posted=month`;
 
 const res=await fetch(url);
 
@@ -255,7 +255,7 @@ return data.jobs || [];
 /* ─────────── RUN SMART SEARCH ─────────── */
 
 async function runJsearchJobs(){
-
+lockJobButtons("smartJobBtn");
 const step1=document.getElementById("aiStep1");
 const step2=document.getElementById("aiStep2");
 const step3=document.getElementById("aiStep3");
@@ -366,6 +366,7 @@ listDirect.innerHTML=`
 }
 finally{
 
+  unlockJobButtons();
 jsearchRunning=false;
 
 document.getElementById("aiProcess").style.display="none";
@@ -393,3 +394,5 @@ btn.style.cursor="pointer";
 btn.onclick=runJsearchJobs;
 
 };
+
+ 

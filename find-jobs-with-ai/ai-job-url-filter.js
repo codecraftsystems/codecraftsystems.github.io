@@ -69,7 +69,7 @@ function createJobCard(url){
 /* ─────────── MAIN RUNNER ─────────── */
 
 async function runAiUrlSearch(){
-
+lockJobButtons("aiUrlBtn"); 
   if(aiRunning) return;
 
   const btn = document.getElementById("aiUrlBtn");
@@ -342,7 +342,7 @@ ${urls.join('\n')}
   }
 
   finally{
-
+unlockJobButtons();
     aiRunning=false;
 
     btn.disabled=false;
@@ -369,3 +369,5 @@ window.enableAiUrlBtn=function(){
   btn.onclick=runAiUrlSearch;
 
 };
+
+ 
