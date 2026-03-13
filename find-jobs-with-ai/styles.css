@@ -910,3 +910,68 @@ footer{
     white-space: nowrap;
   }
 }
+
+
+
+
+.jc {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  transition: border-color .2s, transform .2s;
+  overflow: hidden;        /* ← ADD THIS */
+  min-width: 0;            /* ← ADD THIS */
+  width: 100%;             /* ← ADD THIS */
+}
+
+.jc-url {
+  font-family: var(--font-m);
+  font-size: .63rem;
+  color: var(--blue);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: .75;
+  margin-bottom: 12px;
+  max-width: 100%;         /* ← ADD THIS */
+  display: block;          /* ← CHANGE to block, not flex */
+}
+ 
+.jc:hover { border-color: rgba(255,77,0,.3); transform: translateY(-1px); }
+.jc-seen { opacity: .65; }
+
+.jc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+.jc-title { font-size: .9rem; font-weight: 700; color: var(--white); line-height: 1.4; margin: 0; }
+
+.jc-viewed-badge {
+  font-size: .6rem; padding: 3px 9px; border-radius: 99px;
+  background: var(--card2); color: var(--muted2);
+  border: 1px solid var(--border); white-space: nowrap; flex-shrink: 0;
+  font-family: var(--font-m);
+}
+
+.jc-meta { display: flex; flex-wrap: wrap; gap: 5px 14px; margin-bottom: 10px; }
+.jc-meta span { font-size: .78rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+.jc-meta-icon { font-size: .78rem; width: 16px; text-align: center; }
+
+.jc-url {
+  font-family: var(--font-m); font-size: .63rem; color: var(--blue);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  opacity: .75; margin-bottom: 12px;
+}
+.jc-divider { height: 1px; background: var(--border); margin-bottom: 12px; }
+
+.jc-actions { display: flex; gap: 8px; }
+.jc-btn {
+  font-size: .72rem; font-weight: 600; padding: 7px 14px;
+  border-radius: var(--radius-xs); border: 1px solid var(--border2);
+  cursor: pointer; text-decoration: none; display: inline-flex;
+  align-items: center; gap: 5px; color: var(--muted);
+  background: var(--card); transition: all .15s;
+}
+.jc-btn:hover { border-color: var(--accent); color: var(--accent); }
+.jc-btn.primary { background: var(--success-bg); color: var(--success); border-color: rgba(22,163,74,.25); font-weight: 700; }
+.jc-btn.primary:hover { background: rgba(22,163,74,.15); }
+.jc-btn.seen { color: var(--muted2); background: var(--card2); border-color: var(--border); }

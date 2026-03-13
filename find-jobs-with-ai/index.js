@@ -523,6 +523,7 @@ Return clean JSON only.`;
 let searchRunning = false;
 
 async function runJobSearch() {
+   lockJobButtons("findJobBtn");
   if (searchRunning) return;
   if (!session) { window.location.href = '../auth/?next=' + encodeURIComponent('/find-jobs-with-ai/'); return; }
   if (!profile) { window.location.href = '../submit-profile/'; return; }
@@ -570,6 +571,7 @@ async function runJobSearch() {
       toast('te', 'Search Failed', e.message || 'Try again in a moment.');
     }
   } finally {
+     unlockJobButtons();   // ← ye add karo
     searchRunning = false;
     setBtn('🔄 Search Again', false, false);
     document.getElementById('findJobBtn').onclick = runJobSearch;
@@ -672,3 +674,45 @@ function getSession(){
     toast('te', 'Load Error', e.message || 'Could not load your profile.');
   }
 })();
+
+
+ 
+
+
+
+/* ───────── GLOBAL BUTTON LOCKER ───────── */
+
+window.lockJobButtons = function(activeId){
+
+  const ids = ["findJobBtn","smartJobBtn","aiUrlBtn"];
+
+  ids.forEach(id=>{
+    const btn = document.getElementById(id);
+
+    if(!btn) return;
+
+    if(id !== activeId){
+      btn.disabled = true;
+      btn.style.opacity = "0.5";
+      btn.style.cursor = "not-allowed";
+    }
+  });
+
+};
+
+
+window.unlockJobButtons = function(){
+
+  const ids = ["findJobBtn","smartJobBtn","aiUrlBtn"];
+
+  ids.forEach(id=>{
+    const btn = document.getElementById(id);
+
+    if(!btn) return;
+
+    btn.disabled = false;
+    btn.style.opacity = "1";
+    btn.style.cursor = "pointer";
+  });
+
+};
