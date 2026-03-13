@@ -374,13 +374,16 @@ listDirect.innerHTML=`
 }
 finally{
 
-  unlockJobButtons();
 jsearchRunning=false;
 
 document.getElementById("aiProcess").style.display="none";
 
-btn.disabled=false;
-btn.innerHTML="⚡ Smart Job Search";
+const cooldownActive = window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive();
+if(!cooldownActive){
+  unlockJobButtons();
+  btn.disabled=false;
+  btn.innerHTML="⚡ Smart Job Search";
+}
 
 }
 

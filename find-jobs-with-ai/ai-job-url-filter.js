@@ -348,12 +348,14 @@ ${urls.join('\n')}
   }
 
   finally{
-unlockJobButtons();
     aiRunning=false;
 
-    btn.disabled=false;
-
-    btn.innerHTML="🤖 AI URL Finder";
+    const cooldownActive = window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive();
+    if(!cooldownActive){
+      unlockJobButtons();
+      btn.disabled=false;
+      btn.innerHTML="🤖 AI URL Finder";
+    }
 
   }
 

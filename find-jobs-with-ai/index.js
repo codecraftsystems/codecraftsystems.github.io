@@ -628,9 +628,14 @@ async function runJobSearch() {
       toast('te', 'Search Failed', e.message || 'Try again in a moment.');
     }
   } finally {
-     unlockJobButtons();   // ← ye add karo
     searchRunning = false;
-    setBtn('🔄 Search Again', false, false);
+    const cooldownActive = window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive();
+
+    if (!cooldownActive) {
+      unlockJobButtons();
+      setBtn('🔄 Search Again', false, false);
+    }
+
     document.getElementById('findJobBtn').onclick = runJobSearch;
   }
 }
