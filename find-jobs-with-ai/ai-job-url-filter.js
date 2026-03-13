@@ -78,10 +78,8 @@ lockJobButtons("aiUrlBtn");
 
   const btn = document.getElementById("aiUrlBtn");
 
-  btn.disabled = true;
-  btn.innerHTML = `<span class="spin-ico"></span> Finding Jobs`;
-
   aiRunning = true;
+  if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
 
 
   if (!session){
@@ -209,7 +207,6 @@ Profile Summary: ${(profile.bio || '').substring(0,300)}
   if(!data.results || data.results.length===0){
 
     listDirect.innerHTML=`<div class="job-card">No jobs found</div>`;
-    if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
     return;
 
   }
@@ -242,7 +239,6 @@ Profile Summary: ${(profile.bio || '').substring(0,300)}
   if(urls.length===0){
 
     listDirect.innerHTML=`<div class="job-card">No job URLs found</div>`;
-    if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
     return;
 
   }

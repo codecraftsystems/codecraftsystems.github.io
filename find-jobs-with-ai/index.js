@@ -592,7 +592,7 @@ async function runJobSearch() {
   }
 
   searchRunning = true;
-  setBtn('Finding Jobs…', true, true);
+  if (window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
   setStatus('info', 'AI is working…', 'Analyzing your profile and scanning the job market');
 
   document.getElementById('resultsSection').classList.remove('on');
@@ -613,7 +613,6 @@ async function runJobSearch() {
     } else {
       setStatus('warn', 'No matches found', 'Try updating your skills or title and search again.');
       toast('ti', 'No Results', 'Try expanding your skills in your profile.');
-      if (window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
     }
 
     if (result.strategy) renderTips(result.strategy);

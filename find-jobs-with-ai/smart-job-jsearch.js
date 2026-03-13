@@ -271,11 +271,9 @@ if(step3) step3.innerHTML=`<span class="ls-ico">3</span> Fetching jobs from job 
 if(jsearchRunning) return;
 
 jsearchRunning=true;
+if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
 
 const btn=document.getElementById("smartJobBtn");
-
-btn.disabled=true;
-btn.innerHTML=`<span class="spin-ico"></span> Searching`;
 
 const listDirect=document.getElementById("directUrls");
 const directSection=document.getElementById("directSection");
@@ -319,8 +317,6 @@ listDirect.innerHTML=`
 ⚠️ Jobs not found. Please try again later.
 </div>`;
 
-if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
-
 return;
 
 }
@@ -359,8 +355,6 @@ listDirect.innerHTML=`
 <div class="job-card">
 ⚠️ Job search service is temporarily busy.
 </div>`;
-
-if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
 
 }else{
 
