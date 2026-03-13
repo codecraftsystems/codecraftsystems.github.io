@@ -567,7 +567,6 @@ window.startJobButtonsCooldown = function (seconds = 180) {
 
     const clock = formatCooldown(left);
     applyCooldownLabels(clock);
-    setStatus('warn', 'No results found', `Please wait ${clock} before trying again.`);
   };
 
   tick();
@@ -576,7 +575,7 @@ window.startJobButtonsCooldown = function (seconds = 180) {
 
 async function runJobSearch() {
   if (window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive()) {
-    toast('tw', 'Please wait', 'Cooldown is active for 3 minutes.', 3000);
+    toast('tw', 'Please wait', 'Cooldown is active for 3 minutes. Please wait.', 3000);
     return;
   }
    lockJobButtons("findJobBtn");

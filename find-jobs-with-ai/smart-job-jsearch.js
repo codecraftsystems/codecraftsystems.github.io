@@ -256,7 +256,7 @@ return data.jobs || [];
 
 async function runJsearchJobs(){
 if(window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive()){
-  toast('tw','Please wait','Cooldown is active for 3 minutes.',3000);
+  toast('tw','Please wait','Cooldown is active for 3 minutes. Please wait.',3000);
   return;
 }
 lockJobButtons("smartJobBtn");
@@ -281,6 +281,7 @@ const directSection=document.getElementById("directSection");
 const section=document.getElementById("aiUrlResults");
 
 section.classList.add("on");
+section.scrollIntoView({behavior:"smooth", block:"start"});
 
 document.getElementById("aiProcess").style.display="block";
 

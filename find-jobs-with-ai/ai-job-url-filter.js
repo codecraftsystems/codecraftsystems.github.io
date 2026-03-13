@@ -70,7 +70,7 @@ function createJobCard(url){
 
 async function runAiUrlSearch(){
 if(window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive()){
-  toast('tw','Please wait','Cooldown is active for 3 minutes.',3000);
+  toast('tw','Please wait','Cooldown is active for 3 minutes. Please wait.',3000);
   return;
 }
 lockJobButtons("aiUrlBtn"); 
@@ -112,6 +112,7 @@ lockJobButtons("aiUrlBtn");
 
 
   section.classList.add("on");
+  section.scrollIntoView({behavior:"smooth", block:"start"});
 
   document.getElementById("aiProcess").style.display="block";
 
