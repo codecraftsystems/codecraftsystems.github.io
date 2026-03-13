@@ -402,26 +402,27 @@ footer{position:relative;z-index:1;background:var(--surface);border-top:1px soli
 
 <!-- Mobile menu -->
 <div class="mob" id="mob">
-  <button class="mob-x" onclick="closeMob()">✕</button>
   <a href="../" onclick="closeMob()">Home</a>
+  <a href="../#services" onclick="closeMob()">Services</a>
+  <a href="../blog/" onclick="closeMob()">Blog</a>
   <a href="../developers/" onclick="closeMob()">Developers</a>
-  <a href="../submit-profile/" onclick="closeMob()">My Profile</a>
-  <a href="../find-jobs-with-ai/" onclick="closeMob()" class="nav-feature">Find Jobs with AI</a>
-    <a href="./" onclick="closeMob()">Job Board</a>
-  <!-- <a href="../#contact" onclick="closeMob()">Contact</a> -->
+  <a href="../jobs/" onclick="closeMob()">Job Board</a>
+  <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMob()">Find Jobs with AI</a>
+  <a href="../submit-profile/" data-nav-add-profile onclick="closeMob()">Add Profile</a>
+  <a href="#" data-nav-view-profile onclick="closeMob()" style="display:none">View Profile</a>
 </div>
 
 <nav class="nav" id="nav">
   <a href="../" class="nav-logo">Code<b>Craft</b></a>
-  <ul class="nav-links">
+      <ul class="nav-links">
     <li><a href="../">Home</a></li>
+    <li><a href="../#services">Services</a></li>
+    <li><a href="../blog/">Blog</a></li>
     <li><a href="../developers/">Developers</a></li>
-   
-    <li><a href="../submit-profile/" id="nvView">My Profile</a></li>
-     <li><a href="./" style="color: var(--accent);">Job Board</a></li>
-     <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
-    <!-- <li><a href="#" id="nvLogout" style="display:none" onclick="doLogout(event)">Logout</a></li>
-    <li><a href="../auth/" id="nvLogin" class="nav-cta">Login</a></li> -->
+    <li><a href="../jobs/">Job Board</a></li>
+    <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
+    <li><a href="../submit-profile/" class="btn-nav" data-nav-add-profile>Add Profile</a></li>
+    <li style="display:none"><a href="#" class="btn-nav" data-nav-view-profile>View Profile</a></li>
   </ul>
   <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
@@ -600,10 +601,16 @@ footer{position:relative;z-index:1;background:var(--surface);border-top:1px soli
   <div class="fi">
     <div class="fl">Code<b>Craft</b></div>
     <p class="fc">© <span id="yr"></span> CodeCraft Systems</p>
-    <ul class="flinks">
-      <li><a href="../developers/">All Developers</a></li>
-      <li><a href="../find-jobs-with-ai/">AI Job Finder</a></li>
-      <li><a href="../#contact">Contact</a></li>
+        <ul class="flinks">
+      <li><a href="../">Home</a></li>
+      <li><a href="../#services">Services</a></li>
+      <li><a href="../blog/">Blog</a></li>
+      <li><a href="../developers/">Developers</a></li>
+      <li><a href="../developers-open-to-work/">Open to Work</a></li>
+      <li><a href="../submit-profile/">Add Profile</a></li>
+      <li><a href="../jobs/">Job Board</a></li>
+      <li><a href="../find-jobs-with-ai/">Find Jobs with AI</a></li>
+      <li><a href="../#contact">Hire Us</a></li>
     </ul>
   </div>
 </footer>
@@ -1333,6 +1340,10 @@ if(museCache){
   setSC('themuse', museCache);
 }
 fetchAllJobs();
+
+if(window.devDirectory && typeof window.devDirectory.applyTalentNav==='function'){
+  window.devDirectory.applyTalentNav({profilePathPrefix:'../developer/?slug='});
+}
 
 
 function matchCountry(job){

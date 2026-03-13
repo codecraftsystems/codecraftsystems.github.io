@@ -127,6 +127,10 @@
 .ai-btn-wrap .find-btn{
   width:100%;
 }
+
+  .nav-links a.nav-feature{color:var(--accent)!important;border:1px solid rgba(255,77,0,.35);border-radius:999px;padding:7px 18px;background:rgba(255,77,0,.08)}
+  .nav-links a.nav-feature::after{display:none!important}
+  .mobile-menu a.nav-feature,.mob a.nav-feature,.mob-menu a.nav-feature{color:var(--accent);border:1px solid rgba(255,77,0,.35);border-radius:999px;padding:10px 26px;background:rgba(255,77,0,.08)}
 </style>
 </head>
 <body>
@@ -135,22 +139,27 @@
 
 <!-- Mobile menu -->
 <div class="mob" id="mob">
-  <button class="mob-x" onclick="closeMob()">✕</button>
   <a href="../" onclick="closeMob()">Home</a>
+  <a href="../#services" onclick="closeMob()">Services</a>
+  <a href="../blog/" onclick="closeMob()">Blog</a>
   <a href="../developers/" onclick="closeMob()">Developers</a>
-  <a href="../submit-profile/" onclick="closeMob()">My Profile</a>
-   <a href="../jobs/" onclick="closeMob()">Job Board</a>
-  <a href="./" class="nav-feature active" onclick="closeMob()">Find Jobs with AI</a>
+  <a href="../jobs/" onclick="closeMob()">Job Board</a>
+  <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMob()">Find Jobs with AI</a>
+  <a href="../submit-profile/" data-nav-add-profile onclick="closeMob()">Add Profile</a>
+  <a href="#" data-nav-view-profile onclick="closeMob()" style="display:none">View Profile</a>
 </div>
 
 <nav class="nav" id="nav">
   <a href="../" class="nav-logo">Code<b>Craft</b></a>
-  <ul class="nav-links">
+      <ul class="nav-links">
     <li><a href="../">Home</a></li>
+    <li><a href="../#services">Services</a></li>
+    <li><a href="../blog/">Blog</a></li>
     <li><a href="../developers/">Developers</a></li>
-    <li><a href="../submit-profile/">My Profile</a></li>
-      <li><a href="../jobs/"  >Job Board</a></li>
-    <li><a href="./" class="nav-feature active">Find Jobs with AI</a></li>
+    <li><a href="../jobs/">Job Board</a></li>
+    <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
+    <li><a href="../submit-profile/" class="btn-nav" data-nav-add-profile>Add Profile</a></li>
+    <li style="display:none"><a href="#" class="btn-nav" data-nav-view-profile>View Profile</a></li>
   </ul>
   <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
@@ -350,9 +359,16 @@ AI refining job URLs
   <div class="fi">
     <div class="fl">Code<b>Craft</b></div>
     <p class="fc">© <span id="yr"></span> CodeCraft Systems</p>
-    <ul class="flinks">
-      <li><a href="../developers/">All Developers</a></li>
-      <li><a href="../#contact">Contact</a></li>
+        <ul class="flinks">
+      <li><a href="../">Home</a></li>
+      <li><a href="../#services">Services</a></li>
+      <li><a href="../blog/">Blog</a></li>
+      <li><a href="../developers/">Developers</a></li>
+      <li><a href="../developers-open-to-work/">Open to Work</a></li>
+      <li><a href="../submit-profile/">Add Profile</a></li>
+      <li><a href="../jobs/">Job Board</a></li>
+      <li><a href="../find-jobs-with-ai/">Find Jobs with AI</a></li>
+      <li><a href="../#contact">Hire Us</a></li>
     </ul>
   </div>
 </footer>
@@ -367,6 +383,13 @@ AI refining job URLs
 <script src="./ai-backup.js?v=4" defer></script>
 <script src="./smart-job-jsearch.js?v=4" defer></script>
 <script src="./index.js?v=9" defer></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function(){
+    if(window.devDirectory && typeof window.devDirectory.applyTalentNav==='function'){
+      window.devDirectory.applyTalentNav({profilePathPrefix:'../developer/?slug='});
+    }
+  });
+</script>
 
 
 </body>
