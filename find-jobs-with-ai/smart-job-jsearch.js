@@ -74,15 +74,32 @@ target="_blank">
 
 async function generateKeyword(profile){
 
-const prompt=`Generate ONE short job search phrase.
+  const prompt = `You are a job search keyword generator.
 
-Profile
-Title: ${profile.title}
-Skills: ${(profile.skills||'').split(',').slice(0,5).join(' ')}
-Location: ${profile.location}
+Based on the professional profile below, generate ONE concise job search keyword phrase (2-4 words) that can be used directly in the JSearch API.
 
-Return phrase only`;
+RULES:
+- Focus on job role + key skill + location
+- Keep it short and natural for job search
+- Do NOT include job boards (LinkedIn, Indeed, Naukri, Glassdoor, etc.)
+- Avoid words like today, latest, hiring websites
+- Only generate a keyword phrase suitable for job search
+- Include the candidate's location
+- Vary wording each time
 
+Return ONLY the keyword phrase
+No explanation
+No punctuation
+
+Professional Profile:
+Name: ${profile.name || ''}
+Title: ${profile.title || ''}
+Primary Role: ${profile.experience?.[0]?.role || ''}
+Skills: ${(profile.skills || '').split(',').slice(0,6).join(' ')}
+Experience: ${profile.experience_years || 0} years
+Location: ${profile.location || 'India'}
+Summary: ${(profile.bio || '').substring(0,300)}
+`;
 const res=await fetch(CLOUD_AI,{
 method:'POST',
 headers:{'Content-Type':'application/json'},
