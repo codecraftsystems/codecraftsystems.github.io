@@ -134,21 +134,32 @@ async function runAiUrlSearch(){
 
   const prompt = `You are a job discovery assistant.
 
-Generate ONE short job search phrase to discover the latest developer jobs on company career pages.
+Based on the professional profile below, generate ONE short search phrase (3–6 words) that helps find the LATEST or TODAY jobs posted directly on company career pages or company hiring websites.
 
-The phrase MUST include:
-role
-at least one skill
-location
+The phrase MUST include the professional's location.
 
-Return ONLY the search phrase.
+STRICT RULES:
+- Do NOT target job boards such as LinkedIn, Indeed, Naukri, Glassdoor, Monster, or similar sites.
+- The search phrase should help discover jobs directly on company career pages or startup hiring pages.
+- Prefer keywords like today, latest, recent, hiring, careers, join team so search engines return fresh job postings.
+- Focus on the person's role, core skills, experience level, and location.
+- Each time you generate a phrase, vary the wording so results are not always identical.
+
+Return ONLY the search phrase
+No explanation
+No punctuation
+
+Current Date: ${new Date().toLocaleDateString('en-GB')}
 
 Professional Profile:
+Name: ${profile.name || ''}
 Title: ${profile.title || ''}
-Skills: ${(profile.skills || '').split(',').slice(0,5).join(' ')}
+Primary Role: ${profile.experience?.[0]?.role || ''}
+Skills: ${(profile.skills || '').split(',').slice(0,6).join(' ')}
+Experience: ${profile.experience_years || 0} years
 Location: ${profile.location || 'India'}
+Profile Summary: ${(profile.bio || '').substring(0,300)}
 `;
-
 
   setAiStep(1);
 

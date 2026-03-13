@@ -25,15 +25,15 @@ function locationPriority(jobLocation, profileLocation) {
 let _smartPageNo = 0;
 
 /* ─────────── Enable Smart button — called by index.js boot() ─────────── */
-window.enableSmartJobBtn = function () {
-  const btn = document.getElementById('smartJobBtn');
-  if (!btn) return;
-  btn.disabled = false;
-  btn.style.opacity = '1';
-  btn.style.cursor = 'pointer';
-  btn.onclick = runSmartJobSearch;
-  document.getElementById('smartBtnLabel').innerHTML = '⚡ Smart Job Search';
-};
+// window.enableSmartJobBtn = function () {
+//   const btn = document.getElementById('smartJobBtn');
+//   if (!btn) return;
+//   btn.disabled = false;
+//   btn.style.opacity = '1';
+//   btn.style.cursor = 'pointer';
+//   btn.onclick = runSmartJobSearch;
+//   document.getElementById('smartBtnLabel').innerHTML = '⚡ Smart Job Search';
+// };
 
 /* ─────────── Set Smart Button State ─────────── */
 function setSmartBtn(label, disabled, loading) {
