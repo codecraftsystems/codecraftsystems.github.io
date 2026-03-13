@@ -663,6 +663,7 @@ function getSession(){
     setTimeout(()=>{
   if (window.enableSmartJobBtn) window.enableSmartJobBtn();
 },50);
+
      
     }
 
