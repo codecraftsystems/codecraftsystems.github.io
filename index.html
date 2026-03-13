@@ -32,13 +32,9 @@
 <!-- CANONICAL -->
 <link rel="canonical" href="https://codecraftsystems.github.io">
 
-<!-- FAVICON — GitHub Avatar -->
 <!-- FAVICON -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
 
-<meta name="theme-color" content="#ff4d00">
-<meta name="msapplication-navbutton-color" content="#ff4d00">
-<meta name="apple-mobile-web-app-status-bar-style" content="#ff4d00">
 <meta name="theme-color" content="#ff4d00">
 <meta name="msapplication-navbutton-color" content="#ff4d00">
 <meta name="apple-mobile-web-app-status-bar-style" content="#ff4d00">
@@ -61,7 +57,6 @@
 }
 </script>
 
-<!-- SCHEMA JSON-LD -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -129,31 +124,8 @@
     cursor: auto;
   }
 
-  /* Custom Cursor */
-  .cursor {display:none;
-    display: none;
-    width: 12px; height: 12px;
-    background: var(--accent);
-    border-radius: 50%;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.15s ease;
-    mix-blend-mode: normal;
-  }
-  .cursor-ring {
-    display: none;
-    width: 40px; height: 40px;
-    border: 1px solid var(--accent);
-    border-radius: 50%;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9998;
-    transition: all 0.3s ease;
-    opacity: 0.5;
-  }
+  .cursor { display: none; }
+  .cursor-ring { display: none; }
 
   /* Noise Overlay */
   body::before {
@@ -626,7 +598,6 @@
     gap: 80px;
     align-items: center;
   }
-  .about-left { }
   .about-text {
     color: var(--muted);
     font-size: 1rem;
@@ -654,7 +625,6 @@
     font-size: 0.8rem;
   }
 
-  .about-right { }
   .experience-timeline {
     display: flex;
     flex-direction: column;
@@ -758,7 +728,7 @@
     color: var(--white);
     padding: 12px 16px;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 16px;
     font-family: var(--font-body);
     transition: border-color 0.2s;
     width: 100%;
@@ -789,43 +759,62 @@
   }
   .form-btn:hover { background: #e04400; transform: translateY(-2px); }
 
-  /* FOOTER */
+  /* =====================
+     FOOTER — FULLY RESPONSIVE
+  ===================== */
   footer {
     background: var(--dark);
     border-top: 1px solid var(--border);
-    padding: 40px;
+    padding: 48px 40px;
   }
   .footer-inner {
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "logo  links  links"
+      "copy  copy   copy";
+    gap: 28px 40px;
+    align-items: start;
   }
   .footer-logo {
+    grid-area: logo;
     font-family: var(--font-display);
     font-size: 1.5rem;
     letter-spacing: 2px;
     color: var(--white);
+    white-space: nowrap;
   }
   .footer-logo span { color: var(--accent); }
-  .footer-copy { color: var(--muted); font-size: 0.82rem; }
+
   .footer-links {
+    grid-area: links;
     display: flex;
-    gap: 24px;
+    flex-wrap: wrap;
+    gap: 10px 20px;
     list-style: none;
+    align-items: center;
+    justify-content: flex-end;
   }
   .footer-links a {
     color: var(--muted);
     text-decoration: none;
     font-size: 0.82rem;
     transition: color 0.2s;
+    white-space: nowrap;
   }
   .footer-links a:hover { color: var(--white); }
 
-  /* MOBILE */
+  .footer-copy {
+    grid-area: copy;
+    color: var(--muted);
+    font-size: 0.78rem;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+
+  /* MOBILE MENU */
   .mobile-menu {
     display: none;
     position: fixed;
@@ -875,12 +864,410 @@
     transform: translateY(0);
   }
 
-.grecaptcha-badge {
-  opacity: 0.1;
-  transform: scale(0.80);
-  transform-origin: bottom right;
-}
+  .grecaptcha-badge {
+    opacity: 0.1;
+    transform: scale(0.80);
+    transform-origin: bottom right;
+  }
 
+  /* CERTIFICATIONS */
+  #certifications { background: var(--black); }
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 16px;
+  }
+  .cert-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .cert-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .cert-card:hover::after { transform: scaleX(1); }
+  .cert-card:hover { border-color: rgba(255,77,0,0.3); transform: translateY(-4px); }
+  .cert-issuer { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .cert-issuer-badge {
+    background: rgba(255,77,0,0.1);
+    border: 1px solid rgba(255,77,0,0.25);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .cert-date { font-size: 0.72rem; color: var(--muted); font-family: var(--font-mono); }
+  .cert-name { font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 10px; line-height: 1.3; }
+  .cert-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+  .cert-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .cert-id { font-size: 0.68rem; color: #4b5563; font-family: var(--font-mono); }
+  .cert-id span { color: #6b7280; }
+  .cert-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid rgba(255,77,0,0.3);
+    padding: 6px 14px;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .cert-link:hover {
+    background: rgba(255,77,0,0.1);
+    border-color: var(--accent);
+  }
+
+  /* DevCareer AI Section */
+  #devcareer {
+    background: var(--dark);
+    padding: 100px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  #devcareer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.18;
+    mask-image: radial-gradient(ellipse 70% 60% at 80% 50%, black, transparent);
+  }
+  .dc-glow {
+    position: absolute;
+    right: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,77,0,0.10) 0%, transparent 70%);
+    pointer-events: none;
+    animation: dcOrb 6s ease-in-out infinite alternate;
+  }
+  @keyframes dcOrb {
+    from { transform: translateY(-50%) scale(1); opacity: 0.7; }
+    to   { transform: translateY(-55%) scale(1.15); opacity: 1; }
+  }
+  .dc-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+    align-items: center;
+  }
+  .dc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,77,0,0.08);
+    border: 1px solid rgba(255,77,0,0.25);
+    padding: 5px 14px 5px 8px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  .dc-badge-dot {
+    width: 6px; height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #22c55e;
+    animation: pulse 1.5s infinite;
+  }
+  .dc-version {
+    background: rgba(255,77,0,0.15);
+    color: var(--accent);
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 700;
+    margin-left: 4px;
+  }
+  .dc-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 5.5vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+  .dc-title .dc-accent { color: var(--accent); }
+  .dc-title .dc-outline {
+    -webkit-text-stroke: 1px var(--white);
+    color: transparent;
+  }
+  .dc-desc {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 32px;
+    max-width: 440px;
+  }
+  .dc-stacks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+  .dc-stack {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--black);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    color: var(--white);
+    transition: all 0.25s;
+    cursor: default;
+  }
+  .dc-stack:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+    background: rgba(255,77,0,0.04);
+  }
+  .dc-btns {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .dc-btn-main {
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .dc-btn-main::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .dc-btn-main:hover {
+    background: #e04400;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255,77,0,0.3);
+  }
+  .dc-btn-main .arrow { transition: transform 0.2s; }
+  .dc-btn-main:hover .arrow { transform: translateX(4px); }
+  .dc-btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 14px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s;
+  }
+  .dc-btn-ghost:hover {
+    border-color: var(--white);
+    color: var(--white);
+  }
+  .dc-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .dc-feat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .dc-feat {
+    background: var(--black);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: default;
+  }
+  .dc-feat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .dc-feat:hover::before { transform: scaleX(1); }
+  .dc-feat:hover {
+    border-color: rgba(255,77,0,0.3);
+    transform: translateY(-3px);
+    background: rgba(255,77,0,0.02);
+  }
+  .dc-feat-emoji { font-size: 1.6rem; margin-bottom: 10px; display: block; }
+  .dc-feat-title { font-size: 0.88rem; font-weight: 700; color: var(--white); margin-bottom: 5px; }
+  .dc-feat-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.55; }
+  .dc-endpoint {
+    background: var(--black);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .dc-endpoint-bar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dc-method {
+    background: rgba(255,77,0,0.12);
+    border: 1px solid rgba(255,77,0,0.3);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .dc-url {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: #2f855a;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dc-free-badge {
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.25);
+    color: #22c55e;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+  .dc-endpoint-body {
+    padding: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    line-height: 1.8;
+    color: #4b5563;
+    display: flex;
+    gap: 24px;
+  }
+  .dc-endpoint-col { flex: 1; }
+  .dc-k { color: #6b46c1; }
+  .dc-s { color: #2f855a; }
+  .dc-c { color: #9ca3af; font-style: italic; }
+  .dc-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--black);
+  }
+  .dc-stat {
+    padding: 18px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .dc-stat:last-child { border-right: none; }
+  .dc-stat::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .dc-stat:hover::after { transform: scaleX(1); }
+  .dc-stat-num {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+  }
+  .dc-stat-lbl {
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    display: block;
+  }
+  .dc-typing-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .dc-typing-dot { color: var(--accent); font-weight: 700; }
+  #dc-typewriter {
+    color: var(--white);
+    border-right: 2px solid var(--accent);
+    animation: dcBlink 0.7s step-end infinite;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  @keyframes dcBlink {
+    0%, 100% { border-color: var(--accent); }
+    50%       { border-color: transparent; }
+  }
+
+  /* =====================
+     TABLET (max 900px)
+  ===================== */
   @media (max-width: 900px) {
     nav { padding: 16px 24px; }
     .nav-links { display: none; }
@@ -892,476 +1279,62 @@
     .contact-inner { grid-template-columns: 1fr; padding: 36px 24px; }
     section { padding: 70px 24px; }
     .form-row { grid-template-columns: 1fr; }
-    .footer-inner { flex-direction: column; text-align: center; }
     body { cursor: auto; }
-    .cursor, .cursor-ring { display: none; }
+    .dc-inner { grid-template-columns: 1fr; gap: 48px; }
+    #devcareer { padding: 70px 24px; }
+    .dc-endpoint-body { flex-direction: column; gap: 8px; }
+
+    /* Footer tablet */
+    footer {
+      padding: 40px 24px;
+    }
+    .footer-inner {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "logo"
+        "links"
+        "copy";
+      gap: 20px;
+    }
+    .footer-links {
+      justify-content: flex-start;
+      gap: 10px 16px;
+    }
+    .footer-copy {
+      padding-top: 16px;
+    }
   }
 
+  /* =====================
+     MOBILE (max 500px)
+  ===================== */
   @media (max-width: 500px) {
     .hero-h1 { font-size: 3rem; }
     .services-grid { grid-template-columns: 1fr; }
     .about-skills { grid-template-columns: 1fr; }
+
+    /* Footer mobile */
+    footer {
+      padding: 32px 16px;
+    }
+    .footer-logo {
+      font-size: 1.3rem;
+    }
+    .footer-links {
+      gap: 10px 14px;
+    }
+    .footer-links a {
+      font-size: 0.78rem;
+    }
+    .footer-copy {
+      font-size: 0.74rem;
+      line-height: 1.6;
+    }
   }
-
-
-  /* CERTIFICATIONS */
-#certifications { background: var(--black); }
-.cert-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 16px;
-}
-.cert-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 28px;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-.cert-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s;
-}
-.cert-card:hover::after { transform: scaleX(1); }
-.cert-card:hover { border-color: rgba(255,77,0,0.3); transform: translateY(-4px); }
-.cert-issuer { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.cert-issuer-badge {
-  background: rgba(255,77,0,0.1);
-  border: 1px solid rgba(255,77,0,0.25);
-  border-radius: 4px;
-  padding: 4px 10px;
-  font-size: 0.72rem;
-  font-family: var(--font-mono);
-  color: var(--accent);
-  font-weight: 600;
-}
-.cert-date { font-size: 0.72rem; color: var(--muted); font-family: var(--font-mono); }
-.cert-name { font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 10px; line-height: 1.3; }
-.cert-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
-.cert-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
-.cert-id { font-size: 0.68rem; color: #4b5563; font-family: var(--font-mono); }
-.cert-id span { color: #6b7280; }
-.cert-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.78rem;
-  font-family: var(--font-mono);
-  color: var(--accent);
-  text-decoration: none;
-  border: 1px solid rgba(255,77,0,0.3);
-  padding: 6px 14px;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-.cert-link:hover {
-  background: rgba(255,77,0,0.1);
-  border-color: var(--accent);
-}
-
- 
-/* iPhone form zoom fix */
-input, select, textarea {
-  font-size: 16px !important;
-}
- 
-/* ── DevCareer AI Section ── */
-#devcareer {
-  background: var(--dark);
-  padding: 100px 40px;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Animated background grid accent */
-#devcareer::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 40px 40px;
-  opacity: 0.18;
-  mask-image: radial-gradient(ellipse 70% 60% at 80% 50%, black, transparent);
-}
-
-/* Glowing orb */
-.dc-glow {
-  position: absolute;
-  right: -100px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(255,77,0,0.10) 0%, transparent 70%);
-  pointer-events: none;
-  animation: dcOrb 6s ease-in-out infinite alternate;
-}
-@keyframes dcOrb {
-  from { transform: translateY(-50%) scale(1); opacity: 0.7; }
-  to   { transform: translateY(-55%) scale(1.15); opacity: 1; }
-}
-
-.dc-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 70px;
-  align-items: center;
-}
-
-/* ── LEFT TEXT BLOCK ── */
-.dc-left {}
-
-.dc-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255,77,0,0.08);
-  border: 1px solid rgba(255,77,0,0.25);
-  padding: 5px 14px 5px 8px;
-  border-radius: 100px;
-  font-size: 0.72rem;
-  font-family: var(--font-mono);
-  color: var(--accent);
-  margin-bottom: 20px;
-  letter-spacing: 0.5px;
-}
-.dc-badge-dot {
-  width: 6px; height: 6px;
-  background: #22c55e;
-  border-radius: 50%;
-  box-shadow: 0 0 6px #22c55e;
-  animation: pulse 1.5s infinite;
-}
-.dc-version {
-  background: rgba(255,77,0,0.15);
-  color: var(--accent);
-  font-size: 0.65rem;
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-weight: 700;
-  margin-left: 4px;
-}
-
-.dc-title {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 5.5vw, 5rem);
-  line-height: 0.95;
-  letter-spacing: 2px;
-  color: var(--white);
-  margin-bottom: 20px;
-}
-.dc-title .dc-accent { color: var(--accent); }
-.dc-title .dc-outline {
-  -webkit-text-stroke: 1px var(--white);
-  color: transparent;
-}
-
-.dc-desc {
-  color: var(--muted);
-  font-size: 1rem;
-  line-height: 1.75;
-  margin-bottom: 32px;
-  max-width: 440px;
-}
-
-/* Stack pills */
-.dc-stacks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 36px;
-}
-.dc-stack {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--black);
-  border: 1px solid var(--border);
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 0.78rem;
-  font-family: var(--font-mono);
-  color: var(--white);
-  transition: all 0.25s;
-  cursor: default;
-}
-.dc-stack:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-2px);
-  background: rgba(255,77,0,0.04);
-}
-
-/* CTA Buttons */
-.dc-btns {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.dc-btn-main {
-  background: var(--accent);
-  color: #fff;
-  padding: 14px 32px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.9rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.25s;
-  position: relative;
-  overflow: hidden;
-}
-.dc-btn-main::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
-  pointer-events: none;
-}
-.dc-btn-main:hover {
-  background: #e04400;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255,77,0,0.3);
-}
-.dc-btn-main .arrow {
-  transition: transform 0.2s;
-}
-.dc-btn-main:hover .arrow { transform: translateX(4px); }
-
-.dc-btn-ghost {
-  border: 1px solid var(--border);
-  color: var(--muted);
-  padding: 14px 24px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-family: var(--font-mono);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.25s;
-}
-.dc-btn-ghost:hover {
-  border-color: var(--white);
-  color: var(--white);
-}
-
-/* ── RIGHT VISUAL BLOCK ── */
-.dc-right {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Feature cards grid */
-.dc-feat-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.dc-feat {
-  background: var(--black);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 22px 20px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s;
-  cursor: default;
-}
-.dc-feat::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s ease;
-}
-.dc-feat:hover::before { transform: scaleX(1); }
-.dc-feat:hover {
-  border-color: rgba(255,77,0,0.3);
-  transform: translateY(-3px);
-  background: rgba(255,77,0,0.02);
-}
-
-.dc-feat-emoji {
-  font-size: 1.6rem;
-  margin-bottom: 10px;
-  display: block;
-}
-.dc-feat-title {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--white);
-  margin-bottom: 5px;
-}
-.dc-feat-desc {
-  font-size: 0.75rem;
-  color: var(--muted);
-  line-height: 1.55;
-}
-
-/* Endpoint card */
-.dc-endpoint {
-  background: var(--black);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.dc-endpoint-bar {
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  padding: 11px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.dc-method {
-  background: rgba(255,77,0,0.12);
-  border: 1px solid rgba(255,77,0,0.3);
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 3px;
-}
-.dc-url {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: #2f855a;
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.dc-free-badge {
-  background: rgba(34,197,94,0.1);
-  border: 1px solid rgba(34,197,94,0.25);
-  color: #22c55e;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  padding: 2px 8px;
-  border-radius: 100px;
-}
-.dc-endpoint-body {
-  padding: 16px;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  line-height: 1.8;
-  color: #4b5563;
-  display: flex;
-  gap: 24px;
-}
-.dc-endpoint-col { flex: 1; }
-.dc-k { color: #6b46c1; }
-.dc-s { color: #2f855a; }
-.dc-c { color: #9ca3af; font-style: italic; }
-
-/* Stats row */
-.dc-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  background: var(--black);
-}
-.dc-stat {
-  padding: 18px;
-  text-align: center;
-  border-right: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-.dc-stat:last-child { border-right: none; }
-.dc-stat::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 2px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transition: transform 0.3s;
-}
-.dc-stat:hover::after { transform: scaleX(1); }
-.dc-stat-num {
-  font-family: var(--font-display);
-  font-size: 1.8rem;
-  color: var(--accent);
-  line-height: 1;
-  display: block;
-}
-.dc-stat-lbl {
-  font-size: 0.68rem;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-top: 4px;
-  display: block;
-}
-
-/* Animated typing line */
-.dc-typing-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--muted);
-}
-.dc-typing-dot { color: var(--accent); font-weight: 700; }
-#dc-typewriter {
-  color: var(--white);
-  border-right: 2px solid var(--accent);
-  animation: dcBlink 0.7s step-end infinite;
-  white-space: nowrap;
-  overflow: hidden;
-}
-@keyframes dcBlink {
-  0%, 100% { border-color: var(--accent); }
-  50%       { border-color: transparent; }
-}
-
-/* Mobile */
-@media (max-width: 900px) {
-  .dc-inner { grid-template-columns: 1fr; gap: 48px; }
-  #devcareer { padding: 70px 24px; }
-  .dc-endpoint-body { flex-direction: column; gap: 8px; }
-}
-
-
 </style>
 </head>
 <body>
 
-<!-- Cursor -->
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
@@ -1379,7 +1352,7 @@ input, select, textarea {
 <!-- NAV -->
 <nav id="navbar">
   <a href="#home" class="logo">Code<span>Craft</span></a>
-      <ul class="nav-links">
+  <ul class="nav-links">
     <li><a href="./">Home</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="./blog/">Blog</a></li>
@@ -1468,7 +1441,6 @@ input, select, textarea {
     <span class="marquee-item">cPanel Expert</span>
     <span class="marquee-item">MySQL</span>
     <span class="marquee-item">AI Integration</span>
-    <!-- duplicate for seamless loop -->
     <span class="marquee-item">Laravel API</span>
     <span class="marquee-item">Vue.js SPA</span>
     <span class="marquee-item">Quasar Framework</span>
@@ -1505,7 +1477,6 @@ input, select, textarea {
         </div>
         <a class="service-link" href="https://codecraftsystems.github.io/services/laravel-api-development.html">View details →</a>
       </div>
-
       <div class="service-card">
         <div class="service-num">02</div>
         <div class="service-icon">🖥️</div>
@@ -1519,7 +1490,6 @@ input, select, textarea {
         </div>
         <a class="service-link" href="https://codecraftsystems.github.io/services/vuejs-quasar-frontend-development.html">View details →</a>
       </div>
-
       <div class="service-card">
         <div class="service-num">03</div>
         <div class="service-icon">💬</div>
@@ -1533,7 +1503,6 @@ input, select, textarea {
         </div>
         <a class="service-link" href="https://codecraftsystems.github.io/services/real-time-applications.html">View details →</a>
       </div>
-
       <div class="service-card">
         <div class="service-num">04</div>
         <div class="service-icon">💳</div>
@@ -1547,7 +1516,6 @@ input, select, textarea {
         </div>
         <a class="service-link" href="https://codecraftsystems.github.io/services/payment-gateway-integration.html">View details →</a>
       </div>
-
       <div class="service-card">
         <div class="service-num">05</div>
         <div class="service-icon">☁️</div>
@@ -1561,7 +1529,6 @@ input, select, textarea {
         </div>
         <a class="service-link" href="https://codecraftsystems.github.io/services/cloud-deployment-devops.html">View details →</a>
       </div>
-
       <div class="service-card">
         <div class="service-num">06</div>
         <div class="service-icon">🤖</div>
@@ -1639,7 +1606,6 @@ input, select, textarea {
   <div class="container">
     <div class="section-label reveal">Our Edge</div>
     <h2 class="section-title reveal">WHY CHOOSE<br><span style="color:var(--accent)">CODECRAFT?</span></h2>
-
     <div class="why-grid">
       <div class="why-card reveal">
         <div class="why-icon">🎯</div>
@@ -1675,17 +1641,13 @@ input, select, textarea {
   </div>
 </section>
 
-
-
-
+<!-- CERTIFICATIONS -->
 <section id="certifications">
   <div class="container">
     <div class="section-label reveal">Proven Skills</div>
     <h2 class="section-title reveal">LICENSES &<br><span style="color:var(--accent)">CERTIFICATIONS</span></h2>
     <p class="section-sub reveal">Industry-recognized certifications from Coursera & Oracle — validating real-world expertise.</p>
-
     <div class="cert-grid">
-
       <div class="cert-card reveal">
         <div class="cert-issuer">
           <span class="cert-issuer-badge">☁️ Oracle</span>
@@ -1699,7 +1661,6 @@ input, select, textarea {
         <div class="cert-id">ID: <span>AC93F2805A4B6DCE...6C</span></div>
         <a href="https://catalog-education.oracle.com/ords/certview/sharebadge?id=AC93F2805A4B6DCE76A832BA23611815EF616DEC0B111C44ED8788F2D4FFFD6C" target="_blank" class="cert-link">View Certificate →</a>
       </div>
-
       <div class="cert-card reveal">
         <div class="cert-issuer">
           <span class="cert-issuer-badge">📘 Coursera</span>
@@ -1713,7 +1674,6 @@ input, select, textarea {
         <div class="cert-id">ID: <span>L79GLCI3HDGC</span></div>
         <a href="https://www.coursera.org/account/accomplishments/verify/L79GLCI3HDGC" target="_blank" class="cert-link">View Certificate →</a>
       </div>
-
       <div class="cert-card reveal">
         <div class="cert-issuer">
           <span class="cert-issuer-badge">📘 Coursera</span>
@@ -1727,7 +1687,6 @@ input, select, textarea {
         <div class="cert-id">ID: <span>OF50RCLR249W</span></div>
         <a href="https://www.coursera.org/account/accomplishments/verify/OF50RCLR249W" target="_blank" class="cert-link">View Certificate →</a>
       </div>
-
       <div class="cert-card reveal">
         <div class="cert-issuer">
           <span class="cert-issuer-badge">📘 Coursera</span>
@@ -1739,41 +1698,31 @@ input, select, textarea {
           <span class="tag">Vue.js</span><span class="tag">JavaScript</span><span class="tag">Components</span><span class="tag">State Management</span>
         </div>
         <div class="cert-id">ID: <span>9H2QBI7JI890</span></div>
-          <a href="https://www.coursera.org/account/accomplishments/verify/9H2QBI7JI890" target="_blank" class="cert-link">View Certificate →</a>
+        <a href="https://www.coursera.org/account/accomplishments/verify/9H2QBI7JI890" target="_blank" class="cert-link">View Certificate →</a>
       </div>
-
     </div>
   </div>
 </section>
 
-
-
-<!-- ============ SECTION HTML ============ -->
+<!-- DEVCAREER AI -->
 <section style="background: var(--dark);" id="devcareer">
   <div class="dc-glow"></div>
   <div class="dc-inner">
-
-    <!-- LEFT -->
     <div class="dc-left reveal">
       <div class="section-label">Our AI Tool</div>
-
-    <div class="dc-badge">
-  <span class="dc-badge-dot"></span>
-  Live API
-  <span class="dc-version">v1.5</span>
-</div>
-
+      <div class="dc-badge">
+        <span class="dc-badge-dot"></span>
+        Live API
+        <span class="dc-version">v1.5</span>
+      </div>
       <h2 class="dc-title">
         DEV<span class="dc-accent">CAREER</span><br>
         <span class="dc-outline">AI</span><br>
         STUDIO
       </h2>
-
       <p class="dc-desc">
         AI-powered career growth for every developer — whether you're a <strong style="color:var(--white)">Laravel</strong>, <strong style="color:var(--white)">React</strong>, <strong style="color:var(--white)">Python</strong> or <strong style="color:var(--white)">DevOps</strong> engineer. Get tailored profiles, resume help &amp; job-switch guidance — powered by GPT-4o and local LLMs via Ollama.
       </p>
-
-      <!-- Stack pills -->
       <div class="dc-stacks">
         <span class="dc-stack">🔥 Laravel</span>
         <span class="dc-stack">⚛️ React</span>
@@ -1782,8 +1731,6 @@ input, select, textarea {
         <span class="dc-stack">📄 Resume</span>
         <span class="dc-stack">🎯 Career Path</span>
       </div>
-
-      <!-- CTA -->
       <div class="dc-btns">
         <a href="https://ai.buldel.com/" target="_blank" class="dc-btn-main">
           Launch DevCareer AI
@@ -1794,11 +1741,7 @@ input, select, textarea {
         </a>
       </div>
     </div>
-
-    <!-- RIGHT -->
     <div class="dc-right reveal">
-
-      <!-- Feature cards -->
       <div class="dc-feat-grid">
         <div class="dc-feat">
           <span class="dc-feat-emoji">🌐</span>
@@ -1821,8 +1764,6 @@ input, select, textarea {
           <div class="dc-feat-desc">Personalized paths, skill gaps &amp; level-up strategies.</div>
         </div>
       </div>
-
-      <!-- Endpoint card -->
       <div class="dc-endpoint">
         <div class="dc-endpoint-bar">
           <span class="dc-method">POST</span>
@@ -1842,8 +1783,6 @@ input, select, textarea {
           </div>
         </div>
       </div>
-
-      <!-- Stats row -->
       <div class="dc-stats">
         <div class="dc-stat">
           <span class="dc-stat-num">60</span>
@@ -1858,18 +1797,13 @@ input, select, textarea {
           <span class="dc-stat-lbl">Auth Needed</span>
         </div>
       </div>
-
-      <!-- Animated typing line -->
       <div class="dc-typing-wrap">
         <span class="dc-typing-dot">▸</span>
         <span id="dc-typewriter"></span>
       </div>
-
     </div>
   </div>
 </section>
-
-
 
 <!-- CONTACT -->
 <section id="contact">
@@ -1879,7 +1813,6 @@ input, select, textarea {
         <div class="section-label">Get In Touch</div>
         <h2 class="section-title">LET'S BUILD<br><span style="color:var(--accent)">TOGETHER</span></h2>
         <p style="color:var(--muted); font-size:0.95rem; line-height:1.7;">Tell us about your project and we'll get back to you within 24 hours. UK, USA, Australia, India — all welcome.</p>
-
         <div class="contact-info-items">
           <a href="mailto:sonusahani086@gmail.com" class="contact-info-item">
             <span class="contact-info-icon">✉️</span>
@@ -1899,67 +1832,54 @@ input, select, textarea {
           </div>
         </div>
       </div>
-
       <div class="contact-right">
-      <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
-          
-  <!-- Web3Forms Required -->
-  <input type="hidden" name="access_key" value="2fb628c1-8520-4f03-89c1-b973731d9a4b">
-  <input type="hidden" name="subject" value="New Project Inquiry — CodeCraft Systems">
-  <input type="hidden" name="from_name" value="CodeCraft Systems Website">
-
-  <!-- Spam Protection -->
-  <input type="hidden" name="botcheck" value="">
-
-  <div class="form-row">
-    <div class="form-group">
-      <label class="form-label">Your Name</label>
-      <input type="text" name="name" class="form-input" placeholder="John Smith" required>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Email</label>
-      <input type="email" name="email" class="form-input" placeholder="john@company.com" required>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Service Needed</label>
-    <select name="service" class="form-select">
-      <option value="">Select a service...</option>
-      <option>Laravel API Development</option>
-      <option>Vue.js / Quasar Frontend</option>
-      <option>Real-Time Application</option>
-      <option>Payment Gateway Integration</option>
-      <option>Cloud Deployment & DevOps</option>
-      <option>AI / IoT Integration</option>
-      <option>Full Stack SaaS Project</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Budget Range (USD)</label>
-    <select name="budget" class="form-select">
-      <option value="">Select budget...</option>
-      <option>$500 – $1,500</option>
-      <option>$1,500 – $5,000</option>
-      <option>$5,000 – $15,000</option>
-      <option>$15,000+</option>
-      <option>Monthly Retainer</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Project Details</label>
-    <textarea name="message" class="form-textarea" placeholder="Describe your project — tech stack, features, timeline, etc." required></textarea>
-  </div>
-
- 
-
-  <button type="submit" class="form-btn" id="submitBtn">
-    Send Message
-  </button>
-
-</form>
+        <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="2fb628c1-8520-4f03-89c1-b973731d9a4b">
+          <input type="hidden" name="subject" value="New Project Inquiry — CodeCraft Systems">
+          <input type="hidden" name="from_name" value="CodeCraft Systems Website">
+          <input type="hidden" name="botcheck" value="">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input type="text" name="name" class="form-input" placeholder="John Smith" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" class="form-input" placeholder="john@company.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Service Needed</label>
+            <select name="service" class="form-select">
+              <option value="">Select a service...</option>
+              <option>Laravel API Development</option>
+              <option>Vue.js / Quasar Frontend</option>
+              <option>Real-Time Application</option>
+              <option>Payment Gateway Integration</option>
+              <option>Cloud Deployment & DevOps</option>
+              <option>AI / IoT Integration</option>
+              <option>Full Stack SaaS Project</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Budget Range (USD)</label>
+            <select name="budget" class="form-select">
+              <option value="">Select budget...</option>
+              <option>$500 – $1,500</option>
+              <option>$1,500 – $5,000</option>
+              <option>$5,000 – $15,000</option>
+              <option>$15,000+</option>
+              <option>Monthly Retainer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Project Details</label>
+            <textarea name="message" class="form-textarea" placeholder="Describe your project — tech stack, features, timeline, etc." required></textarea>
+          </div>
+          <button type="submit" class="form-btn" id="submitBtn">
+            Send Message
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -1969,10 +1889,7 @@ input, select, textarea {
 <footer>
   <div class="footer-inner">
     <div class="footer-logo">Code<span>Craft</span></div>
-   <p class="footer-copy">
-    © <span id="year"></span> CodeCraft Systems · Sonu Sahani · All rights reserved.
-  </p>
-            <ul class="footer-links">
+    <ul class="footer-links">
       <li><a href="./">Home</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="./blog/">Blog</a></li>
@@ -1983,37 +1900,20 @@ input, select, textarea {
       <li><a href="./find-jobs-with-ai/">Find Jobs with AI</a></li>
       <li><a href="#contact">Hire Us</a></li>
     </ul>
+    <p class="footer-copy">
+      © <span id="year"></span> CodeCraft Systems · Sonu Sahani · All rights reserved.
+    </p>
   </div>
 </footer>
 
-
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
-  
-document.getElementById('contactForm').addEventListener('submit', function() {
-  const btn = document.getElementById('submitBtn');
-  btn.textContent = '⏳ Sending...';
-  btn.disabled = true;
-});
-</script>
 
-<script>
- 
-  // Cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  function animateCursor() {
-    if (cursor) {
-      cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
-      rx += (mx - rx - 20) * 0.12;
-      ry += (my - ry - 20) * 0.12;
-      ring.style.transform = `translate(${rx}px, ${ry}px)`;
-    }
-    requestAnimationFrame(animateCursor);
-  }
-  animateCursor();
+  document.getElementById('contactForm').addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = '⏳ Sending...';
+    btn.disabled = true;
+  });
 
   // Nav scroll
   window.addEventListener('scroll', () => {
@@ -2031,19 +1931,6 @@ document.getElementById('contactForm').addEventListener('submit', function() {
   }, { threshold: 0.1 });
   reveals.forEach(el => observer.observe(el));
 
-  // Form submit
-  function handleSubmit(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('.form-btn');
-    btn.textContent = '✅ Message Sent!';
-    btn.style.background = '#22c55e';
-    setTimeout(() => {
-      btn.textContent = 'Send Message ✉️';
-      btn.style.background = '';
-      e.target.reset();
-    }, 3000);
-  }
-
   // Smooth anchor scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
@@ -2053,8 +1940,6 @@ document.getElementById('contactForm').addEventListener('submit', function() {
   });
 </script>
 
-
-<!-- Typewriter Script for DevCareer section -->
 <script>
 (function() {
   const lines = [
