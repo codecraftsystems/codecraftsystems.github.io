@@ -255,6 +255,10 @@ return data.jobs || [];
 /* ─────────── RUN SMART SEARCH ─────────── */
 
 async function runJsearchJobs(){
+if(window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive()){
+  toast('tw','Please wait','Cooldown is active for 1 minute after empty results.',3000);
+  return;
+}
 lockJobButtons("smartJobBtn");
 const step1=document.getElementById("aiStep1");
 const step2=document.getElementById("aiStep2");
@@ -315,6 +319,8 @@ listDirect.innerHTML=`
 ⚠️ Jobs not found. Please try again later.
 </div>`;
 
+if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
+
 return;
 
 }
@@ -353,6 +359,8 @@ listDirect.innerHTML=`
 <div class="job-card">
 ⚠️ Job search service is temporarily busy.
 </div>`;
+
+if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
 
 }else{
 

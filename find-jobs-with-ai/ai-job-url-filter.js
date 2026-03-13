@@ -69,6 +69,10 @@ function createJobCard(url){
 /* ─────────── MAIN RUNNER ─────────── */
 
 async function runAiUrlSearch(){
+if(window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive()){
+  toast('tw','Please wait','Cooldown is active for 1 minute after empty results.',3000);
+  return;
+}
 lockJobButtons("aiUrlBtn"); 
   if(aiRunning) return;
 
@@ -205,6 +209,7 @@ Profile Summary: ${(profile.bio || '').substring(0,300)}
   if(!data.results || data.results.length===0){
 
     listDirect.innerHTML=`<div class="job-card">No jobs found</div>`;
+    if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
     return;
 
   }
@@ -237,6 +242,7 @@ Profile Summary: ${(profile.bio || '').substring(0,300)}
   if(urls.length===0){
 
     listDirect.innerHTML=`<div class="job-card">No job URLs found</div>`;
+    if(window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
     return;
 
   }

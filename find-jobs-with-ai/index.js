@@ -521,8 +521,64 @@ Return clean JSON only.`;
 
 /* ─────────── Main run ─────────── */
 let searchRunning = false;
+let cooldownInterval = null;
+let cooldownEndsAt = 0;
+
+function formatCooldown(msLeft) {
+  const total = Math.max(0, Math.ceil(msLeft / 1000));
+  const m = String(Math.floor(total / 60)).padStart(2, '0');
+  const s = String(total % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function applyCooldownLabels(text) {
+  const findLbl = document.getElementById('btnLabel');
+  const smartBtn = document.getElementById('smartJobBtn');
+  const aiBtn = document.getElementById('aiUrlBtn');
+  if (findLbl) findLbl.textContent = `⏳ ${text}`;
+  if (smartBtn) smartBtn.innerHTML = `⏳ ${text}`;
+  if (aiBtn) aiBtn.innerHTML = `⏳ ${text}`;
+}
+
+window.isJobButtonsCooldownActive = function () {
+  return Date.now() < cooldownEndsAt;
+};
+
+window.startJobButtonsCooldown = function (seconds = 60) {
+  cooldownEndsAt = Date.now() + (seconds * 1000);
+  if (cooldownInterval) clearInterval(cooldownInterval);
+
+  lockJobButtons();
+  const tick = () => {
+    const left = cooldownEndsAt - Date.now();
+    if (left <= 0) {
+      clearInterval(cooldownInterval);
+      cooldownInterval = null;
+      cooldownEndsAt = 0;
+      setBtn('💼 Find My Jobs', false, false);
+      const smartBtn = document.getElementById('smartJobBtn');
+      const aiBtn = document.getElementById('aiUrlBtn');
+      if (smartBtn) smartBtn.innerHTML = '⚡ Smart Job Search';
+      if (aiBtn) aiBtn.innerHTML = '🤖 AI URL Finder';
+      unlockJobButtons();
+      setStatus('ok', 'Ready again', 'Cooldown finished. You can search now.');
+      return;
+    }
+
+    const clock = formatCooldown(left);
+    applyCooldownLabels(clock);
+    setStatus('warn', 'No results found', `Please wait ${clock} before trying again.`);
+  };
+
+  tick();
+  cooldownInterval = setInterval(tick, 1000);
+};
 
 async function runJobSearch() {
+  if (window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive()) {
+    toast('tw', 'Please wait', 'Cooldown is active for 1 minute after empty results.', 3000);
+    return;
+  }
    lockJobButtons("findJobBtn");
   if (searchRunning) return;
   if (!session) { window.location.href = '../auth/?next=' + encodeURIComponent('/find-jobs-with-ai/'); return; }
@@ -557,6 +613,7 @@ async function runJobSearch() {
     } else {
       setStatus('warn', 'No matches found', 'Try updating your skills or title and search again.');
       toast('ti', 'No Results', 'Try expanding your skills in your profile.');
+      if (window.startJobButtonsCooldown) window.startJobButtonsCooldown(60);
     }
 
     if (result.strategy) renderTips(result.strategy);
@@ -702,6 +759,10 @@ window.lockJobButtons = function(activeId){
 
 
 window.unlockJobButtons = function(){
+
+  if (window.isJobButtonsCooldownActive && window.isJobButtonsCooldownActive()) {
+    return;
+  }
 
   const ids = ["findJobBtn","smartJobBtn","aiUrlBtn"];
 
