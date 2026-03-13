@@ -553,7 +553,7 @@ body::after{
 .btn-g:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:0 5px 16px rgba(255,77,0,.12)}
 .btn.pulse{animation:btnPulse .6s ease-in-out 0s 3}
 @keyframes btnPulse{0%,100%{transform:translateY(0);box-shadow:0 0 0 rgba(255,77,0,0)}50%{transform:translateY(-2px);box-shadow:0 0 0 5px rgba(255,77,0,.14)}}
-.ai-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:100%}
+.ai-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%}
 .ai-actions .btn{width:100%}
 .btn-d{
   border:1px solid rgba(220,38,38,.22);color:var(--danger);background:none;
@@ -654,30 +654,6 @@ body::after{
 }
 .btn-g .spinner{border-color:rgba(255,255,255,.2);border-top-color:var(--accent)}
 
-/* ── JOB LIST ── */
-.job-list-wrap{
-  margin-top:15px;border:1px solid var(--border);
-  background:var(--card);border-radius:var(--radius-sm);padding:14px;
-}
-.job-list-title{
-  font-family:var(--font-m);font-size:.7rem;color:var(--a2);
-  letter-spacing:.6px;text-transform:uppercase;margin-bottom:9px;
-  display:flex;align-items:center;gap:8px;
-}
-.job-list-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,184,0,.25),transparent)}
-.job-list{display:flex;flex-direction:column;gap:8px}
-.job-item{
-  border:1px solid var(--border2);border-radius:var(--radius-sm);
-  padding:11px;background:var(--card2);
-  transition:border-color .2s,transform .2s;
-}
-.job-item:hover{border-color:rgba(255,77,0,.25);transform:translateY(-1px)}
-.job-role{font-size:.83rem;font-weight:700;color:var(--white);margin-bottom:3px}
-.job-company{font-size:.72rem;color:var(--muted);margin-bottom:7px}
-.job-link{font-family:var(--font-m);font-size:.66rem;color:var(--a2);text-decoration:none;word-break:break-all}
-.job-link:hover{text-decoration:underline}
-.job-empty{font-size:.72rem;color:var(--muted)}
-
 /* ── ANIMATIONS ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pop{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}
@@ -773,7 +749,7 @@ footer{
   <a href="../blog/" onclick="closeMob()">Blog</a>
   <a href="../developers/" onclick="closeMob()">Developers</a>
   <a href="../jobs/" onclick="closeMob()">Job Board</a>
-  <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMob()">Find Jobs with AI</a>
+  
   <a href="../submit-profile/" data-nav-add-profile onclick="closeMob()">Add Profile</a>
   <a href="#" data-nav-view-profile onclick="closeMob()" style="display:none">View Profile</a>
 </div>
@@ -786,7 +762,7 @@ footer{
     <li><a href="../blog/">Blog</a></li>
     <li><a href="../developers/">Developers</a></li>
     <li><a href="../jobs/">Job Board</a></li>
-    <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
+    
     <li><a href="../submit-profile/" class="btn-nav" data-nav-add-profile>Add Profile</a></li>
     <li style="display:none"><a href="#" class="btn-nav" data-nav-view-profile>View Profile</a></li>
   </ul>
@@ -814,7 +790,7 @@ footer{
       <li><a href="../developers-open-to-work/">Open to Work</a></li>
       <li><a href="../submit-profile/">Add Profile</a></li>
       <li><a href="../jobs/">Job Board</a></li>
-      <li><a href="../find-jobs-with-ai/">Find Jobs with AI</a></li>
+      
       <li><a href="../#contact">Hire Us</a></li>
     </ul>
   </div>
@@ -1056,7 +1032,7 @@ function updateProfileCompletion(){
   if(val)val.textContent=score+'%';
   if(note)note.textContent=score===100
     ?'✅ Full profile completed. You can now save and generate ATS resume from your public profile.'
-    :'Complete all sections to unlock 100% profile strength and ATS resume export.';
+    :'Jitna complete profile hoga, utni better visibility milegi. Quick start with required fields.';
 }
 
 /* char counters */
@@ -1246,23 +1222,25 @@ function renderForm(profile){
       <div class="pc-wrap">
         <div class="pc-row"><span class="pc-lbl">Profile Completion</span><span class="pc-val" id="pcVal">0%</span></div>
         <div class="pc-track"><div class="pc-fill" id="pcFill"></div></div>
-        <div class="pc-note" id="pcNote">Complete all sections to unlock 100% profile strength and ATS resume export.</div>
+        <div class="pc-note" id="pcNote">Jitna complete profile hoga, utni better visibility milegi. Quick start with required fields.</div>
       </div>
     </div>
 
     <form id="pForm" onsubmit="doSave(event)" novalidate>
       <div class="form-alert" id="formAlert"><div class="form-alert-title">Please fix required fields</div><div class="form-alert-msg" id="formAlertMsg"></div></div>
 
+      <div class="fhint" style="margin:6px 0 14px">Required for quick profile: Name, Title, Experience, Bio, Skills. Baaki links optional hain.</div>
+
       <div class="fsec">
         <div class="fsec-head"><div class="fstrip so"></div><span class="fsec-title">Basic Information</span><span class="fsec-badge">Required</span></div>
         <div class="fsec-body">
 
           <div style="margin-bottom:18px">
-            <label class="flabel" style="margin-bottom:8px">AI Profile Generator</label>
+            <label class="flabel" style="margin-bottom:8px">Quick AI Profile Assist</label>
             <textarea
               id="ai_prompt"
               class="ta"
-              placeholder="Example: Laravel + Vue.js engineer with 6 years building SaaS products. Include your industries, achievements, and the type of role you want next."
+              placeholder="Example: Main Laravel + Vue developer hu, 4 years experience, India se remote role chahiye. APIs, dashboards, auth and deployment pe kaam kiya hai."
               style="min-height:180px;margin-bottom:10px"></textarea>
             <div class="ai-actions">
               <button type="button" class="btn btn-g" id="aiGenerateBtn" onclick="generateProfileAIWithSpinner(this)" style="min-width:220px;justify-content:center;position:relative;">
@@ -1273,18 +1251,10 @@ function renderForm(profile){
                 <span class="btn-text" style="display:inline-flex;align-items:center;gap:8px;">📄 Upload Resume & Auto Fill</span>
                 <span class="spinner" style="display:none;position:absolute;left:50%;transform:translateX(-50%);"></span>
               </button>
-              <button type="button" class="btn btn-g" id="findJobBtn" onclick="findJobsWithAI(this)" style="min-width:220px;justify-content:center;position:relative;">
-                <span class="btn-text" style="display:inline-flex;align-items:center;gap:8px;">🤖 Find Jobs with AI</span>
-                <span class="spinner" style="display:none;position:absolute;left:50%;transform:translateX(-50%);"></span>
-              </button>
               <input id="resumeUpload" type="file" accept=".pdf,.doc,.docx,.txt,.md" style="display:none" onchange="handleResumeUpload(this)">
             </div>
-            <p class="fhint" style="margin-top:9px">Tip: share your niche, years of experience, target role, and achievements. AI will generate a polished, SEO-friendly profile summary.</p>
-            <p class="fhint" style="margin-top:4px">Upload your resume (PDF/DOC/DOCX/TXT) to auto-fill fields in one tap.</p>
-            <div class="job-list-wrap" id="jobListWrap" style="display:none">
-              <div class="job-list-title">AI Job Matches (Top 5)</div>
-              <div class="job-list" id="jobList"></div>
-            </div>
+            <p class="fhint" style="margin-top:9px">Tip: Bas short intro likho. AI name/title/bio/skills/experience sab readable format me bhar dega.</p>
+            <p class="fhint" style="margin-top:4px">Resume TXT/MD upload kar sakte ho for fast auto-fill. PDF/DOC ho to summary AI box me paste karein.</p>
           </div>
 
           <div class="fg">
@@ -1432,19 +1402,7 @@ function renderForm(profile){
   updateProfileCompletion();
 }
 
-function handleIntentActions(){
-  const qp = new URLSearchParams(window.location.search || '');
-  const intent = (qp.get('intent') || '').toLowerCase();
-  if(intent !== 'find-jobs') return;
-  const btn = document.getElementById('findJobBtn');
-  if(!btn) return;
-  btn.scrollIntoView({behavior:'smooth', block:'center'});
-  btn.classList.add('pulse');
-  setTimeout(()=>btn.classList.remove('pulse'), 1800);
-  if(typeof toast === 'function'){
-    toast('ti', 'Ready to Find Jobs', 'Press "Find Jobs with AI" to start job matching.');
-  }
-}
+function handleIntentActions(){ return; }
 
 /* boot */
 (async function boot(){

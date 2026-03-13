@@ -645,7 +645,7 @@ footer{
 .fl{font-family:var(--font-d);font-size:1.2rem;letter-spacing:2.5px;color:var(--ink)}
 .fl b{color:var(--accent);font-weight:400}
 .fc{color:var(--muted2);font-size:.68rem}
-.flinks{display:flex;gap:20px;list-style:none}
+.flinks{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
 .flinks a{color:var(--muted2);text-decoration:none;font-size:.68rem;transition:color .2s}
 .flinks a:hover{color:var(--ink)}
 
@@ -672,6 +672,13 @@ footer{
   .stats-strip{grid-template-columns:1fr 1fr}
   .apply-bar{gap:8px}
   .apply-bar-left{flex-basis:100%}
+}
+
+@media(max-width:520px){
+  footer{padding:16px 12px}
+  .fi{flex-direction:column;align-items:center;text-align:center;gap:8px}
+  .flinks{justify-content:center;gap:10px}
+  .flinks a,.fc{font-size:.72rem}
 }
  .nav-links a.nav-feature {
     color: var(--accent);
