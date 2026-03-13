@@ -249,6 +249,10 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
   .hero-stats{max-width:100%}
 }
 @media(max-width:375px){.hero-title{font-size:2rem}}
+
+  .nav-links a.nav-feature{color:var(--accent)!important;border:1px solid rgba(255,77,0,.35);border-radius:999px;padding:7px 18px;background:rgba(255,77,0,.08)}
+  .nav-links a.nav-feature::after{display:none!important}
+  .mobile-menu a.nav-feature,.mob a.nav-feature,.mob-menu a.nav-feature{color:var(--accent);border:1px solid rgba(255,77,0,.35);border-radius:999px;padding:10px 26px;background:rgba(255,77,0,.08)}
 </style>
 </head>
 <body>
@@ -265,7 +269,8 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
   <a href="../developers/" onclick="closeMob()">Developers</a>
   <a href="../jobs/" onclick="closeMob()">Job Board</a>
   <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMob()">Find Jobs with AI</a>
-  <a href="../submit-profile/" onclick="closeMob()">Add Profile</a>
+  <a href="../submit-profile/" data-nav-add-profile onclick="closeMob()">Add Profile</a>
+  <a href="#" data-nav-view-profile onclick="closeMob()" style="display:none">View Profile</a>
 </div>
 
 <!-- Nav -->
@@ -275,10 +280,11 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
     <li><a href="../">Home</a></li>
     <li><a href="../#services">Services</a></li>
     <li><a href="../blog/">Blog</a></li>
-    <li><a href="../developers/">Developers</a></li>
+    <li><a href="../developers-open-to-work/" style="color:var(--accent)">Open to Work</a></li>
     <li><a href="../jobs/">Job Board</a></li>
     <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
-    <li><a href="../submit-profile/" class="btn-nav">Add Profile</a></li>
+    <li><a href="../submit-profile/" class="btn-nav" data-nav-add-profile>Add Profile</a></li>
+    <li style="display:none"><a href="#" class="btn-nav" data-nav-view-profile>View Profile</a></li>
   </ul>
   <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
@@ -289,7 +295,7 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
   <div class="hero-glow"></div>
   <div class="hero-inner">
     <nav class="pg-bc" aria-label="Breadcrumb">
-      <a href="https://codecraftsystems.github.io/">Home</a>
+      <a href="../">Home</a>
       <span class="pg-bc-sep">›</span>
       <a href="../developers/">Developers</a>
       <span class="pg-bc-sep">›</span>
@@ -357,11 +363,14 @@ footer{background:var(--dark);border-top:1px solid var(--border);padding:clamp(1
 
   <!-- Grid -->
   <div id="gridWrap"></div>
+  <div class="load-more-wrap" id="loadMoreWrap" style="display:none;margin-top:18px;text-align:center">
+    <button class="btn btn-g" onclick="loadMoreFromDb()">Load More Developers</button>
+  </div>
 
 </div>
 
 <!-- CTA band -->
-<div class="cta-band">
+<div class="cta-band" data-hide-when-logged>
   <div class="cta-band-inner">
     <h2 class="cta-title">ARE YOU<br><span>AVAILABLE?</span></h2>
     <p class="cta-sub">Add your profile and mark yourself as Open to Work — get discovered by employers and clients worldwide.</p>
@@ -427,6 +436,8 @@ function skClass(s){
 /* state */
 let allDevs=[];
 let activeSkill='all';
+let dbOffset=0,dbTotal=0,dbHasMore=true;
+const DB_PAGE_SIZE=24;
 
 /* skill filter */
 function setSkillFilter(el,skill){
@@ -462,6 +473,7 @@ function applyFilters(){
 
   document.getElementById('visCount').textContent=list.length;
   renderGrid(list);
+  document.getElementById('loadMoreWrap').style.display=dbHasMore?'block':'none';
 }
 
 /* render grid */
@@ -583,15 +595,19 @@ const DEMO=[
   }
 
   try{
-    const{data,error}=await SB
+    const{data,error,count}=await SB
       .from('developers')
-      .select('id,name,slug,title,skills,experience_years,profile_image,location,open_to_work,created_at')
+      .select('id,name,slug,title,skills,experience_years,profile_image,location,open_to_work,created_at', { count:'exact' })
       .eq('profile_public', true)
       .eq('open_to_work',true)
-      .order('created_at',{ascending:false});
+      .order('created_at',{ascending:false})
+      .range(dbOffset, dbOffset + DB_PAGE_SIZE - 1);
     if(error)throw error;
 
     allDevs=data||[];
+    dbOffset=allDevs.length;
+    dbTotal=Number(count||allDevs.length);
+    dbHasMore=dbOffset<dbTotal;
     document.getElementById('visCount').textContent=allDevs.length;
     updateStats(allDevs);
     applyFilters();
@@ -599,6 +615,33 @@ const DEMO=[
     renderError(err.message);
   }
 })();
+
+async function loadMoreFromDb(){
+  if(!dbHasMore) return;
+  let SB=null;
+  try{if(typeof devDirectory!=='undefined'&&devDirectory.createClient)SB=devDirectory.createClient();}catch(e){}
+  if(!SB) return;
+  try{
+    const {data,error} = await SB
+      .from('developers')
+      .select('id,name,slug,title,skills,experience_years,profile_image,location,open_to_work,created_at')
+      .eq('profile_public', true)
+      .eq('open_to_work',true)
+      .order('created_at',{ascending:false})
+      .range(dbOffset, dbOffset + DB_PAGE_SIZE - 1);
+    if(error) throw error;
+    const next=data||[];
+    allDevs=allDevs.concat(next);
+    dbOffset=allDevs.length;
+    dbHasMore=dbOffset<dbTotal;
+    updateStats(allDevs);
+    applyFilters();
+  }catch(err){console.error(err)}
+}
+
+if(window.devDirectory && typeof devDirectory.applyTalentNav==='function'){
+  devDirectory.applyTalentNav({profilePathPrefix:'../developer/?slug='});
+}
 </script>
 </body>
 </html>

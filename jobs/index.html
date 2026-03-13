@@ -409,7 +409,8 @@ footer{position:relative;z-index:1;background:var(--surface);border-top:1px soli
   <a href="../developers/" onclick="closeMob()">Developers</a>
   <a href="../jobs/" onclick="closeMob()">Job Board</a>
   <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMob()">Find Jobs with AI</a>
-  <a href="../submit-profile/" onclick="closeMob()">Add Profile</a>
+  <a href="../submit-profile/" data-nav-add-profile onclick="closeMob()">Add Profile</a>
+  <a href="#" data-nav-view-profile onclick="closeMob()" style="display:none">View Profile</a>
 </div>
 
 <nav class="nav" id="nav">
@@ -421,7 +422,8 @@ footer{position:relative;z-index:1;background:var(--surface);border-top:1px soli
     <li><a href="../developers/">Developers</a></li>
     <li><a href="../jobs/">Job Board</a></li>
     <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
-    <li><a href="../submit-profile/" class="btn-nav">Add Profile</a></li>
+    <li><a href="../submit-profile/" class="btn-nav" data-nav-add-profile>Add Profile</a></li>
+    <li style="display:none"><a href="#" class="btn-nav" data-nav-view-profile>View Profile</a></li>
   </ul>
   <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
@@ -1339,6 +1341,10 @@ if(museCache){
   setSC('themuse', museCache);
 }
 fetchAllJobs();
+
+if(window.devDirectory && typeof window.devDirectory.applyTalentNav==='function'){
+  window.devDirectory.applyTalentNav({profilePathPrefix:'../developer/?slug='});
+}
 
 
 function matchCountry(job){

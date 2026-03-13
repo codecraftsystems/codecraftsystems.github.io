@@ -775,7 +775,8 @@ footer{
   <a href="../developers/" onclick="closeMob()">Developers</a>
   <a href="../jobs/" onclick="closeMob()">Job Board</a>
   <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMob()">Find Jobs with AI</a>
-  <a href="../submit-profile/" onclick="closeMob()">Add Profile</a>
+  <a href="../submit-profile/" data-nav-add-profile onclick="closeMob()">Add Profile</a>
+  <a href="#" data-nav-view-profile onclick="closeMob()" style="display:none">View Profile</a>
 </div>
 
 <nav class="nav" id="nav">
@@ -787,7 +788,8 @@ footer{
     <li><a href="../developers/">Developers</a></li>
     <li><a href="../jobs/">Job Board</a></li>
     <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
-    <li><a href="../submit-profile/" class="btn-nav">Add Profile</a></li>
+    <li><a href="../submit-profile/" class="btn-nav" data-nav-add-profile>Add Profile</a></li>
+    <li style="display:none"><a href="#" class="btn-nav" data-nav-view-profile>View Profile</a></li>
   </ul>
   <button class="ham" id="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
@@ -1163,8 +1165,12 @@ async function doSave(e){
     }
     EP=payload;
     toast('ts','Saved!',wasEdit?'Profile updated successfully.':'Profile is now live!');
-    document.getElementById('nvView').href='../developer/?slug='+encodeURIComponent(slug);
-    document.getElementById('nvView').style.display='';
+    const nvView=document.querySelector('[data-nav-view-profile]');
+    if(nvView){
+      nvView.href='../developer/?slug='+encodeURIComponent(slug);
+      nvView.style.display='';
+      if(nvView.closest('li')) nvView.closest('li').style.display='';
+    }
     document.querySelectorAll('.snode').forEach(n=>{n.classList.add('done');n.querySelector('.snode-c').textContent='✓';});
     document.querySelectorAll('.sline').forEach(n=>n.classList.add('done'));
   }catch(err){
@@ -1454,8 +1460,9 @@ CU = {
   id: sess.user_id,
   email: sess.email 
 };
-  document.getElementById('nvLogin').style.display='none';
-  document.getElementById('nvLogout').style.display='';
+  if(window.devDirectory && typeof devDirectory.applyTalentNav==='function'){
+    await devDirectory.applyTalentNav({profilePathPrefix:'../developer/?slug='});
+  }
   try{
     const {data,error} = await SB
       .from('developers').select('*')
@@ -1464,8 +1471,12 @@ CU = {
       .maybeSingle();
     if(!error && data){
       EP = data;
-      document.getElementById('nvView').href = '../developer/?slug='+encodeURIComponent(data.slug||'');
-      document.getElementById('nvView').style.display='';
+      const nvView=document.querySelector('[data-nav-view-profile]');
+      if(nvView){
+        nvView.href = '../developer/?slug='+encodeURIComponent(data.slug||'');
+        nvView.style.display='';
+        if(nvView.closest('li')) nvView.closest('li').style.display='';
+      }
     }
   }catch(e){}
   renderForm(EP);

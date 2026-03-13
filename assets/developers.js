@@ -58,6 +58,64 @@
     return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(String(value || '').trim());
   }
 
+  function getSession() {
+    try {
+      const raw = localStorage.getItem('cc_session');
+      if (!raw) return null;
+      const s = JSON.parse(raw);
+      if (!s || !s.email || !s.user_id || !s.loginAt) return null;
+      return s;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async function applyTalentNav(options = {}) {
+    const session = getSession();
+    if (!session) return null;
+
+    const addSelector = options.addSelector || '[data-nav-add-profile]';
+    const viewSelector = options.viewSelector || '[data-nav-view-profile]';
+    const hideWhenLoggedSelector = options.hideWhenLoggedSelector || '[data-hide-when-logged]';
+    const profilePathPrefix = options.profilePathPrefix || '../developer/?slug=';
+
+    let slug = session.slug || '';
+
+    try {
+      const client = createClient();
+      const { data } = await client
+        .from('developers')
+        .select('slug')
+        .eq('email', session.email)
+        .eq('user_id', session.user_id)
+        .maybeSingle();
+      if (data && data.slug) slug = data.slug;
+    } catch (error) {
+      // no-op: keep graceful fallback
+    }
+
+    const addLinks = document.querySelectorAll(addSelector);
+    addLinks.forEach((el) => {
+      el.style.display = 'none';
+      if (el.closest('li')) el.closest('li').style.display = 'none';
+    });
+
+    if (slug) {
+      const viewLinks = document.querySelectorAll(viewSelector);
+      viewLinks.forEach((el) => {
+        el.href = profilePathPrefix + encodeURIComponent(slug);
+        el.style.display = '';
+        if (el.closest('li')) el.closest('li').style.display = '';
+      });
+    }
+
+    document.querySelectorAll(hideWhenLoggedSelector).forEach((el) => {
+      el.style.display = 'none';
+    });
+
+    return { session, slug };
+  }
+
   window.devDirectory = {
     createClient,
     slugify,
@@ -66,6 +124,8 @@
     isValidHttpUrl,
     normalizeImageUrl,
     isValidEmail,
-    DEFAULT_PROFILE_IMAGE
+    DEFAULT_PROFILE_IMAGE,
+    getSession,
+    applyTalentNav
   };
 })();
