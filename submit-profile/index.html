@@ -109,6 +109,18 @@ body::after{
   transition:transform .25s cubic-bezier(.4,0,.2,1);
 }
 .nav-links a:hover{color:var(--white)}
+  .nav-links a.nav-feature {
+    color: var(--accent);
+    border: 1px solid rgba(255, 77, 0, 0.35);
+    border-radius: 999px;
+    padding: 8px 14px;
+    background: rgba(255, 77, 0, 0.08);
+  }
+  .nav-links a.nav-feature:hover {
+    color: var(--white);
+    border-color: var(--accent);
+    background: rgba(255, 77, 0, 0.2);
+  }
 .nav-links a:hover::after{transform:scaleX(1)}
 .nav-cta{
   background:var(--accent)!important;color:#fff!important;
@@ -721,6 +733,24 @@ footer{
     padding: 10px 26px;
     background: rgba(255, 77, 0, 0.08);
   }
+  
+  /* MOBILE MENU */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(244,247,251,0.98);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { font-family: var(--font-display); font-size: 2.5rem; color: var(--white); text-decoration: none; letter-spacing: 2px; transition: color 0.2s; }
+  .mobile-menu a:hover { color: var(--accent); }
+  .mobile-menu a.nav-feature { color: var(--accent); border: 1px solid rgba(255, 77, 0, 0.35); border-radius: 999px; padding: 10px 26px; background: rgba(255, 77, 0, 0.08); }
+  .close-btn { position: absolute; top: 24px; right: 40px; font-size: 2rem; background: none; border: none; color: var(--white); cursor: pointer; }
 </style>
 </head>
 <body>
@@ -749,7 +779,7 @@ footer{
   <a href="../blog/" onclick="closeMob()">Blog</a>
   <a href="../developers/" onclick="closeMob()">Developers</a>
   <a href="../jobs/" onclick="closeMob()">Job Board</a>
-  
+    <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMobile()">Find Jobs with AI</a>
   <a href="../submit-profile/" data-nav-add-profile onclick="closeMob()">Add Profile</a>
   <a href="#" data-nav-view-profile onclick="closeMob()" style="display:none">View Profile</a>
 </div>
@@ -762,7 +792,7 @@ footer{
     <li><a href="../blog/">Blog</a></li>
     <li><a href="../developers/">Developers</a></li>
     <li><a href="../jobs/">Job Board</a></li>
-    
+    <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
     <li><a href="../submit-profile/" class="btn-nav" data-nav-add-profile>Add Profile</a></li>
     <li style="display:none"><a href="#" class="btn-nav" data-nav-view-profile>View Profile</a></li>
   </ul>

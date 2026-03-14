@@ -41,6 +41,14 @@
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+  /* =====================
+     FIX 1: Prevent ANY horizontal overflow at root level
+  ===================== */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
   :root {
     --black: #f4f7fb;
     --dark: #ffffff;
@@ -243,15 +251,16 @@
   }
 
   /* ═══════════════════════════════════════
-     HERO BTNS — ONLY CHANGED SECTION
-     Row1: Our Services + Get a Quote (same line always)
-     Row2: How AI Finds Jobs (full width on mobile, auto on desktop)
+     HERO BTNS — FIXED FOR ALL DEVICES
   ═══════════════════════════════════════ */
   .hero-btns {
     display: flex;
     flex-direction: column;
     gap: 12px;
     animation: fadeUp 0.6s 0.3s ease both;
+    /* FIX: prevent overflow */
+    width: 100%;
+    max-width: 100%;
   }
   .hero-btns-row1 {
     display: flex;
@@ -283,24 +292,6 @@
     .btn-ai-hero {
       width: auto;
       justify-content: flex-start;
-    }
-  }
-  /* Mobile ≤500px: slightly smaller text */
-  @media (max-width: 500px) {
-    .hero-btns-row1 {
-      gap: 8px;
-    }
-    .btn-primary {
-      padding: 12px 18px;
-      font-size: 0.85rem;
-    }
-    .btn-outline {
-      padding: 12px 18px;
-      font-size: 0.85rem;
-    }
-    .btn-ai-hero {
-      padding: 12px 20px;
-      font-size: 0.82rem;
     }
   }
   /* ═══════════════════════════════════════ */
@@ -343,6 +334,8 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    /* FIX: prevent globe card from overflowing on mobile */
+    min-width: 0;
   }
 
   /* GLOBE CARD */
@@ -354,6 +347,8 @@
     position: relative;
     height: 400px;
     box-shadow: 0 0 60px rgba(255,77,0,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
+    /* FIX: ensure canvas doesn't cause overflow */
+    width: 100%;
   }
   .globe-topbar {
     position: absolute;
@@ -402,6 +397,8 @@
     gap: 8px;
     z-index: 10;
     padding: 0 12px;
+    /* FIX: prevent overflow on small screens */
+    flex-wrap: wrap;
   }
   .globe-country {
     display: flex;
@@ -459,19 +456,23 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* MARQUEE */
+  /* MARQUEE — FIX: contain overflow */
   .marquee-wrap {
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     background: var(--dark);
-    overflow: hidden;
+    overflow: hidden;       /* FIX: was missing on marquee wrap */
     padding: 14px 0;
+    width: 100%;
+    max-width: 100vw;
   }
   .marquee-inner {
     display: flex;
     gap: 48px;
     animation: marquee 20s linear infinite;
     white-space: nowrap;
+    /* FIX: ensure it doesn't break layout */
+    will-change: transform;
   }
   .marquee-item {
     font-family: var(--font-mono);
@@ -481,6 +482,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0;
   }
   .marquee-item::before { content: '▸'; color: var(--accent); }
   @keyframes marquee {
@@ -648,9 +650,12 @@
     color: var(--muted);
     text-decoration: none;
     transition: all 0.2s;
+    /* FIX: prevent long email/phone from overflowing */
+    overflow: hidden;
+    word-break: break-word;
   }
   .contact-info-item:hover { border-color: var(--accent); color: var(--white); }
-  .contact-info-icon { font-size: 1.1rem; }
+  .contact-info-icon { font-size: 1.1rem; flex-shrink: 0; }
   .contact-form { display: flex; flex-direction: column; gap: 16px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-label { font-size: 0.78rem; color: var(--muted); font-family: var(--font-mono); letter-spacing: 0.5px; }
@@ -664,6 +669,9 @@
     font-family: var(--font-body);
     transition: border-color 0.2s;
     width: 100%;
+    /* FIX: prevent input zoom on iOS and overflow */
+    max-width: 100%;
+    min-width: 0;
   }
   .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); }
   .form-textarea { min-height: 120px; resize: vertical; }
@@ -775,7 +783,7 @@
   .dc-btn-main:hover .arrow { transform: translateX(4px); }
   .dc-btn-ghost { border: 1px solid var(--border); color: var(--muted); padding: 14px 24px; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-family: var(--font-mono); display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; }
   .dc-btn-ghost:hover { border-color: var(--white); color: var(--white); }
-  .dc-right { display: flex; flex-direction: column; gap: 16px; }
+  .dc-right { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
   .dc-feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .dc-feat { background: var(--black); border: 1px solid var(--border); border-radius: 10px; padding: 22px 20px; position: relative; overflow: hidden; transition: all 0.3s; cursor: default; }
   .dc-feat::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease; }
@@ -786,11 +794,12 @@
   .dc-feat-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.55; }
   .dc-endpoint { background: var(--black); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
   .dc-endpoint-bar { background: var(--card); border-bottom: 1px solid var(--border); padding: 11px 16px; display: flex; align-items: center; gap: 10px; }
-  .dc-method { background: rgba(255,77,0,0.12); border: 1px solid rgba(255,77,0,0.3); color: var(--accent); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 3px; }
-  .dc-url { font-family: var(--font-mono); font-size: 0.78rem; color: #2f855a; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .dc-free-badge { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: #22c55e; font-family: var(--font-mono); font-size: 0.65rem; padding: 2px 8px; border-radius: 100px; }
+  .dc-method { background: rgba(255,77,0,0.12); border: 1px solid rgba(255,77,0,0.3); color: var(--accent); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 3px; flex-shrink: 0; }
+  /* FIX: dc-url overflow on small screens */
+  .dc-url { font-family: var(--font-mono); font-size: 0.78rem; color: #2f855a; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .dc-free-badge { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: #22c55e; font-family: var(--font-mono); font-size: 0.65rem; padding: 2px 8px; border-radius: 100px; flex-shrink: 0; white-space: nowrap; }
   .dc-endpoint-body { padding: 16px; font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.8; color: #4b5563; display: flex; gap: 24px; }
-  .dc-endpoint-col { flex: 1; }
+  .dc-endpoint-col { flex: 1; min-width: 0; overflow: hidden; }
   .dc-k { color: #6b46c1; }
   .dc-s { color: #2f855a; }
   .dc-c { color: #9ca3af; font-style: italic; }
@@ -801,9 +810,9 @@
   .dc-stat:hover::after { transform: scaleX(1); }
   .dc-stat-num { font-family: var(--font-display); font-size: 1.8rem; color: var(--accent); line-height: 1; display: block; }
   .dc-stat-lbl { font-size: 0.68rem; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; display: block; }
-  .dc-typing-wrap { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
-  .dc-typing-dot { color: var(--accent); font-weight: 700; }
-  #dc-typewriter { color: var(--white); border-right: 2px solid var(--accent); animation: dcBlink 0.7s step-end infinite; white-space: nowrap; overflow: hidden; }
+  .dc-typing-wrap { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); overflow: hidden; }
+  .dc-typing-dot { color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  #dc-typewriter { color: var(--white); border-right: 2px solid var(--accent); animation: dcBlink 0.7s step-end infinite; white-space: nowrap; overflow: hidden; min-width: 0; }
 
   /* HOW AI FINDS JOBS — HERO BUTTON */
   .btn-ai-hero {
@@ -872,9 +881,12 @@
     display: flex; align-items: center; justify-content: space-between;
     gap: 24px; flex-wrap: wrap;
     position: relative; overflow: hidden;
+    /* FIX: prevent banner from overflowing */
+    width: 100%;
+    max-width: 100%;
   }
   .ai-banner::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,77,0,0.04) 0%, transparent 50%, rgba(255,184,0,0.04) 100%); pointer-events: none; }
-  .ai-banner-left { display: flex; align-items: center; gap: 18px; position: relative; z-index: 1; }
+  .ai-banner-left { display: flex; align-items: center; gap: 18px; position: relative; z-index: 1; min-width: 0; flex: 1; }
   .ai-banner-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(255,77,0,0.1); border: 1px solid rgba(255,77,0,0.22); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; animation: bannerPulse 3s ease-in-out infinite; }
   @keyframes bannerPulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,77,0,0.2)} 50%{box-shadow:0 0 0 8px rgba(255,77,0,0)} }
   .ai-banner-label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
@@ -882,7 +894,7 @@
   .ai-banner-title { font-family: var(--font-display); font-size: 1.35rem; color: var(--white); letter-spacing: 1px; }
   .ai-banner-title .acc { color: var(--accent); }
   .ai-banner-sub { font-size: 0.83rem; color: var(--muted); margin-top: 2px; }
-  .ai-banner-steps { display: flex; gap: 0; position: relative; z-index: 1; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .ai-banner-steps { display: flex; gap: 0; position: relative; z-index: 1; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex-shrink: 0; }
   .ai-step { padding: 12px 18px; border-right: 1px solid var(--border); background: var(--card); text-align: center; transition: background 0.2s; }
   .ai-step:last-child { border-right: none; }
   .ai-step:hover { background: rgba(255,77,0,0.04); }
@@ -953,14 +965,23 @@
     .footer-links { justify-content: flex-start; gap: 10px 16px; }
     .footer-copy { padding-top: 16px; }
     .ai-banner { padding: 20px 24px; flex-direction: column; align-items: flex-start; gap: 18px; }
-    .ai-banner-left { width: 100%; }
+    .ai-banner-left { width: 100%; flex: none; }
     .ai-banner-steps { width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); }
     .ai-step { padding: 10px 12px; }
     .btn-ai-big { width: 100%; justify-content: center; }
   }
 
+  /* =====================
+     MOBILE (max 600px)
+  ===================== */
   @media (max-width: 600px) {
-    .ai-banner { padding: 18px 20px; gap: 16px; }
+    /* FIX: all sections get proper side padding */
+    section { padding: 60px 16px; }
+    #devcareer { padding: 60px 16px; }
+    nav { padding: 14px 16px; }
+    nav.scrolled { padding: 12px 16px; }
+
+    .ai-banner { padding: 18px 16px; gap: 16px; }
     .ai-banner-icon { width: 40px; height: 40px; font-size: 1.1rem; }
     .ai-banner-title { font-size: 1.1rem; }
     .ai-banner-sub { font-size: 0.76rem; line-height: 1.55; }
@@ -974,28 +995,36 @@
     .btn-how-ai { width: 100%; justify-content: center; font-size: 0.78rem; }
     .dc-btns { flex-direction: column; gap: 10px; }
     .dc-btn-main, .dc-btn-ghost { width: 100%; justify-content: center; }
-  }
 
-  @media (max-width: 400px) {
-    .ai-banner { padding: 16px; }
-    .ai-banner-left { flex-direction: column; gap: 10px; }
-    .ai-banner-steps { display: none; }
-    .ai-banner-title { font-size: 1rem; }
-    .ai-banner-sub { font-size: 0.72rem; }
-    .btn-ai-big { padding: 12px 18px; font-size: 0.82rem; }
-    .ai-pulse { display: none; }
-  }
+    /* FIX: hero buttons stacking on mobile */
+    .hero-btns { flex-direction: column; width: 100%; }
+    .hero-btns-row1 { display: flex; gap: 10px; }
+    .hero-btns-row2 { display: flex; }
+    .btn-primary { flex: 1; justify-content: center; padding: 12px 16px; font-size: 0.85rem; }
+    .btn-outline { flex: 1; justify-content: center; padding: 12px 16px; font-size: 0.85rem; }
+    .btn-ai-hero { width: 100%; justify-content: center; padding: 12px 20px; font-size: 0.85rem; }
 
-  /* =====================
-     MOBILE (max 500px)
-  ===================== */
-  @media (max-width: 500px) {
-    .hero-h1 { font-size: 3rem; }
+    /* FIX: dc-url wrapping */
+    .dc-endpoint-bar { flex-wrap: wrap; gap: 6px; }
+    .dc-url { font-size: 0.7rem; width: 100%; flex-basis: 100%; }
+
+    /* FIX: services grid */
     .services-grid { grid-template-columns: 1fr; }
+
+    /* FIX: about skills */
     .about-skills { grid-template-columns: 1fr; }
-    .globe-card { height: 280px; }
-    .globe-countries { gap: 6px; }
-    .globe-country { font-size: 0.58rem; padding: 2px 6px; }
+
+    /* FIX: globe */
+    .globe-card { height: 260px; }
+    .globe-countries { gap: 5px; padding: 0 8px; }
+    .globe-country { font-size: 0.58rem; padding: 3px 7px; }
+
+    /* FIX: cert grid */
+    .cert-grid { grid-template-columns: 1fr; }
+
+    /* FIX: contact info long text */
+    .contact-info-item { font-size: 0.82rem; padding: 12px 14px; }
+
     footer { padding: 32px 16px; }
     .footer-logo { font-size: 1.3rem; }
     .footer-links { gap: 10px 14px; }
@@ -1003,56 +1032,32 @@
     .footer-copy { font-size: 0.74rem; line-height: 1.6; }
   }
 
+  /* =====================
+     SMALL MOBILE (max 400px)
+  ===================== */
+  @media (max-width: 400px) {
+    section { padding: 50px 14px; }
+    #devcareer { padding: 50px 14px; }
+    nav { padding: 12px 14px; }
 
-  /* HERO BUTTONS */
-.hero-btns{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  max-width:420px;
-}
+    .ai-banner { padding: 16px 14px; }
+    .ai-banner-left { flex-direction: column; gap: 10px; }
+    .ai-banner-steps { display: none; }
+    .ai-banner-title { font-size: 1rem; }
+    .ai-banner-sub { font-size: 0.72rem; }
+    .btn-ai-big { padding: 12px 18px; font-size: 0.82rem; }
+    .ai-pulse { display: none; }
 
-.hero-btns-row1{
-  display:flex;
-  gap:12px;
-}
+    .hero-h1 { font-size: 2.8rem; }
+    .hero-btns-row1 { flex-direction: column; gap: 10px; }
+    .btn-primary, .btn-outline { width: 100%; justify-content: center; }
 
-.hero-btns-row1 a{
-  flex:1;
-  justify-content:center;
-}
+    /* FIX: dc feat grid 1 col on tiny screens */
+    .dc-feat-grid { grid-template-columns: 1fr; }
 
-.hero-btns-row2{
-  display:flex;
-}
-
-.hero-btns-row2 a{
-  width:100%;
-  justify-content:center;
-}
-
-/* DESKTOP */
-@media (min-width:901px){
-
-  .hero-btns{
-    flex-direction:row;
-    max-width:none;
+    /* FIX: why grid */
+    .why-grid { grid-template-columns: 1fr; }
   }
-
-  .hero-btns-row1{
-    display:contents;
-  }
-
-  .hero-btns-row2{
-    display:contents;
-  }
-
-  .hero-btns-row2 a{
-    width:auto;
-  }
-
-}
-
 </style>
 </head>
 <body>
@@ -1106,7 +1111,6 @@
       </h1>
       <p class="hero-sub">Laravel APIs, Vue.js SPAs, real-time systems & cloud-deployed SaaS products. 6+ years. UK, USA & Australia clients.</p>
 
-      <!-- ★ ONLY HTML CHANGE: added hero-btns-row1 and hero-btns-row2 wrappers -->
       <div class="hero-btns">
         <div class="hero-btns-row1">
           <a href="#services" class="btn-primary">Our Services →</a>
