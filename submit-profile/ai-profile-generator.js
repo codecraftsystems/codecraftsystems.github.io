@@ -64,9 +64,45 @@ const AI_PROFILE_GENERATOR = {
     return content;
   },
 
-  buildPrompt(userPrompt) {
-    return `You are an expert developer profile generator. Return ONLY valid JSON (no markdown, no extra text).\n\nUse this exact schema:\n{\n  "name": "",\n  "title": "",\n  "location": "",\n  "bio": "",\n  "skills": [],\n  "experience_years": 0,\n  "github_url": "",\n  "linkedin_url": "",\n  "portfolio_url": "",\n  "experience": [{"role":"","company":"","period":"","description":""}],\n  "certifications": [{"name":"","issuer":"","year":""}],\n  "seo_focus_keywords": []\n}\n\nGuidelines:\n- Bio should be 80-140 words and recruiter-friendly.\n- Keep skills practical and specific.\n- Experience should be realistic and readable.\n\nUser input: "${userPrompt}"`;
-  },
+buildPrompt(userPrompt) {
+return `You are an expert developer profile writer for a developer hiring platform.
+
+Return ONLY valid JSON (no markdown, no explanations).
+
+Schema:
+{
+"name": "",
+"title": "",
+"location": "",
+"bio": "",
+"skills": [],
+"experience_years": 0,
+"github_url": "",
+"linkedin_url": "",
+"portfolio_url": "",
+"experience": [{"role":"","company":"","period":"","description":""}],
+"certifications": [{"name":"","issuer":"","year":""}],
+"seo_focus_keywords": []
+}
+
+BIO RULES:
+- Write a strong professional developer bio.
+- 120–200 words.
+- Mention technologies, experience, projects, and type of work.
+- Make it recruiter friendly.
+- Do NOT make it generic.
+- Write in natural professional tone.
+
+SKILLS RULES:
+- 8–12 real technical skills.
+
+EXPERIENCE:
+- Use realistic descriptions from user input.
+
+User description:
+"${userPrompt}"
+`;
+},
 
   async generate(prompt, button) {
     if (this.requestLocks.generate) {
@@ -100,7 +136,9 @@ const AI_PROFILE_GENERATOR = {
   },
 
   fillFields(p) {
-    if (p.name) this.setValue('f_name', p.name);
+   if (p.name && !document.getElementById('f_name')?.value.trim()) {
+  this.setValue('f_name', p.name);
+}
     if (p.title) this.setValue('f_title', p.title);
     if (p.location) this.setValue('f_loc', p.location);
     if (p.bio) this.setValue('f_bio', p.bio);
@@ -146,45 +184,187 @@ const AI_PROFILE_GENERATOR = {
   }
 };
 
-AI_PROFILE_GENERATOR.generateFromResumeFile = async function(file, button) {
-  if (this.requestLocks.resume) {
-    this.showToast('ti', 'Please wait', 'Resume parsing is already running.');
+AI_PROFILE_GENERATOR.generateFromResumeFile = async function(file, button){
+
+  if(this.requestLocks.resume){
+    this.showToast('ti','Please wait','Resume parsing already running.');
     return false;
   }
-  if (!file) {
-    this.showToast('te', 'Resume Required', 'Please choose a resume file first.');
+
+  if(!file){
+    this.showToast('te','Resume Required','Please choose a file.');
+    return false;
+  }
+
+  /* block video */
+  if(file.type.startsWith("video/")){
+    this.showToast('te','Invalid File','Video files not allowed.');
     return false;
   }
 
   this.requestLocks.resume = true;
-  this.setButtonLoading(button, true);
+  this.setButtonLoading(button,true);
 
-  try {
-    const canReadText = /^text\//.test(file.type) || /\.(txt|md|json|csv)$/i.test(file.name || '');
-    if (!canReadText) {
-      this.showToast('ti', 'Quick Tip', 'For PDF/DOC, paste details in AI box for fastest results.');
+  try{
+
+    let resumeText = "";
+
+    const ext = file.name.split('.').pop().toLowerCase();
+
+    /* TXT / MD / JSON / CSV */
+    if(ext === "txt" || ext === "md" || ext === "json" || ext === "csv"){
+      resumeText = await file.text();
+    }
+
+    /* PDF */
+    else if(ext === "pdf"){
+
+      const buffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument(new Uint8Array(buffer)).promise;
+
+      for(let i=1;i<=pdf.numPages;i++){
+
+        const page = await pdf.getPage(i);
+        const txt = await page.getTextContent();
+
+        const pageText = txt.items.map(item=>item.str).join(" ");
+        resumeText += pageText + "\n\n";
+
+      }
+
+    }
+
+    /* DOCX */
+    else if(ext === "docx"){
+
+      const buffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({arrayBuffer:buffer});
+
+      resumeText = result.value;
+
+    }
+
+    /* DOC fallback */
+   else if(ext === "doc"){
+
+  const buffer = await file.arrayBuffer();
+
+  /* try docx parser first */
+  try{
+    const result = await mammoth.extractRawText({arrayBuffer:buffer});
+    resumeText = result.value;
+  }
+  catch{
+
+    /* fallback: binary text extraction */
+    const decoder = new TextDecoder("latin1");
+    const raw = decoder.decode(buffer);
+
+    resumeText = raw
+      .replace(/[^\x20-\x7E\n]/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+
+  }
+
+}
+
+
+    else{
+      this.showToast('te','Unsupported file','Upload PDF, DOCX, TXT etc.');
       return false;
     }
 
-    const resumeText = await file.text();
+    if(!resumeText || resumeText.length < 50){
+      this.showToast('te','Resume Read Failed','File text could not be extracted.');
+      return false;
+    }
+
+    /* limit text for AI cost */
+    resumeText = resumeText.slice(0,2500);
+
     const cfg = await this.loadConfig('resume-autofill');
-    const basePrompt = cfg?.promptTemplate || 'Extract a complete developer profile from this resume text. Return only JSON.';
-    const prompt = `${basePrompt}\n\nRESUME TEXT:\n${resumeText.slice(0, 20000)}`;
+
+   const basePrompt =
+cfg?.promptTemplate ||
+`You are an expert resume parser.
+
+Read the resume text and generate a complete developer profile.
+
+Return ONLY JSON using this schema:
+{
+"name": "",
+"title": "",
+"location": "",
+"bio": "",
+"skills": [],
+"experience_years": 0,
+"github_url": "",
+"linkedin_url": "",
+"portfolio_url": "",
+"experience": [{"role":"","company":"","period":"","description":""}],
+"certifications": [{"name":"","issuer":"","year":""}],
+"seo_focus_keywords": []
+}
+
+Rules:
+- Leave "name" empty.
+- Bio must be 120–200 words.
+- Bio should summarize the developer's experience, technologies, and projects.
+- Mention key tech stacks.
+- Make it recruiter friendly.
+- Extract real experience details from the resume.
+
+Skills:
+- Extract top technical skills from resume.
+
+Experience:
+- Convert resume work history into readable descriptions.
+`;
+
+
+    const prompt = `${basePrompt}
+
+RESUME TEXT:
+${resumeText}`;
 
     const raw = await this.callAi(prompt);
+
     const profile = this.extractJson(raw);
+
     this.fillFields(profile);
-    this.showToast('ts', 'Resume Imported', 'Your fields were auto-filled from resume text with AI.');
+
+    this.showToast(
+      'ts',
+      'Resume Imported',
+      'Profile fields auto-filled successfully.'
+    );
+
     return true;
-  } catch (e) {
+
+  }
+  catch(e){
+
     console.error(e);
-    this.showToast('te', 'Resume Parse Failed', e?.message || 'Could not extract details. Use AI prompt text instead.');
+
+    this.showToast(
+      'te',
+      'Resume Parse Failed',
+      e?.message || 'AI extraction failed.'
+    );
+
     return false;
-  } finally {
+
+  }
+  finally{
+
     this.requestLocks.resume = false;
     this.resetButton(button);
+
   }
+
 };
+
 
 window.triggerResumeUpload = function() { document.getElementById('resumeUpload')?.click(); };
 window.handleResumeUpload = async function(input) {

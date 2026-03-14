@@ -799,6 +799,8 @@ footer{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../assets/supabase-config.js"></script>
 <script src="../assets/developers.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
 <script src="ai-profile-generator.js"></script>
 <script>
 'use strict';
@@ -1251,10 +1253,15 @@ function renderForm(profile){
                 <span class="btn-text" style="display:inline-flex;align-items:center;gap:8px;">📄 Upload Resume & Auto Fill</span>
                 <span class="spinner" style="display:none;position:absolute;left:50%;transform:translateX(-50%);"></span>
               </button>
-              <input id="resumeUpload" type="file" accept=".pdf,.doc,.docx,.txt,.md" style="display:none" onchange="handleResumeUpload(this)">
+              <input id="resumeUpload" type="file" accept=".pdf,.doc,.docx,.txt,.md,.json,.csv" style="display:none" onchange="handleResumeUpload(this)">
             </div>
-            <p class="fhint" style="margin-top:9px">Tip: Bas short intro likho. AI name/title/bio/skills/experience sab readable format me bhar dega.</p>
-            <p class="fhint" style="margin-top:4px">Resume TXT/MD upload kar sakte ho for fast auto-fill. PDF/DOC ho to summary AI box me paste karein.</p>
+          <p class="fhint" style="margin-top:9px">
+Tip: Just write a short intro. AI will automatically fill name, title, bio, skills, and experience in a readable format.
+</p>
+
+<p class="fhint" style="margin-top:4px">
+You can upload a TXT or MD resume for quick auto-fill. For PDF/DOC files, paste a short summary into the AI box.
+</p>
           </div>
 
           <div class="fg">
