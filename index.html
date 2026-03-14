@@ -1078,6 +1078,84 @@
     gap: 8px;
     margin-bottom: 36px;
   }
+  .jobflow-preview {
+    background: var(--black);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .jobflow-preview::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 0% 50%, rgba(255,77,0,0.12), transparent 55%);
+    animation: jobFlowGlow 4s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes jobFlowGlow {
+    0% { transform: translateX(-8%); }
+    100% { transform: translateX(108%); }
+  }
+  .jobflow-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  .jobflow-title {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    font-family: var(--font-mono);
+    color: var(--accent);
+  }
+  .jobflow-speed {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: #22c55e;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.24);
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .jobflow-line {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .jobflow-step {
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.67rem;
+    color: var(--muted);
+    animation: jobPulse 2.6s ease-in-out infinite;
+  }
+  .jobflow-step:nth-child(2) { animation-delay: .4s; }
+  .jobflow-step:nth-child(3) { animation-delay: .8s; }
+  .jobflow-step:nth-child(4) { animation-delay: 1.2s; }
+  @keyframes jobPulse {
+    0%, 100% { transform: translateY(0); border-color: var(--border); color: var(--muted); }
+    35% { transform: translateY(-3px); border-color: rgba(255,77,0,0.35); color: var(--accent); }
+  }
+  .jobflow-note {
+    margin-top: 10px;
+    font-size: 0.74rem;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
   .dc-stack {
     display: flex;
     align-items: center;
@@ -1328,6 +1406,7 @@
     .dc-inner { grid-template-columns: 1fr; gap: 48px; }
     #devcareer { padding: 70px 24px; }
     .dc-endpoint-body { flex-direction: column; gap: 8px; }
+    .jobflow-line { grid-template-columns: 1fr 1fr; }
 
     /* Footer tablet */
     footer {
@@ -1777,6 +1856,19 @@
         <span class="dc-stack">☁️ DevOps</span>
         <span class="dc-stack">📄 Resume</span>
         <span class="dc-stack">🎯 Career Path</span>
+      </div>
+      <div class="jobflow-preview reveal">
+        <div class="jobflow-head">
+          <div class="jobflow-title">Find Jobs with AI · How it works</div>
+          <div class="jobflow-speed">Results in ~20-60s</div>
+        </div>
+        <div class="jobflow-line">
+          <div class="jobflow-step">1. Read User Profile</div>
+          <div class="jobflow-step">2. AI Builds Keywords</div>
+          <div class="jobflow-step">3. Search Job Sources</div>
+          <div class="jobflow-step">4. Refine Direct Apply Links</div>
+        </div>
+        <p class="jobflow-note">AI splits results into direct company career pages + job boards, then highlights where you can apply faster.</p>
       </div>
       <div class="dc-btns">
         <a href="https://ai.buldel.com/" target="_blank" class="dc-btn-main">
