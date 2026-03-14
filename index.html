@@ -288,7 +288,7 @@
   /* Mobile ≤500px: slightly smaller text */
   @media (max-width: 500px) {
     .hero-btns-row1 {
-      gap: 55px;
+      gap: 8px;
     }
     .btn-primary {
       padding: 12px 18px;
@@ -1002,6 +1002,57 @@
     .footer-links a { font-size: 0.78rem; }
     .footer-copy { font-size: 0.74rem; line-height: 1.6; }
   }
+
+
+  /* HERO BUTTONS */
+.hero-btns{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  max-width:420px;
+}
+
+.hero-btns-row1{
+  display:flex;
+  gap:12px;
+}
+
+.hero-btns-row1 a{
+  flex:1;
+  justify-content:center;
+}
+
+.hero-btns-row2{
+  display:flex;
+}
+
+.hero-btns-row2 a{
+  width:100%;
+  justify-content:center;
+}
+
+/* DESKTOP */
+@media (min-width:901px){
+
+  .hero-btns{
+    flex-direction:row;
+    max-width:none;
+  }
+
+  .hero-btns-row1{
+    display:contents;
+  }
+
+  .hero-btns-row2{
+    display:contents;
+  }
+
+  .hero-btns-row2 a{
+    width:auto;
+  }
+
+}
+
 </style>
 </head>
 <body>
