@@ -1079,9 +1079,9 @@
     margin-bottom: 36px;
   }
   .jobflow-preview {
-    background: var(--black);
+    background: linear-gradient(165deg, #ffffff 0%, #f6f9ff 100%);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 16px;
     margin-bottom: 28px;
     position: relative;
@@ -1091,13 +1091,8 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 0% 50%, rgba(255,77,0,0.12), transparent 55%);
-    animation: jobFlowGlow 4s linear infinite;
+    background: radial-gradient(circle at 15% 20%, rgba(255,77,0,0.14), transparent 50%);
     pointer-events: none;
-  }
-  @keyframes jobFlowGlow {
-    0% { transform: translateX(-8%); }
-    100% { transform: translateX(108%); }
   }
   .jobflow-head {
     display: flex;
@@ -1106,7 +1101,7 @@
     align-items: center;
     margin-bottom: 14px;
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
   .jobflow-title {
     font-size: 0.78rem;
@@ -1124,37 +1119,84 @@
     padding: 3px 8px;
     border-radius: 999px;
   }
-  .jobflow-line {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
+  .jobflow-3d {
     position: relative;
-    z-index: 1;
+    height: 170px;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    z-index: 2;
+    margin-bottom: 12px;
+  }
+  .jobflow-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 180px; height: 180px;
+    margin: -90px 0 0 -90px;
+    border-radius: 50%;
+    border: 1px dashed rgba(255,77,0,0.35);
+    animation: flowSpin 14s linear infinite;
+  }
+  .jobflow-ring.ring2 {
+    width: 126px; height: 126px;
+    margin: -63px 0 0 -63px;
+    border-color: rgba(96,165,250,0.45);
+    animation-direction: reverse;
+    animation-duration: 10s;
+  }
+  .jobflow-center {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%) translateZ(40px);
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,77,0,0.35);
+    background: #fff;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    box-shadow: 0 10px 22px rgba(255,77,0,0.16);
   }
   .jobflow-step {
+    position: absolute;
+    width: 148px;
+    padding: 9px 10px;
     border: 1px solid var(--border);
-    background: var(--card);
-    border-radius: 8px;
-    padding: 10px 8px;
-    text-align: center;
+    border-radius: 10px;
+    background: #fff;
     font-family: var(--font-mono);
-    font-size: 0.67rem;
+    font-size: 0.64rem;
     color: var(--muted);
-    animation: jobPulse 2.6s ease-in-out infinite;
+    box-shadow: 0 8px 18px rgba(15,23,42,0.08);
+    animation: flowFloat 3s ease-in-out infinite;
   }
-  .jobflow-step:nth-child(2) { animation-delay: .4s; }
-  .jobflow-step:nth-child(3) { animation-delay: .8s; }
-  .jobflow-step:nth-child(4) { animation-delay: 1.2s; }
-  @keyframes jobPulse {
-    0%, 100% { transform: translateY(0); border-color: var(--border); color: var(--muted); }
-    35% { transform: translateY(-3px); border-color: rgba(255,77,0,0.35); color: var(--accent); }
+  .jobflow-step b { color: var(--white); font-size: 0.67rem; display: block; margin-bottom: 2px; }
+  .jobflow-step.s1 { top: 10px; left: 0; transform: rotateY(8deg); }
+  .jobflow-step.s2 { top: 10px; right: 0; transform: rotateY(-8deg); animation-delay: .5s; }
+  .jobflow-step.s3 { bottom: 8px; left: 6px; transform: rotateY(6deg); animation-delay: 1s; }
+  .jobflow-step.s4 { bottom: 8px; right: 6px; transform: rotateY(-6deg); animation-delay: 1.5s; }
+  .jobflow-step::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 24px;
+    border-top: 1px dashed rgba(255,77,0,0.4);
   }
+  .jobflow-step.s1::after, .jobflow-step.s3::after { right: -24px; }
+  .jobflow-step.s2::after, .jobflow-step.s4::after { left: -24px; }
   .jobflow-note {
     margin-top: 10px;
     font-size: 0.74rem;
     color: var(--muted);
     position: relative;
-    z-index: 1;
+    z-index: 2;
+  }
+  @keyframes flowFloat {
+    0%, 100% { transform: translateY(0) translateZ(18px); }
+    50% { transform: translateY(-6px) translateZ(28px); }
+  }
+  @keyframes flowSpin {
+    from { transform: rotateZ(0deg) rotateX(60deg); }
+    to { transform: rotateZ(360deg) rotateX(60deg); }
   }
   .dc-stack {
     display: flex;
@@ -1406,7 +1448,8 @@
     .dc-inner { grid-template-columns: 1fr; gap: 48px; }
     #devcareer { padding: 70px 24px; }
     .dc-endpoint-body { flex-direction: column; gap: 8px; }
-    .jobflow-line { grid-template-columns: 1fr 1fr; }
+    .jobflow-3d { height: 250px; }
+    .jobflow-step { width: calc(50% - 18px); }
 
     /* Footer tablet */
     footer {
@@ -1439,6 +1482,26 @@
     .globe-card { height: 280px; }
     .globe-countries { gap: 6px; }
     .globe-country { font-size: 0.58rem; padding: 2px 6px; }
+    .jobflow-3d { height: 360px; }
+    .jobflow-ring { display: none; }
+    .jobflow-center {
+      left: 0;
+      top: auto;
+      bottom: 0;
+      transform: none;
+      border-radius: 8px;
+    }
+    .jobflow-step {
+      width: 100%;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
+    }
+    .jobflow-step.s1 { top: 0; }
+    .jobflow-step.s2 { top: 82px; }
+    .jobflow-step.s3 { top: 164px; }
+    .jobflow-step.s4 { top: 246px; }
+    .jobflow-step::after { display: none; }
 
     /* Footer mobile */
     footer {
@@ -1862,11 +1925,14 @@
           <div class="jobflow-title">Find Jobs with AI · How it works</div>
           <div class="jobflow-speed">Results in ~20-60s</div>
         </div>
-        <div class="jobflow-line">
-          <div class="jobflow-step">1. Read User Profile</div>
-          <div class="jobflow-step">2. AI Builds Keywords</div>
-          <div class="jobflow-step">3. Search Job Sources</div>
-          <div class="jobflow-step">4. Refine Direct Apply Links</div>
+        <div class="jobflow-3d" aria-hidden="true">
+          <div class="jobflow-ring"></div>
+          <div class="jobflow-ring ring2"></div>
+          <div class="jobflow-center">AI ENGINE</div>
+          <div class="jobflow-step s1"><b>1. Read Profile</b>User profile + skills scan</div>
+          <div class="jobflow-step s2"><b>2. Create Keywords</b>Role-based search query</div>
+          <div class="jobflow-step s3"><b>3. Search Sources</b>Company pages + boards</div>
+          <div class="jobflow-step s4"><b>4. Refine Apply URL</b>Direct apply first</div>
         </div>
         <p class="jobflow-note">AI splits results into direct company career pages + job boards, then highlights where you can apply faster.</p>
       </div>

@@ -242,9 +242,9 @@ body::after{
   line-height:1.75;max-width:540px;
 }
 
-/* ─────────── AI FLOW CARD ─────────── */
+/* ─────────── AI FLOW CARD (3D) ─────────── */
 .ai-flow-card{
-  background:var(--card);
+  background:linear-gradient(165deg,#ffffff 0%,#f7faff 100%);
   border:1px solid var(--border2);
   border-radius:var(--radius);
   padding:clamp(16px,2.6vw,22px);
@@ -257,71 +257,50 @@ body::after{
 .ai-flow-card::before{
   content:'';
   position:absolute;
-  top:0;bottom:0;left:-30%;
-  width:42%;
-  background:linear-gradient(90deg,transparent,rgba(255,77,0,.12),transparent);
-  animation:flowBeam 4s linear infinite;
+  inset:0;
+  background:radial-gradient(circle at 10% 20%,rgba(255,77,0,.12),transparent 45%);
   pointer-events:none;
 }
-@keyframes flowBeam{to{transform:translateX(320%)}}
 .ai-flow-head{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
-  margin-bottom:14px;position:relative;z-index:1;flex-wrap:wrap;
+  margin-bottom:12px;position:relative;z-index:2;flex-wrap:wrap;
 }
-.ai-flow-title{
-  font-family:var(--font-d);
-  letter-spacing:1px;
-  font-size:1.05rem;
-  color:var(--white);
-}
+.ai-flow-title{font-family:var(--font-d);letter-spacing:1px;font-size:1.05rem;color:var(--white)}
 .ai-flow-time{
-  font-family:var(--font-m);
-  font-size:.66rem;
-  color:var(--success);
-  border:1px solid rgba(22,163,74,.28);
-  background:var(--success-bg);
-  padding:4px 10px;
-  border-radius:100px;
+  font-family:var(--font-m);font-size:.66rem;color:var(--success);
+  border:1px solid rgba(22,163,74,.28);background:var(--success-bg);
+  padding:4px 10px;border-radius:100px;
 }
-.ai-flow-track{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:9px;
-  position:relative;
-  z-index:1;
+.ai-flow-3d{position:relative;height:180px;perspective:1000px;transform-style:preserve-3d;z-index:2}
+.ai-flow-ring{
+  position:absolute;left:50%;top:50%;width:180px;height:180px;margin:-90px 0 0 -90px;
+  border-radius:50%;border:1px dashed rgba(255,77,0,.35);animation:aiSpin 13s linear infinite;
+}
+.ai-flow-ring.r2{width:128px;height:128px;margin:-64px 0 0 -64px;border-color:rgba(37,99,235,.35);animation-direction:reverse;animation-duration:9s}
+.ai-flow-core{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) translateZ(45px);
+  border:1px solid rgba(255,77,0,.3);background:#fff;color:var(--accent);
+  border-radius:999px;padding:7px 12px;font-family:var(--font-m);font-size:.65rem;
+  box-shadow:0 8px 20px rgba(255,77,0,.15)
 }
 .ai-flow-item{
-  background:var(--card2);
-  border:1px solid var(--border2);
-  border-radius:var(--radius-sm);
-  padding:12px 10px;
-  position:relative;
-  animation:flowStep 2.8s ease-in-out infinite;
+  position:absolute;width:145px;background:#fff;border:1px solid var(--border2);
+  border-radius:var(--radius-sm);padding:10px 9px;box-shadow:0 8px 20px rgba(2,8,23,.08);
+  animation:aiFloat 3s ease-in-out infinite;
 }
-.ai-flow-item:nth-child(2){animation-delay:.45s}
-.ai-flow-item:nth-child(3){animation-delay:.9s}
-.ai-flow-item:nth-child(4){animation-delay:1.35s}
-@keyframes flowStep{
-  0%,100%{transform:translateY(0);border-color:var(--border2)}
-  40%{transform:translateY(-3px);border-color:rgba(255,77,0,.35);box-shadow:0 8px 20px rgba(255,77,0,.08)}
-}
-.ai-flow-dot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--accent);
-  box-shadow:0 0 0 6px rgba(255,77,0,.12);
-  display:inline-block;
-  margin-bottom:8px;
-}
-.ai-flow-item h3{
-  font-size:.78rem;
-  color:var(--white);
-  margin-bottom:4px;
-}
-.ai-flow-item p{
-  font-size:.7rem;
-  color:var(--muted);
-  line-height:1.55;
-}
+.ai-flow-item h3{font-size:.74rem;color:var(--white);margin-bottom:3px}
+.ai-flow-item p{font-size:.67rem;color:var(--muted);line-height:1.5}
+.ai-flow-item .ai-flow-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;margin-bottom:6px;box-shadow:0 0 0 5px rgba(255,77,0,.11)}
+.ai-flow-item.i1{left:0;top:10px;transform:rotateY(8deg)}
+.ai-flow-item.i2{right:0;top:10px;transform:rotateY(-8deg);animation-delay:.5s}
+.ai-flow-item.i3{left:8px;bottom:8px;transform:rotateY(6deg);animation-delay:1s}
+.ai-flow-item.i4{right:8px;bottom:8px;transform:rotateY(-6deg);animation-delay:1.5s}
+.ai-flow-item::after{content:'';position:absolute;top:50%;width:24px;border-top:1px dashed rgba(255,77,0,.38)}
+.ai-flow-item.i1::after,.ai-flow-item.i3::after{right:-24px}
+.ai-flow-item.i2::after,.ai-flow-item.i4::after{left:-24px}
+.ai-flow-caption{font-size:.74rem;color:var(--muted);margin-top:8px;position:relative;z-index:2}
+@keyframes aiFloat{0%,100%{transform:translateY(0) translateZ(18px)}50%{transform:translateY(-6px) translateZ(26px)}}
+@keyframes aiSpin{from{transform:rotateZ(0) rotateX(60deg)}to{transform:rotateZ(360deg) rotateX(60deg)}}
 
 /* ─────────── HOW IT WORKS ─────────── */
 .how-steps{
@@ -913,11 +892,17 @@ footer{
 /* ─────────── RESPONSIVE ─────────── */
 
 @media (max-width: 900px) {
-  .ai-flow-track { grid-template-columns: 1fr 1fr; }
+  .ai-flow-3d{height:250px}
+  .ai-flow-item{width:calc(50% - 18px)}
 }
 
 @media (max-width: 640px) {
-  .ai-flow-track { grid-template-columns: 1fr; }
+  .ai-flow-3d{height:360px}
+  .ai-flow-item{width:100%;max-width:none;left:0!important;right:0!important;transform:none!important}
+  .ai-flow-item.i1{top:0}.ai-flow-item.i2{top:86px}.ai-flow-item.i3{top:172px}.ai-flow-item.i4{top:258px}
+  .ai-flow-item::after{display:none}
+  .ai-flow-ring{display:none}
+  .ai-flow-core{top:auto;bottom:0;left:0;transform:none;border-radius:8px}
 }
 
 @media(max-width:820px){.nav-links{display:none}.ham{display:flex}}
