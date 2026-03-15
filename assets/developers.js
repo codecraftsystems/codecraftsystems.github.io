@@ -70,8 +70,27 @@
     }
   }
 
+  const developerSlugCache = new Map();
+
+  async function fetchDeveloperSlug(client, session) {
+    const cacheKey = `${session.email}::${session.user_id}`;
+    if (developerSlugCache.has(cacheKey)) return developerSlugCache.get(cacheKey);
+
+    const request = client
+      .from('developers')
+      .select('slug')
+      .eq('email', session.email)
+      .eq('user_id', session.user_id)
+      .maybeSingle()
+      .then(({ data }) => (data && data.slug ? data.slug : ''))
+      .catch(() => '');
+
+    developerSlugCache.set(cacheKey, request);
+    return request;
+  }
+
   async function applyTalentNav(options = {}) {
-    const session = getSession();
+    const session = options.session || getSession();
     if (!session) return null;
 
     const addSelector = options.addSelector || '[data-nav-add-profile]';
@@ -79,19 +98,15 @@
     const hideWhenLoggedSelector = options.hideWhenLoggedSelector || '[data-hide-when-logged]';
     const profilePathPrefix = options.profilePathPrefix || '../developer/?slug=';
 
-    let slug = session.slug || '';
+    let slug = options.slug || (options.profile && options.profile.slug) || session.slug || '';
 
-    try {
-      const client = createClient();
-      const { data } = await client
-        .from('developers')
-        .select('slug')
-        .eq('email', session.email)
-        .eq('user_id', session.user_id)
-        .maybeSingle();
-      if (data && data.slug) slug = data.slug;
-    } catch (error) {
-      // no-op: keep graceful fallback
+    if (!slug) {
+      try {
+        const client = createClient();
+        slug = await fetchDeveloperSlug(client, session);
+      } catch (error) {
+        // no-op: keep graceful fallback
+      }
     }
 
     const addLinks = document.querySelectorAll(addSelector);
