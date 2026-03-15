@@ -1,79 +1,102 @@
 :root {
-  --ccs-header-bg: rgba(244, 247, 251, 0.96);
-  --ccs-header-border: #d9e2ef;
+  --ccs-nav-h: 64px;
+  --ccs-border: #d9e2ef;
+  --ccs-accent: #ff4d00;
   --ccs-text: #1f2937;
   --ccs-muted: #5f6b7a;
-  --ccs-accent: #ff4d00;
-  --ccs-footer-bg: #ffffff;
+  --ccs-bg: #f4f7fb;
+  --ccs-panel: #ffffff;
+  --ccs-footer-muted: #758397;
 }
 
 .ccs-site-header {
-  position: fixed;
+  position: fixed !important;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1200;
-  background: var(--ccs-header-bg);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--ccs-header-border);
+  height: var(--ccs-nav-h);
+  border-bottom: 1px solid transparent;
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+  background: rgba(242, 245, 250, .94);
+  border-color: var(--ccs-border);
+  backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow: 0 1px 0 rgba(0,0,0,.06);
+  font-family: 'DM Sans', sans-serif;
 }
 
-.ccs-site-header .ccs-nav-inner {
+.ccs-nav-inner {
   max-width: 1240px;
   margin: 0 auto;
+  height: 100%;
+  padding: 0 clamp(16px,4vw,44px);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 14px 20px;
+  gap: 12px;
 }
 
 .ccs-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.8rem;
-  letter-spacing: 1.8px;
-  color: var(--ccs-text);
-  text-decoration: none;
+  font-family: 'Bebas Neue', sans-serif !important;
+  font-size: clamp(1.25rem,3vw,1.75rem) !important;
+  letter-spacing: 2.5px !important;
+  color: var(--ccs-text) !important;
+  text-decoration: none !important;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
-.ccs-logo span { color: var(--ccs-accent); }
+.ccs-logo span {
+  color: var(--ccs-accent) !important;
+  font-weight: 400;
+}
 
 .ccs-nav-links {
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  gap: clamp(12px,2vw,28px);
 }
 
 .ccs-nav-links a {
-  text-decoration: none;
+  color: var(--ccs-muted) !important;
+  text-decoration: none !important;
+  font-size: .75rem !important;
+  font-weight: 500 !important;
+  letter-spacing: .9px !important;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--ccs-muted);
+  white-space: nowrap;
+  line-height: 1;
 }
 
-.ccs-nav-links a:hover { color: var(--ccs-text); }
+.ccs-nav-links a:hover { color: var(--ccs-text) !important; }
+
+.ccs-nav-links a.ccs-nav-feature {
+  color: var(--ccs-accent) !important;
+  border: 1px solid rgba(255,77,0,.3);
+  border-radius: 999px;
+  padding: 7px 14px;
+  background: rgba(255,77,0,.08);
+}
 
 .ccs-nav-links a.ccs-nav-cta {
-  background: var(--ccs-accent);
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 999px;
+  background: var(--ccs-accent) !important;
+  color: #fff !important;
+  padding: 7px 18px !important;
+  border-radius: 8px;
+  font-weight: 600 !important;
 }
 
 .ccs-mobile-toggle,
 .ccs-mobile-close {
   display: none;
-  border: 1px solid var(--ccs-header-border);
-  background: #fff;
+  border: none;
+  background: transparent;
   color: var(--ccs-text);
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  font-size: 1.3rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
 }
@@ -83,14 +106,12 @@
   position: fixed;
   inset: 0;
   z-index: 1300;
-  background: rgba(244, 247, 251, 0.98);
+  background: rgba(242,245,250,.99);
+  backdrop-filter: blur(16px);
   padding: 16px;
 }
 
-.ccs-mobile-panel.open {
-  display: flex;
-  flex-direction: column;
-}
+.ccs-mobile-panel.open { display: flex; flex-direction: column; }
 
 .ccs-mobile-panel-header {
   display: flex;
@@ -99,63 +120,91 @@
 
 .ccs-mobile-links {
   list-style: none;
-  margin: 16px 0 0;
+  margin: 12px 0 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  flex: 1;
 }
 
 .ccs-mobile-links a {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.8rem,6vw,2.8rem);
+  letter-spacing: 2px;
   text-decoration: none;
   color: var(--ccs-text);
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2rem;
-  letter-spacing: 1.5px;
 }
 
-.ccs-mobile-links .ccs-nav-cta {
+.ccs-mobile-links a.ccs-nav-feature {
+  color: var(--ccs-accent);
+  border: 1px solid rgba(255,77,0,.35);
+  border-radius: 999px;
+  padding: 8px 18px;
+  background: rgba(255,77,0,.08);
+}
+
+.ccs-mobile-links a.ccs-nav-cta {
   color: var(--ccs-accent);
 }
 
 .ccs-site-footer {
-  border-top: 1px solid var(--ccs-header-border);
-  background: var(--ccs-footer-bg);
-  margin-top: 56px;
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  background: var(--ccs-panel);
+  border-top: 1px solid var(--ccs-border);
+  padding: clamp(18px,3vw,32px) clamp(16px,4vw,44px);
+  font-family: 'DM Sans', sans-serif;
 }
 
 .ccs-footer-inner {
-  max-width: 1240px;
+  max-width: 940px;
   margin: 0 auto;
-  padding: 24px 20px;
-  display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
-  gap: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 
-.ccs-footer-brand {
-  color: var(--ccs-muted);
-  font-size: 0.92rem;
+.ccs-footer-brand p {
+  color: var(--ccs-footer-muted);
+  font-size: .71rem;
+  margin-top: 8px;
 }
 
 .ccs-footer-links h4 {
-  margin: 0 0 10px;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  color: var(--ccs-text);
-  letter-spacing: 1px;
+  display: none;
+}
+
+.ccs-footer-links {
+  display: flex;
+  gap: clamp(12px,2vw,20px);
+  flex-wrap: wrap;
 }
 
 .ccs-footer-links a {
-  display: block;
+  color: var(--ccs-footer-muted);
   text-decoration: none;
-  color: var(--ccs-muted);
-  font-size: 0.85rem;
-  margin: 6px 0;
+  font-size: .71rem;
 }
 
+.ccs-footer-links a:hover { color: var(--ccs-text); }
+
 @media (max-width: 960px) {
-  .ccs-desktop-nav { display: none; }
+  .ccs-nav-links { display: none; }
   .ccs-mobile-toggle,
   .ccs-mobile-close { display: inline-flex; align-items: center; justify-content: center; }
-  .ccs-footer-inner { grid-template-columns: 1fr; gap: 8px; }
+}
+
+@media (max-width: 600px) {
+  :root { --ccs-nav-h: 58px; }
+}
+
+@media (max-width: 430px) {
+  :root { --ccs-nav-h: 54px; }
+  .ccs-footer-inner { flex-direction: column; align-items: center; text-align: center; }
+  .ccs-footer-links { justify-content: center; }
 }

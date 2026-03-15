@@ -14,30 +14,29 @@
     var links = [
       ['Home', 'index.html'],
       ['Services', 'services/cloud-deployment-devops.html'],
+      ['Blog', 'blog/index.html'],
       ['Developers', 'developers/index.html'],
       ['Jobs', 'jobs/index.html'],
-      ['AI Job Search', 'find-jobs-with-ai/index.html'],
-      ['Blog', 'blog/index.html'],
-      ['Submit Profile', 'submit-profile/index.html'],
-      ['Contact', 'https://wa.me/919016135299', true]
+      ['Find Jobs with AI', 'find-jobs-with-ai/index.html', false, 'ccs-nav-feature'],
+      ['Submit Profile', 'submit-profile/index.html', false, 'ccs-nav-cta']
     ];
 
     var navLinks = links.map(function (item) {
-      return '<li><a ' + (item[2] ? 'target="_blank" rel="noopener" ' : '') + 'href="' + (item[2] ? item[1] : toRoot(item[1])) + '" class="' + (item[0] === 'Contact' ? 'ccs-nav-cta' : '') + '">' + item[0] + '</a></li>';
+      return '<li><a href="' + toRoot(item[1]) + '" class="' + (item[3] || '') + '">' + item[0] + '</a></li>';
     }).join('');
 
-    return '<header class="ccs-site-header"><nav id="nav" class="nav"><div class="ccs-nav-inner"><a class="ccs-logo" href="' + toRoot('index.html') + '">Code<span>Craft</span></a><ul class="ccs-nav-links ccs-desktop-nav">' + navLinks + '</ul><button class="ccs-mobile-toggle" aria-label="Open menu" type="button">☰</button></div></nav><div class="ccs-mobile-panel" id="ccsMobilePanel" aria-hidden="true"><div class="ccs-mobile-panel-header"><button class="ccs-mobile-close" aria-label="Close menu" type="button">✕</button></div><ul class="ccs-mobile-links">' + navLinks + '</ul></div></header>';
+    return '<header class="ccs-site-header"><div class="ccs-nav-inner"><a class="ccs-logo" href="' + toRoot('index.html') + '">Code<span>Craft</span></a><ul class="ccs-nav-links">' + navLinks + '</ul><button class="ccs-mobile-toggle" aria-label="Open menu" type="button">☰</button></div><div class="ccs-mobile-panel" id="ccsMobilePanel" aria-hidden="true"><div class="ccs-mobile-panel-header"><button class="ccs-mobile-close" aria-label="Close menu" type="button">✕</button></div><ul class="ccs-mobile-links">' + navLinks + '</ul></div></header>';
   }
 
   function footerHtml() {
-    return '<footer class="ccs-site-footer"><div class="ccs-footer-inner"><div class="ccs-footer-brand"><a class="ccs-logo" href="' + toRoot('index.html') + '">Code<span>Craft</span></a><p>Laravel, Vue.js and AI-powered web development for global startups and growing teams.</p></div><div class="ccs-footer-links"><h4>Explore</h4><a href="' + toRoot('developers-open-to-work/index.html') + '">Open to Work Developers</a><a href="' + toRoot('how-ai-finds-jobs/index.html') + '">How AI Finds Jobs</a><a href="' + toRoot('database/public-blogs.html') + '">Public Blogs (DB)</a></div><div class="ccs-footer-links"><h4>More Links</h4><a href="' + toRoot('auth/index.html') + '">Auth</a><a href="' + toRoot('developer/index.html') + '">Developer Profile</a><a href="' + toRoot('404.html') + '">404</a></div></div></footer>';
+    return '<footer class="ccs-site-footer"><div class="ccs-footer-inner"><div class="ccs-footer-brand"><a class="ccs-logo" href="' + toRoot('index.html') + '">Code<span>Craft</span></a><p>© ' + new Date().getFullYear() + ' CodeCraft Systems</p></div><div class="ccs-footer-links"><a href="' + toRoot('how-ai-finds-jobs/index.html') + '">How AI Works</a><a href="' + toRoot('developers-open-to-work/index.html') + '">Open to Work</a><a href="' + toRoot('database/public-blogs.html') + '">Public Blogs</a><a href="' + toRoot('auth/index.html') + '">Auth</a><a href="' + toRoot('404.html') + '">404</a></div></div></footer>';
   }
 
   function replaceLayout() {
-    var oldMenus = document.querySelectorAll('.mobile-menu, .mob-menu');
+    var oldMenus = document.querySelectorAll('.mobile-menu, .mob-menu, .mob');
     oldMenus.forEach(function (el) { el.remove(); });
 
-    var existingHeader = document.querySelector('header.ccs-site-header, nav#nav, nav#navbar, body > nav, body > header.nav, body > header');
+    var existingHeader = document.querySelector('header.ccs-site-header, nav#nav, nav#navbar, nav.nav, body > nav');
     var headerWrapper = document.createElement('div');
     headerWrapper.innerHTML = headerHtml();
     var newHeader = headerWrapper.firstChild;
@@ -63,12 +62,14 @@
     var closeBtn = document.querySelector('.ccs-mobile-close');
 
     function closeMenu() {
+      if (!panel) return;
       panel.classList.remove('open');
       panel.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
     }
 
     openBtn && openBtn.addEventListener('click', function () {
+      if (!panel) return;
       panel.classList.add('open');
       panel.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
