@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Remote IT Developer Jobs | CodeCraft Systems</title>
 <meta name="description" content="Live IT & developer jobs from RemoteOK, Arbeitnow, Jobicy & The Muse — updated daily.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1000,15 +999,40 @@ async function fetchAllJobs() {
   fetchInProgress = false;
 }
 
-// Background load remaining Muse pages silently — NO UI jank mid-load
-// Fetches all pages quietly, then does ONE final UI refresh at the very end
+// Background load remaining Muse pages silently — UI refreshes every 100 jobs + final page
 async function loadMuseBackground(totalPages) {
   const maxPages = Math.min(totalPages, 22);
   musePageLoading = true;
   document.getElementById('bgLoadPill').classList.add('on');
 
-  // Fetch pages sequentially — collect all jobs silently into a buffer
   const buffer = [];
+  let lastFlushAt = 0; // track how many were flushed last time
+
+  const doFlush = (isFinal) => {
+    if (buffer.length === 0 && !isFinal) return;
+    // Add buffered jobs to allJobs
+    allJobs = allJobs.concat(buffer.splice(0)); // splice clears buffer in-place
+    sourceCounts.themuse = allJobs.filter(j => j.source === 'themuse').length;
+
+    refreshCounts();
+    buildTagCloud();
+    updateLocalCounts();
+    updTypeCounts();
+
+    const savedPage = currentPage;
+    applyFilters(true);
+    currentPage = savedPage;
+    renderPage();
+
+    document.getElementById('updTime').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+
+    if (isFinal) {
+      musePageLoading = false;
+      document.getElementById('bgLoadPill').classList.remove('on');
+      toast(`✓ The Muse: ${sourceCounts.themuse} IT jobs · ${allJobs.length} total`, 'ts', 3500);
+    }
+  };
+
   for (let p = 2; p <= maxPages; p++) {
     try {
       const url = `${API_BASE}themuse?page=${p}&descending=true&category=IT&category=Computer%20and%20IT&category=Software%20Engineer&category=Software%20Engineering`;
@@ -1016,36 +1040,26 @@ async function loadMuseBackground(totalPages) {
       const { items } = parseMuseResponse(raw);
       const more = items.map(normMUSEItem).filter(Boolean).filter(isITJob);
       buffer.push(...more);
-      // Only update the count badge quietly — no render
-      document.getElementById('tab-themuse').textContent = sourceCounts.themuse + buffer.length;
-      document.getElementById('totalJobs').textContent = allJobs.length + buffer.length;
+
+      // Quiet count update in header/tab only
+      const liveTotal = allJobs.length + buffer.length;
+      const liveMuseCount = sourceCounts.themuse + buffer.length;
+      document.getElementById('tab-themuse').textContent = liveMuseCount;
+      document.getElementById('totalJobs').textContent = liveTotal;
+
+      // Flush every 100 buffered jobs
+      const isFinalPage = (p === maxPages);
+      if (buffer.length >= 100 || isFinalPage) {
+        doFlush(isFinalPage);
+      }
     } catch(e) { /* skip failed pages silently */ }
     await new Promise(r => setTimeout(r, 200));
   }
 
-  // ── ONE final flush — add all buffered jobs, rebuild everything once ──
-  if (buffer.length > 0) {
-    allJobs = allJobs.concat(buffer);
-    sourceCounts.themuse += buffer.length;
+  // Safety: if loop ends but buffer wasn't flushed (e.g. < 100 jobs total)
+  if (musePageLoading) {
+    doFlush(true);
   }
-
-  musePageLoading = false;
-  document.getElementById('bgLoadPill').classList.remove('on');
-
-  // Final single UI refresh
-  refreshCounts();
-  buildTagCloud();
-  updateLocalCounts();
-  updTypeCounts();
-
-  // Re-apply filters and re-render current page WITHOUT resetting pagination
-  const savedPage = currentPage;
-  applyFilters(true);   // silent — no renderPage call inside
-  currentPage = savedPage;
-  renderPage();         // one clean render
-
-  document.getElementById('updTime').textContent = `Updated ${new Date().toLocaleTimeString()}`;
-  toast(`✓ The Muse: ${sourceCounts.themuse} IT jobs · ${allJobs.length} total`, 'ts', 3500);
 }
 
 function refreshCounts() {
