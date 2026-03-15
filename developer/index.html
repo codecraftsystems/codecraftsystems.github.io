@@ -226,6 +226,7 @@ body::after{
 
 /* action buttons */
 .prof-actions{display:flex;gap:12px;flex-wrap:wrap}
+.ats-download-wrap{position:relative}
 .btn-primary,.btn-ghost{
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
   min-height:48px;
@@ -247,6 +248,14 @@ body::after{
 }
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:rgba(255,77,0,.07);transform:translateY(-2px)}
 .btn-action-wide{min-width:220px;letter-spacing:.2px}
+.ats-menu{position:absolute;top:calc(100% + 8px);left:0;min-width:280px;background:var(--card);border:1px solid var(--border2);border-radius:12px;box-shadow:0 14px 32px rgba(0,0,0,.16);padding:10px;z-index:22}
+.ats-menu[hidden]{display:none}
+.ats-item{width:100%;border:1px solid transparent;background:transparent;color:var(--white);text-align:left;padding:11px 12px;border-radius:8px;cursor:pointer;font-family:var(--font-b)}
+.ats-item:hover{background:rgba(255,77,0,.08);border-color:rgba(255,77,0,.26)}
+.ats-item b{display:block;font-size:.88rem}
+.ats-item span{display:block;color:var(--muted);font-size:.77rem;margin-top:2px}
+.ats-tip{padding:8px 12px 4px;color:var(--muted);font-size:.72rem;line-height:1.45}
+.ats-toast{position:fixed;right:18px;bottom:18px;background:#13231a;color:#c8f7d6;border:1px solid #2f8f57;border-radius:8px;padding:10px 13px;font-size:.82rem;box-shadow:0 8px 26px rgba(0,0,0,.18);z-index:99999}
 
 /* ══ PAGE LAYOUT ══ */
 .layout{
@@ -664,14 +673,33 @@ function slugify(text){
     .replace(/[^a-z0-9]+/g,'-')
     .replace(/^-+|-+$/g,'');
 }
- function downloadATSResume(d){
-
+function normalizeATSData(d){
   d = d || window.__currentDeveloper || {};
-
   const skills = (d.skills||'').split(',').map(s=>s.trim()).filter(Boolean);
   const exp = Array.isArray(d.experience)?d.experience:[];
   const certs = Array.isArray(d.certifications)?d.certifications:[];
   const seo = Array.isArray(d.seo_focus_keywords)?d.seo_focus_keywords.filter(Boolean):[];
+  return { d, skills, exp, certs, seo };
+}
+
+function showATSToast(msg){
+  const old = document.querySelector('.ats-toast');
+  if(old)old.remove();
+  const el = document.createElement('div');
+  el.className = 'ats-toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 2800);
+}
+
+function downloadATSResume(d, mode='full'){
+
+  const normalized = normalizeATSData(d);
+  d = normalized.d;
+  const skills = normalized.skills;
+  const exp = normalized.exp;
+  const certs = normalized.certs;
+  const seo = normalized.seo;
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit:'pt', format:'a4' });
@@ -737,11 +765,12 @@ function slugify(text){
   writeLines(d.bio||'No professional summary provided.');
 
   heading('CORE SKILLS');
-  bulletList(skills);
+  bulletList(mode === 'compact' ? skills.slice(0,10) : skills);
 
   heading('PROFESSIONAL EXPERIENCE');
-  if(exp.length){
-    exp.forEach((e)=>{
+  const expRows = mode === 'compact' ? exp.slice(0,2) : exp;
+  if(expRows.length){
+    expRows.forEach((e)=>{
       ensureSpace(36);
       doc.setFont(undefined, 'bold');
       writeLines(`${e.role||'Developer'} | ${e.company||'Company'}`, 10.8);
@@ -755,16 +784,43 @@ function slugify(text){
   }
 
   heading('CERTIFICATIONS');
-  if(certs.length){
-    certs.forEach((c)=>writeLines(`• ${c.name||c.title||'Certification'} — ${c.issuer||'Issuer'} (${c.year||'N/A'})`));
+  const certRows = mode === 'compact' ? certs.slice(0,3) : certs;
+  if(certRows.length){
+    certRows.forEach((c)=>writeLines(`• ${c.name||c.title||'Certification'} — ${c.issuer||'Issuer'} (${c.year||'N/A'})`));
   } else {
     writeLines('No certifications listed.');
   }
 
   heading('ADDITIONAL KEYWORDS (ATS)');
-  bulletList(seo);
+  bulletList(mode === 'compact' ? seo.slice(0,12) : seo);
 
-  doc.save(`${slugify(d.name||'developer')}-ats-resume.pdf`);
+  doc.save(`${slugify(d.name||'developer')}-ats-resume${mode==='compact'?'-compact':''}.pdf`);
+  showATSToast(mode==='compact' ? 'Compact ATS resume downloaded.' : 'ATS resume downloaded successfully.');
+}
+
+async function copyATSKeywords(d){
+  const { skills, seo } = normalizeATSData(d);
+  const all = Array.from(new Set([].concat(skills, seo).filter(Boolean)));
+  const text = all.join(', ');
+  if(!text){
+    showATSToast('No ATS keywords available for this profile.');
+    return;
+  }
+  try{
+    await navigator.clipboard.writeText(text);
+    showATSToast('ATS keywords copied. Paste them in job applications.');
+  }catch(e){
+    showATSToast('Copy failed. Please try again.');
+  }
+}
+
+function toggleATSMenu(force){
+  const menu = document.getElementById('atsMenu');
+  if(!menu)return;
+  const open = typeof force === 'boolean' ? force : menu.hidden;
+  menu.hidden = !open;
+  const trigger = document.getElementById('atsDownloadTrigger');
+  if(trigger)trigger.setAttribute('aria-expanded', String(open));
 }
 
 
@@ -898,7 +954,31 @@ function buildProfile(d,others){
             <a class="btn-primary btn-action-wide" href="${esc(contactHref)}" ${email?'':'target="_blank" rel="noopener"'}>
               ${d.open_to_work?'✉ Hire Me — I\'m Available':'✉ Get In Touch'}
             </a>
-            <button class="btn-ghost btn-action-wide" type="button" onclick="downloadATSResume()">⬇ Download ATS Resume</button>
+            <div class="ats-download-wrap">
+              <button
+                class="btn-ghost btn-action-wide"
+                id="atsDownloadTrigger"
+                type="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                onclick="toggleATSMenu()"
+              >⬇ Download ATS Resume</button>
+              <div class="ats-menu" id="atsMenu" hidden>
+                <button class="ats-item" type="button" onclick="downloadATSResume(window.__currentDeveloper,'full');toggleATSMenu(false)">
+                  <b>Download Full ATS Resume (PDF)</b>
+                  <span>Complete profile with all experience and certifications.</span>
+                </button>
+                <button class="ats-item" type="button" onclick="downloadATSResume(window.__currentDeveloper,'compact');toggleATSMenu(false)">
+                  <b>Download 1-Page ATS Resume</b>
+                  <span>Short version for quick job applications.</span>
+                </button>
+                <button class="ats-item" type="button" onclick="copyATSKeywords(window.__currentDeveloper);toggleATSMenu(false)">
+                  <b>Copy ATS Keywords</b>
+                  <span>Use keywords directly while applying on portals.</span>
+                </button>
+                <div class="ats-tip">Tip: Use the compact version for faster recruiter scan and full version for detailed screening.</div>
+              </div>
+            </div>
             <a class="btn-ghost btn-action-wide" href="../developers/">← All Developers</a>
           </div>
         </div>
@@ -1073,6 +1153,9 @@ function tplNoSlug(){
             profile_image,
             open_to_work,
             verified,
+            contact_email,
+            certifications,
+            seo_focus_keywords,
             created_at,
             location,
             experience
@@ -1125,6 +1208,12 @@ function tplNoSlug(){
   updateSEO(dev);
   window.__currentDeveloper = dev;
   root.innerHTML = buildProfile(dev, others);
+
+  document.addEventListener('click', function(e){
+    const wrap = document.querySelector('.ats-download-wrap');
+    if(!wrap)return;
+    if(!wrap.contains(e.target))toggleATSMenu(false);
+  });
 
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
