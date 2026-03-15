@@ -709,6 +709,15 @@ function getSession(){
       return;
     }
 
+    if (window.devDirectory && typeof window.devDirectory.applyTalentNav === 'function') {
+      window.devDirectory.applyTalentNav({
+        profilePathPrefix: '../developer/?slug=',
+        session,
+        profile,
+        slug: profile.slug || ''
+      });
+    }
+
     renderProfile(profile);
      if (window.enableAiUrlBtn) window.enableAiUrlBtn();
     const missing = getMissingFields(profile);

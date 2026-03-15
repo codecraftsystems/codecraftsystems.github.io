@@ -1454,9 +1454,6 @@ CU = {
   id: sess.user_id,
   email: sess.email 
 };
-  if(window.devDirectory && typeof devDirectory.applyTalentNav==='function'){
-    await devDirectory.applyTalentNav({profilePathPrefix:'../developer/?slug='});
-  }
   try{
     const {data,error} = await SB
       .from('developers').select('*')
@@ -1473,6 +1470,14 @@ CU = {
       }
     }
   }catch(e){}
+  if(window.devDirectory && typeof devDirectory.applyTalentNav==='function'){
+    await devDirectory.applyTalentNav({
+      profilePathPrefix:'../developer/?slug=',
+      session: sess,
+      profile: EP,
+      slug: EP?.slug || ''
+    });
+  }
   renderForm(EP);
   handleIntentActions();
 })();
