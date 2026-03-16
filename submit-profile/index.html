@@ -1199,6 +1199,9 @@ async function doSave(e){
     }
     EP=payload;
     toast('ts','Saved!',wasEdit?'Profile updated successfully.':'Profile is now live!');
+    setTimeout(()=>{
+    location.reload(true);
+  },800);
     const nvView=document.querySelector('[data-nav-view-profile]');
     if(nvView){
       nvView.href='../developer/?slug='+encodeURIComponent(slug);
