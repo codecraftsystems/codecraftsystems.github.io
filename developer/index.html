@@ -1,27 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.02, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<!-- SEO — filled dynamically -->
 <title id="pageTitle">Developer Profile | CodeCraft Systems</title>
-<meta name="description" id="pageMeta" content="Developer profile in the Laravel + Vue.js talent network.">
-<link rel="canonical" id="pageCanonical" href="https://codecraftsystems.github.io/developer/">
-<meta property="og:type" content="profile">
-<meta property="og:title" id="ogTitle" content="Developer Profile | CodeCraft Systems">
-<meta property="og:description" id="ogDesc" content="View developer skills, experience and availability.">
-<meta property="og:image" id="ogImg" content="">
-<meta property="og:url" id="ogUrl" content="https://codecraftsystems.github.io/developer/">
-<meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
+<meta name="description" id="pageMeta" content="Developer profile in the Laravel + Vue.js talent network.">
+
+<meta name="keywords" id="metaKeywords">
+
+<meta name="robots" content="index,follow,max-image-preview:large">
+
+<link rel="canonical" id="pageCanonical" href="https://codecraftsystems.github.io/developer/">
+
+<meta property="og:type" content="profile">
+<meta property="og:title" id="ogTitle">
+<meta property="og:description" id="ogDesc">
+<meta property="og:image" id="ogImg">
+<meta property="og:url" id="ogUrl">
+<meta property="og:site_name" content="CodeCraft Systems">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" id="twitterTitle">
+<meta name="twitter:description" id="twitterDesc">
+<meta name="twitter:image" id="twitterImg">
+
 <meta name="theme-color" content="#ff4d00">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<!-- Person schema -->
+<script type="application/ld+json" id="personSchema"></script>
 
+<!-- Breadcrumb schema -->
+<script type="application/ld+json" id="breadcrumbSchema"></script>
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+<rect width='100' height='100' rx='12' fill='%23ff4d00'/>
+<text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text>
+</svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans&family=JetBrains+Mono&display=swap" rel="stylesheet">
+ 
 <style>
 /* ══════════════════════════════════════
    RESET & BASE
@@ -642,19 +662,116 @@ function getSlug(){
 
 /* ══ UPDATE HEAD SEO ══ */
 function updateSEO(d){
-  const name=d.name||'Developer';
-  const title=d.title||'Laravel / Vue.js Developer';
-  const exp=d.experience_years||0;
-  const otw=d.open_to_work?'Open to work. ':'';
-  const slug=esc(d.slug||'');
-  const canonical=`https://codecraftsystems.github.io/developer/${slug}`;
-  document.getElementById('pageTitle').textContent=`${name} — ${title} | CodeCraft Systems`;
-  document.getElementById('pageMeta').setAttribute('content',`${name}, ${title} with ${exp} years experience. ${otw}View skills and contact.`);
-  document.getElementById('pageCanonical').setAttribute('href',canonical);
-  document.getElementById('ogTitle').setAttribute('content',`${name} — ${title}`);
-  document.getElementById('ogDesc').setAttribute('content',`${name}: ${(d.skills||'').split(',').slice(0,4).join(', ')}`);
-  document.getElementById('ogUrl').setAttribute('content',canonical);
-  if(d.profile_image)document.getElementById('ogImg').setAttribute('content',imgUrl(d.profile_image));
+
+const name=d.name||'Developer';
+const title=d.title||'Developer';
+const exp=d.experience_years||0;
+const slug=d.slug||'';
+const canonical=`https://codecraftsystems.github.io/developer/${slug}`;
+const skills=(d.skills||'').split(',');
+
+/* TITLE */
+document.getElementById('pageTitle').textContent=
+`${name} | ${title} in ${d.location} | ${exp}+ Years Experience`;
+
+/* META DESCRIPTION */
+document.getElementById('pageMeta').setAttribute(
+'content',
+`${name} is a ${exp}+ years experienced ${title} based in ${d.location}. Skilled in ${skills.slice(0,5).join(', ')}. View portfolio, experience and contact details.`
+);
+
+/* KEYWORDS */
+document.getElementById('metaKeywords').setAttribute(
+'content',
+`${name}, ${title}, ${skills.join(', ')}, ${d.location}, developer portfolio`
+);
+
+/* CANONICAL */
+document.getElementById('pageCanonical').setAttribute('href',canonical);
+
+/* OPEN GRAPH */
+document.getElementById('ogTitle').setAttribute(
+'content',
+`${name} – ${title}`
+);
+
+document.getElementById('ogDesc').setAttribute(
+'content',
+`${name} developer profile. Skills: ${skills.slice(0,6).join(', ')}`
+);
+
+document.getElementById('ogUrl').setAttribute('content',canonical);
+
+document.getElementById('ogImg').setAttribute(
+'content',
+d.profile_image || ''
+);
+
+/* TWITTER */
+document.getElementById('twitterTitle').content=
+`${name} | ${title}`;
+
+document.getElementById('twitterDesc').content=
+`${name} developer profile – ${d.location}`;
+
+document.getElementById('twitterImg').content=
+d.profile_image || '';
+
+/* PERSON SCHEMA */
+
+const personSchema={
+"@context":"https://schema.org",
+"@type":"Person",
+"name":name,
+"jobTitle":title,
+"url":canonical,
+"image":d.profile_image||"",
+"description":d.bio,
+"address":{
+"@type":"PostalAddress",
+"addressLocality":d.location
+},
+"knowsAbout":skills,
+"sameAs":[
+d.github_url,
+d.linkedin_url,
+d.portfolio_url
+].filter(Boolean)
+};
+
+document.getElementById("personSchema").textContent=
+JSON.stringify(personSchema);
+
+/* BREADCRUMB SCHEMA */
+
+const breadcrumb={
+"@context":"https://schema.org",
+"@type":"BreadcrumbList",
+"itemListElement":[
+{
+"@type":"ListItem",
+"position":1,
+"name":"Home",
+"item":"https://codecraftsystems.github.io/"
+},
+{
+"@type":"ListItem",
+"position":2,
+"name":"Developers",
+"item":"https://codecraftsystems.github.io/developers/"
+},
+{
+"@type":"ListItem",
+"position":3,
+"name":name,
+"item":canonical
+}
+]
+};
+
+document.getElementById("breadcrumbSchema").textContent=
+JSON.stringify(breadcrumb);
+
 }
 
 function slugify(text){
@@ -869,14 +986,14 @@ function buildProfile(d,others){
         <!-- Avatar -->
         <div class="av-wrap">
           <div class="av-ring${d.open_to_work?' otw':''}"></div>
-          <img class="av-img" id="avImg" src="${esc(img)}" alt="${esc(d.name)}"
+          <img loading="lazy" class="av-img" id="avImg" src="${esc(img)}" alt="${esc(d.name)}"
             onerror="this.style.display='none';document.getElementById('avFb').style.display='flex'">
           <div class="av-fb" id="avFb">${initials(d.name)}</div>
         </div>
 
         <!-- Info -->
         <div class="prof-info">
-          <h1 class="prof-name" itemprop="name">${esc(d.name)}</h1>
+          <h1 class="prof-name">${esc(d.name)} – ${esc(d.title)}</h1>
 
           <div class="prof-role">
             <span itemprop="jobTitle">${esc(d.title||'Developer')}</span>
