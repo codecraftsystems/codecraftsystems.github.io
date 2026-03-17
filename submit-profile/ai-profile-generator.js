@@ -448,7 +448,7 @@ Return JSON only.
 Resume:
 
 Rules:
-- The "bio" field must be between 300 and 600 words.
+- The "bio" field must be between 300 and 400 words.
 - Format the bio in 2–4 paragraphs.
 - Use newline characters (\\n\\n) between paragraphs so it displays properly in a textarea.
 - Do not return anything outside the JSON.
