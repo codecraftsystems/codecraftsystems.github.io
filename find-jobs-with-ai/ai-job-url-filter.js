@@ -196,7 +196,7 @@ Profile Summary: ${(profile.bio || '').substring(0,300)}
 
   setAiStep(2);
 
-  const api = `${JOB_SEARCH_URL}?q=${searchQuery}&pages=10&categories=jobs`;
+  const api = `${JOB_SEARCH_URL}?q=${searchQuery}&pages=10&categories=jobs,general`;
 
   const res = await fetch(api);
 
