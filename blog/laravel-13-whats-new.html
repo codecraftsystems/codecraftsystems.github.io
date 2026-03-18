@@ -1,38 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.02, user-scalable=no">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.02, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<!-- ═══ SEO ═══ -->
-<title>Laravel 13: What's New — Complete Guide to Features, Setup & API Development | CodeCraft Systems</title>
-<meta name="description" content="A complete developer guide to Laravel 13 — new features like the AI SDK, PHP Attributes, typed Eloquent models, JSON:API resources, installation, routing, Blade, Eloquent ORM, authentication, security, and deployment. Updated 2026.">
-<meta name="author" content="Sonu Sahani - CodeCraft Systems">
-<meta name="robots" content="index, follow">
-<meta name="keywords" content="Laravel 13, Laravel 13 features, Laravel 13 new features, Laravel AI SDK, Laravel 13 installation, Eloquent ORM, Laravel 13 tutorial, PHP 8.3 Laravel, Laravel JSON API, Laravel 2026">
-<link rel="canonical" href="https://codecraftsystems.github.io/blog/laravel-13-whats-new.html">
+  <!-- ═══ SEO ═══ -->
+  <title>Laravel 13: What's New — Complete Guide to Features, Setup & API Development | CodeCraft Systems</title>
+  <meta name="description"
+    content="A complete developer guide to Laravel 13 — new features like the AI SDK, PHP Attributes, typed Eloquent models, JSON:API resources, installation, routing, Blade, Eloquent ORM, authentication, security, and deployment. Updated 2026.">
+  <meta name="author" content="Sonu Sahani - CodeCraft Systems">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords"
+    content="Laravel 13, Laravel 13 features, Laravel 13 new features, Laravel AI SDK, Laravel 13 installation, Eloquent ORM, Laravel 13 tutorial, PHP 8.3 Laravel, Laravel JSON API, Laravel 2026">
+  <link rel="canonical" href="https://codecraftsystems.github.io/blog/laravel-13-whats-new.html">
 
-<!-- Open Graph -->
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://codecraftsystems.github.io/blog/laravel-13-whats-new.html">
-<meta property="og:site_name" content="CodeCraft Systems">
-<meta property="og:title" content="Laravel 13: What's New — Complete Developer Guide 2026">
-<meta property="og:description" content="Everything you need to know about Laravel 13 — AI SDK, PHP Attributes, typed Eloquent, JSON:API, PreventRequestForgery, installation, routing, and deployment.">
-<meta property="og:image" content="https://codecraftsystems.github.io/images/laravel-13.jpg">
-<meta property="article:published_time" content="2026-03-18">
-<meta property="article:author" content="Sonu Sahani">
-<meta property="article:section" content="Laravel">
-<meta property="article:tag" content="Laravel 13, PHP 8.3, Laravel AI SDK, Eloquent ORM, API Development">
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://codecraftsystems.github.io/blog/laravel-13-whats-new.html">
+  <meta property="og:site_name" content="CodeCraft Systems">
+  <meta property="og:title" content="Laravel 13: What's New — Complete Developer Guide 2026">
+  <meta property="og:description"
+    content="Everything you need to know about Laravel 13 — AI SDK, PHP Attributes, typed Eloquent, JSON:API, PreventRequestForgery, installation, routing, and deployment.">
+  <meta property="og:image" content="https://codecraftsystems.github.io/images/laravel-13.jpg">
+  <meta property="article:published_time" content="2026-03-18">
+  <meta property="article:author" content="Sonu Sahani">
+  <meta property="article:section" content="Laravel">
+  <meta property="article:tag" content="Laravel 13, PHP 8.3, Laravel AI SDK, Eloquent ORM, API Development">
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Laravel 13: What's New — Complete Guide 2026">
-<meta name="twitter:description" content="AI SDK, PHP Attributes, typed Eloquent, JSON:API, PreventRequestForgery and more. Full guide for developers.">
-<meta name="twitter:image" content="https://codecraftsystems.github.io/images/laravel-13.jpg">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Laravel 13: What's New — Complete Guide 2026">
+  <meta name="twitter:description"
+    content="AI SDK, PHP Attributes, typed Eloquent, JSON:API, PreventRequestForgery and more. Full guide for developers.">
+  <meta name="twitter:image" content="https://codecraftsystems.github.io/images/laravel-13.jpg">
 
-<!-- Article Schema JSON-LD -->
-<script type="application/ld+json">
+  <!-- Article Schema JSON-LD -->
+  <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
@@ -61,8 +66,8 @@
 }
 </script>
 
-<!-- BreadcrumbList Schema -->
-<script type="application/ld+json">
+  <!-- BreadcrumbList Schema -->
+  <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -74,8 +79,8 @@
 }
 </script>
 
-<!-- FAQPage Schema -->
-<script type="application/ld+json">
+  <!-- FAQPage Schema -->
+  <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -104,797 +109,1663 @@
 }
 </script>
 
-<!-- SVG favicon -->
-<link rel="icon" type="image/svg+xml"
-  href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
-<link rel="icon" type="image/x-icon" href="https://codecraftsystems.github.io/images/fav/favicon.ico">
-<link rel="shortcut icon" href="https://codecraftsystems.github.io/images/fav/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="https://codecraftsystems.github.io/images/fav/favicon-32x32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="https://codecraftsystems.github.io/images/fav/apple-touch-icon.png">
-<meta name="theme-color" content="#ff4d00">
+  <!-- SVG favicon -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23ff4d00'/><text x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='white'>CC</text></svg>">
+  <link rel="icon" type="image/x-icon" href="https://codecraftsystems.github.io/images/fav/favicon.ico">
+  <link rel="shortcut icon" href="https://codecraftsystems.github.io/images/fav/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32"
+    href="https://codecraftsystems.github.io/images/fav/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180"
+    href="https://codecraftsystems.github.io/images/fav/apple-touch-icon.png">
+  <meta name="theme-color" content="#ff4d00">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
 
-<style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-  :root {
-    --black: #f4f7fb;
-    --dark: #ffffff;
-    --card: #ffffff;
-    --border: #d9e2ef;
-    --accent: #ff4d00;
-    --accent2: #ffb800;
-    --white: #1f2937;
-    --muted: #5f6b7a;
-    --font-display: 'Bebas Neue', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --nav-h: 65px;
-  }
-
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.6;
-    overflow-x: hidden;
-    cursor: auto;
-  }
-
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 100; opacity: 0.4;
-  }
-
-  /* ── NAVBAR ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 1000; height: var(--nav-h);
-    padding: 0 40px;
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid transparent;
-    transition: all 0.3s;
-  }
-  nav.scrolled {
-    background: rgba(244,247,251,0.95);
-    border-color: var(--border);
-    backdrop-filter: blur(20px);
-  }
-  .logo {
-    font-family: var(--font-display);
-    font-size: 1.8rem; letter-spacing: 2px;
-    color: var(--white); text-decoration: none;
-    flex-shrink: 0;
-  }
-  .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 36px; list-style: none; align-items: center; }
-  .nav-links a {
-    color: var(--muted); text-decoration: none; font-size: 0.85rem;
-    font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--white); }
-  .nav-cta {
-    background: var(--accent) !important; color: var(--white) !important;
-    padding: 10px 24px; border-radius: 2px; font-weight: 600 !important;
-  }
-  .nav-cta:hover { background: #e04400 !important; }
-  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-  .hamburger span { display: block; width: 28px; height: 2px; background: var(--white); transition: all 0.3s; }
-
-  .mobile-menu {
-    display: none; position: fixed; inset: 0;
-    background: rgba(244,247,251,0.98); z-index: 999;
-    flex-direction: column; align-items: center; justify-content: center; gap: 36px;
-  }
-  .mobile-menu.open { display: flex; }
-  .mobile-menu a {
-    font-family: var(--font-display); font-size: 2.5rem;
-    color: var(--white); text-decoration: none; letter-spacing: 2px; transition: color 0.2s;
-  }
-  .mobile-menu a:hover { color: var(--accent); }
-  .close-btn {
-    position: absolute; top: 24px; right: 40px;
-    font-size: 2rem; background: none; border: none; color: var(--white); cursor: pointer;
-  }
-
-  /* ── ARTICLE HERO ── */
-  .article-hero {
-    padding-top: var(--nav-h);
-    background: var(--dark);
-    border-bottom: 1px solid var(--border);
-    position: relative; overflow: hidden;
-  }
-  .hero-grid-bg {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 60px 60px; opacity: 0.18;
-    mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, black, transparent);
-  }
-  .hero-glow {
-    position: absolute; width: 600px; height: 400px;
-    background: radial-gradient(ellipse, rgba(255,77,0,0.08) 0%, transparent 70%);
-    top: 0; left: 50%; transform: translateX(-50%);
-    pointer-events: none;
-  }
-  .article-hero-inner {
-    max-width: 900px; margin: 0 auto;
-    padding: 52px 40px 48px;
-    position: relative; z-index: 1;
-    animation: fadeUp 0.6s ease both;
-  }
-
-  /* Breadcrumb */
-  .breadcrumb {
-    display: flex; align-items: center; gap: 6px;
-    font-family: var(--font-mono); font-size: 0.73rem;
-    color: var(--muted); margin-bottom: 24px;
-    flex-wrap: wrap; line-height: 1.8;
-  }
-  .breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.2s; white-space: nowrap; }
-  .breadcrumb a:hover { color: var(--accent); }
-  .breadcrumb .sep { color: #aaa; }
-  .breadcrumb .current { color: var(--muted); word-break: break-word; }
-
-  /* Category pill */
-  .article-cat {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,77,0,0.1); border: 1px solid rgba(255,77,0,0.3);
-    padding: 5px 14px; border-radius: 100px;
-    font-family: var(--font-mono); font-size: 0.72rem;
-    color: var(--accent); letter-spacing: 1px;
-    margin-bottom: 20px;
-  }
-  .cat-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.4)} }
-
-  /* Article title */
-  .article-title {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 5vw, 4.2rem);
-    line-height: 1; letter-spacing: 1px;
-    color: var(--white); margin-bottom: 20px;
-    word-break: break-word;
-  }
-  .article-title em { font-style: normal; color: var(--accent); }
-
-  .article-desc {
-    font-size: 1rem;
-    color: var(--muted);
-    line-height: 1.7; max-width: 680px;
-    margin-bottom: 32px;
-  }
-
-  /* Meta bar */
-  .article-meta {
-    display: flex; align-items: center;
-    gap: 0; flex-wrap: wrap;
-    padding: 20px 0; border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .meta-author {
-    display: flex; align-items: center; gap: 12px;
-    padding-right: 24px; margin-right: 24px;
-    border-right: 1px solid var(--border);
-  }
-  .author-avatar-sm {
-    width: 42px; height: 42px; border-radius: 50%;
-    border: 2px solid var(--accent);
-    background: var(--card);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem; flex-shrink: 0;
-  }
-  .author-info-name { font-weight: 600; font-size: 0.88rem; color: var(--white); }
-  .author-info-role { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); }
-  .meta-items { display: flex; gap: 16px; flex-wrap: wrap; }
-  .meta-item {
-    display: flex; align-items: center; gap: 7px;
-    font-family: var(--font-mono); font-size: 0.73rem; color: var(--muted);
-  }
-  .meta-icon { font-size: 0.85rem; }
-
-  /* Tags row */
-  .article-tags { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 20px; }
-  .atag {
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    padding: 4px 12px; border-radius: 100px;
-    font-size: 0.73rem; font-family: var(--font-mono); color: var(--muted);
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── PAGE LAYOUT ── */
-  .page-layout {
-    max-width: 1260px; margin: 0 auto;
-    padding: 56px 40px 80px;
-    display: grid;
-    grid-template-columns: minmax(0, 760px) 300px;
-    gap: 48px;
-    align-items: start;
-  }
-
-  /* ── ARTICLE BODY ── */
-  .article-body { min-width: 0; }
-
-  /* Reading progress bar */
-  .progress-bar {
-    position: fixed; top: var(--nav-h); left: 0;
-    height: 2px; background: var(--accent);
-    z-index: 900; width: 0%;
-    transition: width 0.1s linear;
-  }
-
-  /* Article prose */
-  .prose { color: #4b5563; font-size: 1.02rem; line-height: 1.85; }
-
-  .prose h2 {
-    font-family: var(--font-display);
-    font-size: clamp(1.4rem, 3vw, 2.2rem);
-    letter-spacing: 0.5px; color: var(--white);
-    margin: 52px 0 20px; line-height: 1;
-    padding-top: 52px; border-top: 1px solid var(--border);
-    scroll-margin-top: 90px;
-  }
-  .prose h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
-
-  .prose h3 {
-    font-size: 1.1rem; font-weight: 700;
-    color: var(--white); margin: 32px 0 14px;
-    scroll-margin-top: 90px;
-  }
-
-  .prose p { margin-bottom: 20px; }
-  .prose strong { color: var(--white); font-weight: 600; }
-
-  .prose a {
-    color: var(--accent); text-decoration: none;
-    border-bottom: 1px solid rgba(255,77,0,0.3); transition: border-color 0.2s;
-  }
-  .prose a:hover { border-color: var(--accent); }
-
-  .prose ul, .prose ol {
-    margin: 0 0 20px 20px; display: flex; flex-direction: column; gap: 8px;
-  }
-  .prose li::marker { color: var(--accent); }
-
-  /* Inline code */
-  .prose code {
-    background: rgba(255,77,0,0.08);
-    border: 1px solid rgba(255,77,0,0.15);
-    padding: 2px 7px; border-radius: 3px;
-    font-family: var(--font-mono); font-size: 0.82rem;
-    color: #d44d00;
-    word-break: break-word;
-  }
-
-  /* Code blocks */
-  .code-block {
-    background: #1e2433; border: 1px solid #2d3448;
-    border-radius: 8px; overflow: hidden;
-    margin: 28px 0; max-width: 100%;
-  }
-  .code-header {
-    background: #161b2e; padding: 10px 16px;
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid #2d3448;
-    gap: 8px;
-  }
-  .code-header-left { display: flex; align-items: center; gap: 8px; flex-shrink: 1; min-width: 0; }
-  .cdot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-  .cdot.r { background: #ff5f57; }
-  .cdot.y { background: #febc2e; }
-  .cdot.g { background: #28c840; }
-  .code-lang {
-    font-family: var(--font-mono); font-size: 0.7rem;
-    color: #6272a4; margin-left: 6px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .copy-btn {
-    background: none; border: 1px solid #2d3448;
-    color: #6272a4; font-family: var(--font-mono);
-    font-size: 0.68rem; padding: 3px 10px;
-    border-radius: 3px; cursor: pointer; transition: all 0.2s;
-    flex-shrink: 0; white-space: nowrap;
-  }
-  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .code-pre {
-    padding: 22px 24px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    font-family: var(--font-mono); font-size: 0.82rem;
-    line-height: 1.8; color: #cdd6f4;
-    white-space: pre;
-    word-break: normal;
-  }
-  /* Syntax colors */
-  .code-pre .cm  { color: #6272a4; font-style: italic; }
-  .code-pre .ck  { color: #cba6f7; }
-  .code-pre .cs  { color: #a6e3a1; }
-  .code-pre .cf  { color: #89b4fa; }
-  .code-pre .ca  { color: #ff4d00; font-weight: 600; }
-  .code-pre .cn  { color: #fab387; }
-  .code-pre .cg  { color: #a6e3a1; }
-  .code-pre .ct  { color: #f38ba8; }
-  .code-pre .cprop { color: #cdd6f4; }
-  .code-pre .cval  { color: #fab387; }
-
-  /* Callout boxes */
-  .callout {
-    border-left: 3px solid var(--accent);
-    background: rgba(255,77,0,0.05);
-    padding: 18px 20px; border-radius: 0 6px 6px 0;
-    margin: 28px 0;
-  }
-  .callout.info { border-color: #89b4fa; background: rgba(137,180,250,0.05); }
-  .callout.warn { border-color: var(--accent2); background: rgba(255,184,0,0.05); }
-  .callout.success { border-color: #a6e3a1; background: rgba(166,227,161,0.05); }
-  .callout-title {
-    font-weight: 700; font-size: 0.85rem; color: var(--white);
-    margin-bottom: 8px;
-  }
-  .callout p { margin: 0; font-size: 0.92rem; }
-
-  /* Comparison table */
-  .table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin: 28px 0;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-  }
-  .compare-table {
-    width: 100%; border-collapse: collapse;
-    font-size: 0.88rem;
-    min-width: 460px;
-  }
-  .compare-table th {
-    background: var(--dark); padding: 14px 16px;
-    text-align: left; font-family: var(--font-mono);
-    font-size: 0.75rem; letter-spacing: 1px;
-    text-transform: uppercase; color: var(--muted);
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-  .compare-table th:first-child { color: var(--white); }
-  .compare-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-    color: #4b5563; vertical-align: middle;
-  }
-  .compare-table tr:last-child td { border-bottom: none; }
-  .compare-table tr:hover td { background: rgba(255,77,0,0.02); }
-  .compare-table .feature { color: var(--white); font-weight: 500; white-space: nowrap; }
-  .badge-good { color: #16a34a; font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; }
-  .badge-ok   { color: #d97706; font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; }
-  .badge-bad  { color: #dc2626; font-family: var(--font-mono); font-size: 0.78rem; white-space: nowrap; }
-
-  /* Step blocks */
-  .step-block {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 22px 24px;
-    margin: 20px 0;
-    display: flex;
-    gap: 18px;
-    align-items: flex-start;
-  }
-  .step-num {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    color: var(--accent);
-    line-height: 1;
-    min-width: 36px;
-    flex-shrink: 0;
-  }
-  .step-content h4 {
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 6px;
-    font-size: 0.95rem;
-  }
-  .step-content p { margin: 0; font-size: 0.9rem; color: var(--muted); }
-
-  /* Verdict box */
-  .verdict-box {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--accent);
-    border-radius: 8px; padding: 28px;
-    margin: 36px 0;
-  }
-  .verdict-title {
-    font-family: var(--font-display);
-    font-size: 1.4rem; letter-spacing: 1px;
-    color: var(--white); margin-bottom: 14px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .verdict-box p { color: var(--muted); font-size: 0.92rem; line-height: 1.7; margin-bottom: 14px; }
-  .verdict-box p:last-child { margin-bottom: 0; }
-
-  /* Share row */
-  .share-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 28px 0; border-top: 1px solid var(--border);
-    flex-wrap: wrap; margin-top: 48px;
-  }
-  .share-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 1px; }
-  .share-btn {
-    border: 1px solid var(--border); color: var(--muted);
-    padding: 7px 14px; border-radius: 2px;
-    font-family: var(--font-mono); font-size: 0.75rem;
-    text-decoration: none; cursor: pointer; background: none;
-    transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
-    white-space: nowrap;
-  }
-  .share-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* Author bio card */
-  .author-bio-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 10px; padding: 28px;
-    display: flex; gap: 20px; align-items: flex-start;
-    margin-top: 12px;
-  }
-  .author-bio-avatar {
-    width: 64px; height: 64px; border-radius: 50%;
-    border: 2px solid var(--accent);
-    background: var(--dark); flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.8rem;
-  }
-  .author-bio-name { font-weight: 700; color: var(--white); font-size: 1rem; margin-bottom: 4px; }
-  .author-bio-role { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); margin-bottom: 10px; }
-  .author-bio-text { color: var(--muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 14px; }
-  .author-bio-links { display: flex; gap: 10px; flex-wrap: wrap; }
-  .author-bio-link {
-    border: 1px solid var(--border); color: var(--muted);
-    padding: 5px 14px; border-radius: 2px;
-    font-family: var(--font-mono); font-size: 0.72rem;
-    text-decoration: none; transition: all 0.2s;
-  }
-  .author-bio-link:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* Related posts */
-  .related-section { margin-top: 60px; }
-  .related-title {
-    font-family: var(--font-display); font-size: 1.8rem;
-    letter-spacing: 1px; color: var(--white);
-    margin-bottom: 24px; padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 12px;
-  }
-  .related-title::before {
-    content: ''; width: 3px; height: 24px;
-    background: var(--accent); border-radius: 2px; flex-shrink: 0;
-  }
-  .related-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .related-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 8px; padding: 22px;
-    text-decoration: none; color: inherit;
-    transition: all 0.3s; display: flex; flex-direction: column; gap: 10px;
-    position: relative; overflow: hidden;
-  }
-  .related-card::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
-  }
-  .related-card:hover::after { transform: scaleX(1); }
-  .related-card:hover { border-color: rgba(255,77,0,0.3); transform: translateY(-3px); }
-  .related-cat { font-family: var(--font-mono); font-size: 0.68rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
-  .related-post-title { font-size: 0.9rem; font-weight: 700; color: var(--white); line-height: 1.4; }
-  .related-meta { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); }
-
-  /* ── RIGHT SIDEBAR ── */
-  .article-sidebar {
-    display: flex; flex-direction: column; gap: 24px;
-    position: sticky; top: 90px;
-    min-width: 0;
-  }
-  .sidebar-widget {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 8px; overflow: hidden; min-width: 0;
-  }
-  .widget-head {
-    padding: 13px 18px; background: var(--dark);
-    border-bottom: 1px solid var(--border);
-    font-family: var(--font-display); font-size: 0.95rem;
-    letter-spacing: 1px; color: var(--white);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .widget-head::before { content: ''; width: 3px; height: 14px; background: var(--accent); border-radius: 2px; }
-  .widget-body { padding: 18px; }
-
-  /* TOC */
-  .toc-list { display: flex; flex-direction: column; gap: 2px; }
-  .toc-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 7px 10px; border-radius: 4px;
-    text-decoration: none; color: var(--muted);
-    font-size: 0.82rem; line-height: 1.4;
-    transition: all 0.2s; cursor: pointer; border: none; background: none;
-    font-family: var(--font-body); text-align: left; width: 100%;
-  }
-  .toc-item:hover, .toc-item.active { background: rgba(255,77,0,0.08); color: var(--white); }
-  .toc-item.active { color: var(--accent); }
-  .toc-num { font-family: var(--font-mono); font-size: 0.68rem; color: var(--accent); opacity: 0.7; min-width: 18px; margin-top: 1px; }
-
-  /* CTA widget */
-  .cta-widget {
-    background: linear-gradient(135deg, rgba(255,77,0,0.08), rgba(255,184,0,0.04));
-    border: 1px solid rgba(255,77,0,0.2) !important;
-  }
-  .cta-widget .widget-body { text-align: center; }
-  .cta-title { font-family: var(--font-display); font-size: 1.3rem; letter-spacing: 1px; color: var(--white); margin-bottom: 10px; }
-  .cta-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.6; margin-bottom: 18px; }
-  .cta-btn {
-    display: block; background: var(--accent); color: #fff;
-    padding: 11px 20px; text-decoration: none;
-    font-weight: 600; font-size: 0.85rem; border-radius: 2px;
-    transition: all 0.2s; text-align: center;
-  }
-  .cta-btn:hover { background: #e04400; transform: translateY(-2px); }
-
-  /* Tags widget */
-  .tags-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
-  .tag-pill {
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    padding: 4px 10px; border-radius: 100px;
-    font-size: 0.72rem; font-family: var(--font-mono);
-    color: var(--muted); text-decoration: none; transition: all 0.2s;
-  }
-  .tag-pill:hover { background: rgba(255,77,0,0.1); border-color: rgba(255,77,0,0.4); color: var(--accent); }
-
-  .back-link {
-    display: flex; align-items: center; gap: 8px;
-    border: 1px solid var(--border); color: var(--muted);
-    padding: 12px 18px; border-radius: 6px;
-    font-family: var(--font-mono); font-size: 0.78rem;
-    text-decoration: none; transition: all 0.2s;
-  }
-  .back-link:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--dark); border-top: 1px solid var(--border); padding: 40px;
-  }
-  .footer-inner {
-    max-width: 1200px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 20px; flex-wrap: wrap;
-  }
-  .footer-logo { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 2px; color: var(--white); }
-  .footer-logo span { color: var(--accent); }
-  .footer-copy { color: var(--muted); font-size: 0.82rem; }
-  .footer-links { display: flex; gap: 20px; list-style: none; flex-wrap: wrap; }
-  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
-  .footer-links a:hover { color: var(--white); }
-
-  /* nav feature pill */
-  .nav-links a.nav-feature {
-    color: var(--accent) !important;
-    border: 1px solid rgba(255,77,0,.35);
-    border-radius: 999px; padding: 7px 18px;
-    background: rgba(255,77,0,.08);
-  }
-  .mobile-menu a.nav-feature {
-    color: var(--accent);
-    border: 1px solid rgba(255,77,0,.35);
-    border-radius: 999px; padding: 10px 26px;
-    background: rgba(255,77,0,.08);
-  }
-
-  /* ════ RESPONSIVE ════ */
-  @media (max-width: 1100px) {
-    .page-layout {
-      grid-template-columns: 1fr;
-      gap: 40px; padding: 48px 32px 72px;
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .article-sidebar {
-      position: static;
+
+    :root {
+      --black: #f4f7fb;
+      --dark: #ffffff;
+      --card: #ffffff;
+      --border: #d9e2ef;
+      --accent: #ff4d00;
+      --accent2: #ffb800;
+      --white: #1f2937;
+      --muted: #5f6b7a;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --nav-h: 65px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: auto;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.4;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: var(--nav-h);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s;
+    }
+
+    nav.scrolled {
+      background: rgba(244, 247, 251, 0.95);
+      border-color: var(--border);
+      backdrop-filter: blur(20px);
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      color: var(--white);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+    }
+
+    .nav-cta {
+      background: var(--accent) !important;
+      color: var(--white) !important;
+      padding: 10px 24px;
+      border-radius: 2px;
+      font-weight: 600 !important;
+    }
+
+    .nav-cta:hover {
+      background: #e04400 !important;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 2px;
+      background: var(--white);
+      transition: all 0.3s;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(244, 247, 251, 0.98);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu a {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: 2px;
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover {
+      color: var(--accent);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 24px;
+      right: 40px;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    /* ── ARTICLE HERO ── */
+    .article-hero {
+      padding-top: var(--nav-h);
+      background: var(--dark);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.18;
+      mask-image: radial-gradient(ellipse 100% 100% at 50% 0%, black, transparent);
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(255, 77, 0, 0.08) 0%, transparent 70%);
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .article-hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 52px 40px 48px;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      line-height: 1.8;
+    }
+
+    .breadcrumb a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--accent);
+    }
+
+    .breadcrumb .sep {
+      color: #aaa;
+    }
+
+    .breadcrumb .current {
+      color: var(--muted);
+      word-break: break-word;
+    }
+
+    /* Category pill */
+    .article-cat {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 77, 0, 0.1);
+      border: 1px solid rgba(255, 77, 0, 0.3);
+      padding: 5px 14px;
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    .cat-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .4;
+        transform: scale(1.4)
+      }
+    }
+
+    /* Article title */
+    .article-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 4.2rem);
+      line-height: 1;
+      letter-spacing: 1px;
+      color: var(--white);
+      margin-bottom: 20px;
+      word-break: break-word;
+    }
+
+    .article-title em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .article-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    /* Meta bar */
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .meta-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-right: 24px;
+      margin-right: 24px;
+      border-right: 1px solid var(--border);
+    }
+
+    .author-avatar-sm {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .author-info-name {
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--white);
+    }
+
+    .author-info-role {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    .meta-items {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      color: var(--muted);
+    }
+
+    .meta-icon {
+      font-size: 0.85rem;
+    }
+
+    /* Tags row */
+    .article-tags {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .atag {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.73rem;
+      font-family: var(--font-mono);
+      color: var(--muted);
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .page-layout {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 56px 40px 80px;
+      display: grid;
+      grid-template-columns: minmax(0, 760px) 300px;
+      gap: 48px;
+      align-items: start;
+    }
+
+    /* ── ARTICLE BODY ── */
+    .article-body {
+      min-width: 0;
+    }
+
+    /* Reading progress bar */
+    .progress-bar {
+      position: fixed;
+      top: var(--nav-h);
+      left: 0;
+      height: 2px;
+      background: var(--accent);
+      z-index: 900;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* Article prose */
+    .prose {
+      color: #4b5563;
+      font-size: 1.02rem;
+      line-height: 1.85;
+    }
+
+    .prose h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      letter-spacing: 0.5px;
+      color: var(--white);
+      margin: 52px 0 20px;
+      line-height: 1;
+      padding-top: 52px;
+      border-top: 1px solid var(--border);
+      scroll-margin-top: 90px;
+    }
+
+    .prose h2:first-child {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .prose h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin: 32px 0 14px;
+      scroll-margin-top: 90px;
+    }
+
+    .prose p {
+      margin-bottom: 20px;
+    }
+
+    .prose strong {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .prose a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 77, 0, 0.3);
+      transition: border-color 0.2s;
+    }
+
+    .prose a:hover {
+      border-color: var(--accent);
+    }
+
+    .prose ul,
+    .prose ol {
+      margin: 0 0 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .prose li::marker {
+      color: var(--accent);
+    }
+
+    /* Inline code */
+    .prose code {
+      background: rgba(255, 77, 0, 0.08);
+      border: 1px solid rgba(255, 77, 0, 0.15);
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #d44d00;
+      word-break: break-word;
+    }
+
+    /* Code blocks */
+    .code-block {
+      background: #1e2433;
+      border: 1px solid #2d3448;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 28px 0;
+      max-width: 100%;
+    }
+
+    .code-header {
+      background: #161b2e;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #2d3448;
+      gap: 8px;
+    }
+
+    .code-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 1;
+      min-width: 0;
+    }
+
+    .cdot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .cdot.r {
+      background: #ff5f57;
+    }
+
+    .cdot.y {
+      background: #febc2e;
+    }
+
+    .cdot.g {
+      background: #28c840;
+    }
+
+    .code-lang {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: #6272a4;
+      margin-left: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid #2d3448;
+      color: #6272a4;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 3px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .code-pre {
+      padding: 22px 24px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: #cdd6f4;
+      white-space: pre;
+      word-break: normal;
+    }
+
+    /* Syntax colors */
+    .code-pre .cm {
+      color: #6272a4;
+      font-style: italic;
+    }
+
+    .code-pre .ck {
+      color: #cba6f7;
+    }
+
+    .code-pre .cs {
+      color: #a6e3a1;
+    }
+
+    .code-pre .cf {
+      color: #89b4fa;
+    }
+
+    .code-pre .ca {
+      color: #ff4d00;
+      font-weight: 600;
+    }
+
+    .code-pre .cn {
+      color: #fab387;
+    }
+
+    .code-pre .cg {
+      color: #a6e3a1;
+    }
+
+    .code-pre .ct {
+      color: #f38ba8;
+    }
+
+    .code-pre .cprop {
+      color: #cdd6f4;
+    }
+
+    .code-pre .cval {
+      color: #fab387;
+    }
+
+    /* Callout boxes */
+    .callout {
+      border-left: 3px solid var(--accent);
+      background: rgba(255, 77, 0, 0.05);
+      padding: 18px 20px;
+      border-radius: 0 6px 6px 0;
+      margin: 28px 0;
+    }
+
+    .callout.info {
+      border-color: #89b4fa;
+      background: rgba(137, 180, 250, 0.05);
+    }
+
+    .callout.warn {
+      border-color: var(--accent2);
+      background: rgba(255, 184, 0, 0.05);
+    }
+
+    .callout.success {
+      border-color: #a6e3a1;
+      background: rgba(166, 227, 161, 0.05);
+    }
+
+    .callout-title {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .callout p {
+      margin: 0;
+      font-size: 0.92rem;
+    }
+
+    /* Comparison table */
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 28px 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      min-width: 460px;
+    }
+
+    .compare-table th {
+      background: var(--dark);
+      padding: 14px 16px;
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .compare-table th:first-child {
+      color: var(--white);
+    }
+
+    .compare-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: #4b5563;
+      vertical-align: middle;
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .compare-table tr:hover td {
+      background: rgba(255, 77, 0, 0.02);
+    }
+
+    .compare-table .feature {
+      color: var(--white);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .badge-good {
+      color: #16a34a;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .badge-ok {
+      color: #d97706;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .badge-bad {
+      color: #dc2626;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    /* Step blocks */
+    .step-block {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px 24px;
+      margin: 20px 0;
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--accent);
+      line-height: 1;
+      min-width: 36px;
+      flex-shrink: 0;
+    }
+
+    .step-content h4 {
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    .step-content p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    /* Verdict box */
+    .verdict-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 28px;
+      margin: 36px 0;
+    }
+
+    .verdict-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+      color: var(--white);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .verdict-box p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .verdict-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Share row */
+    .share-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      margin-top: 48px;
+    }
+
+    .share-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .share-btn {
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 7px 14px;
+      border-radius: 2px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .share-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Author bio card */
+    .author-bio-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      margin-top: 12px;
+    }
+
+    .author-bio-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--dark);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .author-bio-name {
+      font-weight: 700;
+      color: var(--white);
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .author-bio-role {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .author-bio-text {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .author-bio-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .author-bio-link {
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 5px 14px;
+      border-radius: 2px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .author-bio-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Related posts */
+    .related-section {
+      margin-top: 60px;
+    }
+
+    .related-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+      color: var(--white);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .related-title::before {
+      content: '';
+      width: 3px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .related-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .related-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .related-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .related-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .related-card:hover {
+      border-color: rgba(255, 77, 0, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .related-cat {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .related-post-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.4;
+    }
+
+    .related-meta {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    /* ── RIGHT SIDEBAR ── */
+    .article-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: sticky;
+      top: 90px;
+      min-width: 0;
+    }
+
+    .sidebar-widget {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .widget-head {
+      padding: 13px 18px;
+      background: var(--dark);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .widget-head::before {
+      content: '';
+      width: 3px;
+      height: 14px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .widget-body {
+      padding: 18px;
+    }
+
+    /* TOC */
+    .toc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toc-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: 4px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.4;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: var(--font-body);
+      text-align: left;
+      width: 100%;
+    }
+
+    .toc-item:hover,
+    .toc-item.active {
+      background: rgba(255, 77, 0, 0.08);
+      color: var(--white);
+    }
+
+    .toc-item.active {
+      color: var(--accent);
+    }
+
+    .toc-num {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      opacity: 0.7;
+      min-width: 18px;
+      margin-top: 1px;
+    }
+
+    /* CTA widget */
+    .cta-widget {
+      background: linear-gradient(135deg, rgba(255, 77, 0, 0.08), rgba(255, 184, 0, 0.04));
+      border: 1px solid rgba(255, 77, 0, 0.2) !important;
+    }
+
+    .cta-widget .widget-body {
+      text-align: center;
+    }
+
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .cta-desc {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .cta-btn {
+      display: block;
+      background: var(--accent);
+      color: #fff;
+      padding: 11px 20px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: 2px;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .cta-btn:hover {
+      background: #e04400;
+      transform: translateY(-2px);
+    }
+
+    /* Tags widget */
+    .tags-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .tag-pill:hover {
+      background: rgba(255, 77, 0, 0.1);
+      border-color: rgba(255, 77, 0, 0.4);
+      color: var(--accent);
+    }
+
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 12px 18px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .back-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      padding: 40px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 20px;
+      flex-wrap: wrap;
     }
-    .article-sidebar .back-link,
-    .article-sidebar .cta-widget { grid-column: 1 / -1; }
-  }
-  @media (max-width: 900px) {
-    nav { padding: 0 24px; }
-    .nav-links { display: none; }
-    .hamburger { display: flex; }
-  }
-  @media (max-width: 768px) {
-    .article-hero-inner { padding: 36px 24px 32px; }
-    .page-layout { padding: 40px 24px 60px; }
-    .article-desc { font-size: 0.95rem; }
-    .prose { font-size: 0.97rem; }
-    .verdict-box { padding: 22px 18px; }
-    .author-bio-card { padding: 22px 18px; }
-  }
-  @media (max-width: 700px) {
-    .meta-author {
-      padding-right: 0; margin-right: 0;
-      border-right: none; border-bottom: 1px solid var(--border);
-      padding-bottom: 16px; margin-bottom: 16px; width: 100%;
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      color: var(--white);
     }
-    .article-meta { flex-direction: column; align-items: flex-start; }
-    .article-sidebar { grid-template-columns: 1fr; }
-    .article-sidebar .back-link,
-    .article-sidebar .cta-widget { grid-column: auto; }
-    .related-grid { grid-template-columns: 1fr; }
-    .code-pre { font-size: 0.78rem; padding: 16px 14px; }
-    .author-bio-card { flex-direction: column; gap: 14px; }
-    .step-block { flex-direction: column; gap: 10px; }
-  }
-  @media (max-width: 600px) {
-    .page-layout { padding: 32px 16px 56px; }
-    .article-hero-inner { padding: 28px 16px 28px; }
-    .article-title { font-size: clamp(1.7rem, 8vw, 2.4rem); }
-    .prose { font-size: 0.94rem; line-height: 1.8; }
-    .prose h2 { margin-top: 40px; padding-top: 40px; }
-    .code-pre { font-size: 0.73rem; padding: 14px 12px; }
-    .callout { padding: 14px 16px; }
-    .share-row { gap: 8px; }
-    .share-label { width: 100%; }
-    .related-card { padding: 16px; }
-  }
-  @media (max-width: 480px) {
-    nav { padding: 0 16px; }
-    .logo { font-size: 1.5rem; }
-    .article-hero-inner { padding: 24px 16px 24px; }
-    .breadcrumb { font-size: 0.68rem; gap: 4px; }
-    .article-title { font-size: clamp(1.6rem, 9vw, 2rem); }
-    .article-desc { font-size: 0.9rem; }
-    .meta-items { gap: 10px; }
-    .meta-item { font-size: 0.68rem; }
-    .code-pre { font-size: 0.7rem; padding: 12px 10px; }
-    .verdict-box { padding: 18px 14px; }
-    .verdict-title { font-size: 1.2rem; }
-    .related-title { font-size: 1.4rem; }
-    footer { padding: 28px 16px; }
-    .footer-inner { flex-direction: column; text-align: center; gap: 14px; }
-    .footer-links { justify-content: center; gap: 14px; }
-    .close-btn { right: 20px; }
-  }
-  @media (max-width: 360px) {
-    .article-title { font-size: 1.55rem; }
-    .code-pre { font-size: 0.65rem; }
-    .share-btn { font-size: 0.68rem; padding: 6px 10px; }
-    .article-tags { gap: 5px; }
-    .atag { font-size: 0.65rem; padding: 3px 9px; }
-  }
-</style>
+
+    .footer-logo span {
+      color: var(--accent);
+    }
+
+    .footer-copy {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--white);
+    }
+
+    /* nav feature pill */
+    .nav-links a.nav-feature {
+      color: var(--accent) !important;
+      border: 1px solid rgba(255, 77, 0, .35);
+      border-radius: 999px;
+      padding: 7px 18px;
+      background: rgba(255, 77, 0, .08);
+    }
+
+    .mobile-menu a.nav-feature {
+      color: var(--accent);
+      border: 1px solid rgba(255, 77, 0, .35);
+      border-radius: 999px;
+      padding: 10px 26px;
+      background: rgba(255, 77, 0, .08);
+    }
+
+    /* ════ RESPONSIVE ════ */
+    @media (max-width: 1100px) {
+      .page-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 48px 32px 72px;
+      }
+
+      .article-sidebar {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .article-sidebar .back-link,
+      .article-sidebar .cta-widget {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 900px) {
+      nav {
+        padding: 0 24px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .article-hero-inner {
+        padding: 75px 24px 32px;
+      }
+
+      .page-layout {
+        padding: 40px 24px 60px;
+      }
+
+      .article-desc {
+        font-size: 0.95rem;
+      }
+
+      .prose {
+        font-size: 0.97rem;
+      }
+
+      .verdict-box {
+        padding: 22px 18px;
+      }
+
+      .author-bio-card {
+        padding: 22px 18px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .meta-author {
+        padding-right: 0;
+        margin-right: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+        width: 100%;
+      }
+
+      .article-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .article-sidebar {
+        grid-template-columns: 1fr;
+      }
+
+      .article-sidebar .back-link,
+      .article-sidebar .cta-widget {
+        grid-column: auto;
+      }
+
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .code-pre {
+        font-size: 0.78rem;
+        padding: 16px 14px;
+      }
+
+      .author-bio-card {
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .step-block {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page-layout {
+        padding: 32px 16px 56px;
+      }
+
+      .article-hero-inner {
+        padding: 28px 16px 28px;
+      }
+
+      .article-title {
+        font-size: clamp(1.7rem, 8vw, 2.4rem);
+      }
+
+      .prose {
+        font-size: 0.94rem;
+        line-height: 1.8;
+      }
+
+      .prose h2 {
+        margin-top: 40px;
+        padding-top: 40px;
+      }
+
+      .code-pre {
+        font-size: 0.73rem;
+        padding: 14px 12px;
+      }
+
+      .callout {
+        padding: 14px 16px;
+      }
+
+      .share-row {
+        gap: 8px;
+      }
+
+      .share-label {
+        width: 100%;
+      }
+
+      .related-card {
+        padding: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      nav {
+        padding: 0 16px;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+      }
+
+      .article-hero-inner {
+        padding: 75px 16px 24px;
+      }
+
+      .breadcrumb {
+        font-size: 0.68rem;
+        gap: 4px;
+      }
+
+      .article-title {
+        font-size: clamp(1.6rem, 9vw, 2rem);
+      }
+
+      .article-desc {
+        font-size: 0.9rem;
+      }
+
+      .meta-items {
+        gap: 10px;
+      }
+
+      .meta-item {
+        font-size: 0.68rem;
+      }
+
+      .code-pre {
+        font-size: 0.7rem;
+        padding: 12px 10px;
+      }
+
+      .verdict-box {
+        padding: 18px 14px;
+      }
+
+      .verdict-title {
+        font-size: 1.2rem;
+      }
+
+      .related-title {
+        font-size: 1.4rem;
+      }
+
+      footer {
+        padding: 28px 16px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+      }
+
+      .footer-links {
+        justify-content: center;
+        gap: 14px;
+      }
+
+      .close-btn {
+        right: 20px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .article-title {
+        font-size: 1.55rem;
+      }
+
+      .code-pre {
+        font-size: 0.65rem;
+      }
+
+      .share-btn {
+        font-size: 0.68rem;
+        padding: 6px 10px;
+      }
+
+      .article-tags {
+        gap: 5px;
+      }
+
+      .atag {
+        font-size: 0.65rem;
+        padding: 3px 9px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="progress-bar" id="progressBar"></div>
+  <div class="progress-bar" id="progressBar"></div>
 
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-  <button class="close-btn" onclick="closeMobile()">x</button>
-  <a href="../" onclick="closeMobile()">Home</a>
-  <a href="../#services" onclick="closeMobile()">Services</a>
-  <a href="../blog/" onclick="closeMobile()">Blog</a>
-  <a href="../developers/" onclick="closeMobile()">Developers</a>
-  <a href="../jobs/" onclick="closeMobile()">Job Board</a>
-  <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMobile()">Find Jobs with AI</a>
-  <a href="../submit-profile/" onclick="closeMobile()">Add Profile</a>
-</div>
-
-<!-- NAV -->
-<nav id="navbar">
-  <a href="../" class="logo">Code<span>Craft</span></a>
-  <ul class="nav-links">
-    <li><a href="../">Home</a></li>
-    <li><a href="../#services">Services</a></li>
-    <li><a href="../blog/">Blog</a></li>
-    <li><a href="../developers/">Developers</a></li>
-    <li><a href="../jobs/">Job Board</a></li>
-    <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
-    <li><a href="../submit-profile/" class="nav-cta">Add Profile</a></li>
-  </ul>
-  <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
-</nav>
-
-<!-- ── ARTICLE HERO ── -->
-<header class="article-hero">
-  <div class="hero-grid-bg"></div>
-  <div class="hero-glow"></div>
-  <div class="article-hero-inner">
-
-    <nav class="breadcrumb" aria-label="breadcrumb">
-      <a href="https://codecraftsystems.github.io/">Home</a>
-      <span class="sep">›</span>
-      <a href="https://codecraftsystems.github.io/blog">Blog</a>
-      <span class="sep">›</span>
-      <span class="current">Laravel 13: What's New</span>
-    </nav>
-
-    <div class="article-cat"><span class="cat-dot"></span> Laravel</div>
-
-    <h1 class="article-title">
-      LARAVEL <em>13</em>:<br>WHAT'S NEW —<br>COMPLETE GUIDE
-    </h1>
-    <p class="article-desc">Everything you need to know about Laravel 13 — the AI SDK, PHP Attributes, typed Eloquent models, JSON:API resources, installation, routing, Blade, authentication, security, and deployment. Updated March 2026.</p>
-
-    <div class="article-meta">
-      <div class="meta-author">
-        <div class="author-avatar-sm">👨‍💻</div>
-        <div>
-          <div class="author-info-name">Sonu Sahani</div>
-          <div class="author-info-role">Full Stack Developer · CodeCraft Systems</div>
-        </div>
-      </div>
-      <div class="meta-items">
-        <span class="meta-item"><span class="meta-icon">📅</span> Mar 18, 2026</span>
-        <span class="meta-item"><span class="meta-icon">⏱</span> 18 min read</span>
-        <span class="meta-item"><span class="meta-icon">👁</span> Laravel 13</span>
-        <span class="meta-item"><span class="meta-icon">💬</span> PHP 8.3</span>
-      </div>
-    </div>
-
-    <div class="article-tags">
-      <span class="atag">Laravel 13</span>
-      <span class="atag">PHP 8.3</span>
-      <span class="atag">AI SDK</span>
-      <span class="atag">Eloquent ORM</span>
-      <span class="atag">JSON:API</span>
-      <span class="atag">REST API</span>
-      <span class="atag">Blade</span>
-    </div>
-
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="close-btn" onclick="closeMobile()">x</button>
+    <a href="../" onclick="closeMobile()">Home</a>
+    <a href="../#services" onclick="closeMobile()">Services</a>
+    <a href="../blog/" onclick="closeMobile()">Blog</a>
+    <a href="../developers/" onclick="closeMobile()">Developers</a>
+    <a href="../jobs/" onclick="closeMobile()">Job Board</a>
+    <a href="../find-jobs-with-ai/" class="nav-feature" onclick="closeMobile()">Find Jobs with AI</a>
+    <a href="../submit-profile/" onclick="closeMobile()">Add Profile</a>
   </div>
-</header>
 
-<!-- ── MAIN ── -->
-<div class="page-layout">
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="../" class="logo">Code<span>Craft</span></a>
+    <ul class="nav-links">
+      <li><a href="../">Home</a></li>
+      <li><a href="../#services">Services</a></li>
+      <li><a href="../blog/">Blog</a></li>
+      <li><a href="../developers/">Developers</a></li>
+      <li><a href="../jobs/">Job Board</a></li>
+      <li><a href="../find-jobs-with-ai/" class="nav-feature">Find Jobs with AI</a></li>
+      <li><a href="../submit-profile/" class="nav-cta">Add Profile</a></li>
+    </ul>
+    <div class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></div>
+  </nav>
 
-  <!-- Article Content -->
-  <article class="article-body">
-    <div class="prose">
+  <!-- ── ARTICLE HERO ── -->
+  <header class="article-hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow"></div>
+    <div class="article-hero-inner">
 
-      <!-- ══════════════════════════════════════ 1. INTRO ══ -->
-      <h2 id="intro">Introduction to Laravel</h2>
-      <p><strong>Laravel</strong> is an open-source PHP web framework built around the MVC (Model-View-Controller) architectural pattern. Created by Taylor Otwell in 2011, it has grown into the most popular PHP framework in the world, with over 80,000 GitHub stars and millions of applications running in production across every industry.</p>
-      <p>Laravel's appeal comes from its philosophy: make common tasks — routing, authentication, sessions, caching, queues, testing — as painless as possible, without sacrificing power or flexibility. The framework ships with an expressive query builder, a world-class ORM (Eloquent), a template engine (Blade), first-party authentication scaffolding, real-time WebSocket support via Reverb, and now in version 13, a native AI SDK.</p>
-      <p>This guide is written for <strong>beginner to intermediate developers</strong> who want a practical, no-fluff understanding of Laravel 13 — what it is, what's new, how to install it, and how to use its key features. If you already know Laravel 12, the "What's New" section is the one to jump to first.</p>
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a href="https://codecraftsystems.github.io/">Home</a>
+        <span class="sep">›</span>
+        <a href="https://codecraftsystems.github.io/blog">Blog</a>
+        <span class="sep">›</span>
+        <span class="current">Laravel 13: What's New</span>
+      </nav>
 
-      <div class="callout info">
-        <div class="callout-title">Release Context</div>
-        <p>Laravel 13 was released on <strong>March 17, 2026</strong>. It requires <strong>PHP 8.3 or newer</strong> and follows the framework's annual Q1 release schedule. Bug fixes are supported until Q3 2027; security fixes until Q1 2028.</p>
+      <div class="article-cat"><span class="cat-dot"></span> Laravel</div>
+
+      <h1 class="article-title">
+        LARAVEL <em>13</em>:<br>WHAT'S NEW —<br>COMPLETE GUIDE
+      </h1>
+      <p class="article-desc">Everything you need to know about Laravel 13 — the AI SDK, PHP Attributes, typed Eloquent
+        models, JSON:API resources, installation, routing, Blade, authentication, security, and deployment. Updated
+        March 2026.</p>
+
+      <div class="article-meta">
+        <div class="meta-author">
+          <div class="author-avatar-sm">👨‍💻</div>
+          <div>
+            <div class="author-info-name">Sonu Sahani</div>
+            <div class="author-info-role">Full Stack Developer · CodeCraft Systems</div>
+          </div>
+        </div>
+        <div class="meta-items">
+          <span class="meta-item"><span class="meta-icon">📅</span> Mar 18, 2026</span>
+          <span class="meta-item"><span class="meta-icon">⏱</span> 18 min read</span>
+          <span class="meta-item"><span class="meta-icon">👁</span> Laravel 13</span>
+          <span class="meta-item"><span class="meta-icon">💬</span> PHP 8.3</span>
+        </div>
       </div>
 
-      <!-- ══════════════════════════════════════ 2. WHATS NEW ══ -->
-      <h2 id="whatsnew">What's New in Laravel 13</h2>
-      <p>Laravel 13 is officially described as a "relatively minor upgrade in terms of breaking changes, while still delivering substantial new capabilities." In practice, this means most applications upgrade in under 10 minutes — but there are genuinely significant additions that change how you write Laravel code going forward.</p>
+      <div class="article-tags">
+        <span class="atag">Laravel 13</span>
+        <span class="atag">PHP 8.3</span>
+        <span class="atag">AI SDK</span>
+        <span class="atag">Eloquent ORM</span>
+        <span class="atag">JSON:API</span>
+        <span class="atag">REST API</span>
+        <span class="atag">Blade</span>
+      </div>
 
-      <h3>PHP Attributes for Model Configuration</h3>
-      <p>This is the biggest quality-of-life improvement in three versions. Previously, every Eloquent model started with a wall of protected arrays — <code>$fillable</code>, <code>$hidden</code>, <code>$guarded</code>, <code>$table</code>, <code>$connection</code>. Laravel 13 replaces all of this with native PHP 8 Attributes. The change is entirely non-breaking — the old syntax still works.</p>
+    </div>
+  </header>
 
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">app/Models/User.php · Laravel 13 Attributes</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+  <!-- ── MAIN ── -->
+  <div class="page-layout">
+
+    <!-- Article Content -->
+    <article class="article-body">
+      <div class="prose">
+
+        <!-- ══════════════════════════════════════ 1. INTRO ══ -->
+        <h2 id="intro">Introduction to Laravel</h2>
+        <p><strong>Laravel</strong> is an open-source PHP web framework built around the MVC (Model-View-Controller)
+          architectural pattern. Created by Taylor Otwell in 2011, it has grown into the most popular PHP framework in
+          the world, with over 80,000 GitHub stars and millions of applications running in production across every
+          industry.</p>
+        <p>Laravel's appeal comes from its philosophy: make common tasks — routing, authentication, sessions, caching,
+          queues, testing — as painless as possible, without sacrificing power or flexibility. The framework ships with
+          an expressive query builder, a world-class ORM (Eloquent), a template engine (Blade), first-party
+          authentication scaffolding, real-time WebSocket support via Reverb, and now in version 13, a native AI SDK.
+        </p>
+        <p>This guide is written for <strong>beginner to intermediate developers</strong> who want a practical, no-fluff
+          understanding of Laravel 13 — what it is, what's new, how to install it, and how to use its key features. If
+          you already know Laravel 12, the "What's New" section is the one to jump to first.</p>
+
+        <div class="callout info">
+          <div class="callout-title">Release Context</div>
+          <p>Laravel 13 was released on <strong>March 17, 2026</strong>. It requires <strong>PHP 8.3 or newer</strong>
+            and follows the framework's annual Q1 release schedule. Bug fixes are supported until Q3 2027; security
+            fixes until Q1 2028.</p>
         </div>
-        <pre class="code-pre"><span class="ck">use</span> Illuminate\Database\Eloquent\Attributes\<span class="cf">Table</span>;
+
+        <!-- ══════════════════════════════════════ 2. WHATS NEW ══ -->
+        <h2 id="whatsnew">What's New in Laravel 13</h2>
+        <p>Laravel 13 is officially described as a "relatively minor upgrade in terms of breaking changes, while still
+          delivering substantial new capabilities." In practice, this means most applications upgrade in under 10
+          minutes — but there are genuinely significant additions that change how you write Laravel code going forward.
+        </p>
+
+        <h3>PHP Attributes for Model Configuration</h3>
+        <p>This is the biggest quality-of-life improvement in three versions. Previously, every Eloquent model started
+          with a wall of protected arrays — <code>$fillable</code>, <code>$hidden</code>, <code>$guarded</code>,
+          <code>$table</code>, <code>$connection</code>. Laravel 13 replaces all of this with native PHP 8 Attributes.
+          The change is entirely non-breaking — the old syntax still works.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">app/Models/User.php · Laravel 13 Attributes</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre"><span class="ck">use</span> Illuminate\Database\Eloquent\Attributes\<span class="cf">Table</span>;
 <span class="ck">use</span> Illuminate\Database\Eloquent\Attributes\<span class="cf">Fillable</span>;
 <span class="ck">use</span> Illuminate\Database\Eloquent\Attributes\<span class="cf">Hidden</span>;
 
@@ -913,22 +1784,29 @@
   <span class="cm">// Your actual business logic lives here now</span>
   <span class="ck">public function</span> <span class="cf">posts</span>(): HasMany { ... }
 }</pre>
-      </div>
-
-      <p>Attributes are also available for Commands, Form Requests, Mailables, Listeners, Notifications, API Resources, and Factories. Every class that previously used property-based configuration now has an attribute alternative.</p>
-
-      <h3>Typed Eloquent Properties</h3>
-      <p>For years, model properties were magic. <code>$user->email</code> could be a string, could be null — your IDE just returned <code>mixed</code>. Laravel 13 adds support for fully typed Eloquent properties, which immediately improves IDE autocomplete and lets PHPStan catch type errors at development time rather than in production.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">app/Models/User.php · Typed Properties</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="ck">use</span> Carbon\<span class="cf">Carbon</span>;
+
+        <p>Attributes are also available for Commands, Form Requests, Mailables, Listeners, Notifications, API
+          Resources, and Factories. Every class that previously used property-based configuration now has an attribute
+          alternative.</p>
+
+        <h3>Typed Eloquent Properties</h3>
+        <p>For years, model properties were magic. <code>$user->email</code> could be a string, could be null — your IDE
+          just returned <code>mixed</code>. Laravel 13 adds support for fully typed Eloquent properties, which
+          immediately improves IDE autocomplete and lets PHPStan catch type errors at development time rather than in
+          production.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">app/Models/User.php · Typed Properties</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre"><span class="ck">use</span> Carbon\<span class="cf">Carbon</span>;
 <span class="ck">use</span> Illuminate\Database\Eloquent\<span class="cf">Model</span>;
 
 <span class="ck">class</span> <span class="cf">User</span> <span class="ck">extends</span> Model {
@@ -939,20 +1817,24 @@
   <span class="ck">public</span> <span class="ct">bool</span>    <span class="ct">$is_active</span>;
   <span class="ck">public</span> <span class="ct">float</span>   <span class="ct">$account_balance</span>;
 }</pre>
-      </div>
-
-      <h3>First-Party Laravel AI SDK</h3>
-      <p>The biggest platform addition in Laravel 13 is the <strong>first-party AI SDK</strong>. It provides a unified, provider-agnostic API for text generation, tool-calling agents, embeddings, image generation, audio synthesis, and vector-store integrations — all with a clean Laravel-native developer experience.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">Laravel AI SDK — Quick Examples</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="ck">use</span> App\Ai\Agents\<span class="cf">SalesCoach</span>;
+
+        <h3>First-Party Laravel AI SDK</h3>
+        <p>The biggest platform addition in Laravel 13 is the <strong>first-party AI SDK</strong>. It provides a
+          unified, provider-agnostic API for text generation, tool-calling agents, embeddings, image generation, audio
+          synthesis, and vector-store integrations — all with a clean Laravel-native developer experience.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">Laravel AI SDK — Quick Examples</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre"><span class="ck">use</span> App\Ai\Agents\<span class="cf">SalesCoach</span>;
 <span class="ck">use</span> Laravel\Ai\<span class="cf">Audio</span>;
 <span class="ck">use</span> Illuminate\Support\Facades\<span class="cf">DB</span>;
 
@@ -968,85 +1850,106 @@
   -><span class="cf">whereVectorSimilarTo</span>(<span class="cs">'embedding'</span>, <span class="cs">'Best wineries in Napa Valley'</span>)
   -><span class="cf">limit</span>(<span class="cn">10</span>)
   -><span class="cf">get</span>();</pre>
-      </div>
-
-      <h3>First-Party JSON:API Resources</h3>
-      <p>Laravel 13 ships native <strong>JSON:API resources</strong>. If you build APIs for mobile apps or third-party clients, this eliminates the need to assemble JSON:API-shaped responses by hand. The new <code>JsonApiResource</code> handles resource objects, relationships, sparse fieldsets, includes, links, and the correct <code>application/vnd.api+json</code> response header automatically.</p>
-
-      <h3>Enhanced CSRF — PreventRequestForgery</h3>
-      <p>Laravel's CSRF middleware has been formalized as <code>PreventRequestForgery</code>. In modern browsers, it first checks the <code>Sec-Fetch-Site</code> header to verify same-origin requests, then falls back to normal CSRF token validation. This is a genuine security improvement, not just a rename.</p>
-
-      <h3>Cache::touch() — Extend TTL Without Fetch</h3>
-      <p>A small but highly impactful addition: <code>Cache::touch($key, $seconds)</code> extends a cached item's time-to-live without fetching or re-storing its value. This eliminates the old get-then-put pattern in high-traffic systems.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">Cache::touch() — Before vs After</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="cm">// Before — get value, then re-store it just to extend TTL</span>
+
+        <h3>First-Party JSON:API Resources</h3>
+        <p>Laravel 13 ships native <strong>JSON:API resources</strong>. If you build APIs for mobile apps or third-party
+          clients, this eliminates the need to assemble JSON:API-shaped responses by hand. The new
+          <code>JsonApiResource</code> handles resource objects, relationships, sparse fieldsets, includes, links, and
+          the correct <code>application/vnd.api+json</code> response header automatically.</p>
+
+        <h3>Enhanced CSRF — PreventRequestForgery</h3>
+        <p>Laravel's CSRF middleware has been formalized as <code>PreventRequestForgery</code>. In modern browsers, it
+          first checks the <code>Sec-Fetch-Site</code> header to verify same-origin requests, then falls back to normal
+          CSRF token validation. This is a genuine security improvement, not just a rename.</p>
+
+        <h3>Cache::touch() — Extend TTL Without Fetch</h3>
+        <p>A small but highly impactful addition: <code>Cache::touch($key, $seconds)</code> extends a cached item's
+          time-to-live without fetching or re-storing its value. This eliminates the old get-then-put pattern in
+          high-traffic systems.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">Cache::touch() — Before vs After</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre
+            class="code-pre"><span class="cm">// Before — get value, then re-store it just to extend TTL</span>
 <span class="ct">$value</span> = <span class="cf">Cache</span>::<span class="cf">get</span>(<span class="cs">'session:123'</span>);
 <span class="cf">Cache</span>::<span class="cf">put</span>(<span class="cs">'session:123'</span>, <span class="ct">$value</span>, now()-><span class="cf">addMinutes</span>(<span class="cn">30</span>));
 
 <span class="cm">// After (Laravel 13) — one line, no fetch required</span>
 <span class="cf">Cache</span>::<span class="cf">touch</span>(<span class="cs">'session:123'</span>, now()-><span class="cf">addMinutes</span>(<span class="cn">30</span>));</pre>
-      </div>
-
-      <h3>Queue Routing by Job Class</h3>
-      <p>Laravel 13 adds <code>Queue::route()</code>, which lets you define default queue and connection routing rules for specific job classes centrally — instead of scattering <code>onQueue()</code> calls throughout your codebase.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">AppServiceProvider.php · Queue Routing</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="ck">use</span> App\Jobs\<span class="cf">ProcessPodcast</span>;
+
+        <h3>Queue Routing by Job Class</h3>
+        <p>Laravel 13 adds <code>Queue::route()</code>, which lets you define default queue and connection routing rules
+          for specific job classes centrally — instead of scattering <code>onQueue()</code> calls throughout your
+          codebase.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">AppServiceProvider.php · Queue Routing</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre
+            class="code-pre"><span class="ck">use</span> App\Jobs\<span class="cf">ProcessPodcast</span>;
 <span class="ck">use</span> Illuminate\Support\Facades\<span class="cf">Queue</span>;
 
 Queue::<span class="cf">route</span>(<span class="cf">ProcessPodcast</span>::<span class="ck">class</span>, connection: <span class="cs">'redis'</span>, queue: <span class="cs">'media'</span>);
 Queue::<span class="cf">route</span>(<span class="cf">SendWelcomeEmail</span>::<span class="ck">class</span>, queue: <span class="cs">'emails'</span>);</pre>
-      </div>
-
-      <div class="callout warn">
-        <div class="callout-title">Breaking Changes to Watch</div>
-        <p>Dropping PHP 8.2 support is the main breaking change. Additionally review: <code>PreventRequestForgery</code> if you have custom CSRF logic, cache serializable_classes (Laravel now hardens cache unserialization by default), and MySQL DELETE queries with JOIN + ORDER BY which may now throw errors on unsupported engines.</p>
-      </div>
-
-      <!-- ══════════════════════════════════════ 3. INSTALL ══ -->
-      <h2 id="installation">Installation and Setup</h2>
-      <p>Before installing Laravel 13, make sure your system meets the requirements. PHP 8.3 is the minimum — there is no way around this for Laravel 13.</p>
-
-      <h3>System Requirements</h3>
-      <ul>
-        <li>PHP 8.3, 8.4, or 8.5</li>
-        <li>Composer 2.x</li>
-        <li>A database: MySQL 8+, PostgreSQL 13+, SQLite 3.26+, or SQL Server 2017+</li>
-        <li>Node.js 18+ and npm (for frontend assets with Vite)</li>
-      </ul>
-
-      <div class="step-block">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>Install via Laravel Installer</h4>
-          <p>The Laravel installer is the fastest way to scaffold a new project.</p>
         </div>
-      </div>
 
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">Terminal</span>
+        <div class="callout warn">
+          <div class="callout-title">Breaking Changes to Watch</div>
+          <p>Dropping PHP 8.2 support is the main breaking change. Additionally review:
+            <code>PreventRequestForgery</code> if you have custom CSRF logic, cache serializable_classes (Laravel now
+            hardens cache unserialization by default), and MySQL DELETE queries with JOIN + ORDER BY which may now throw
+            errors on unsupported engines.</p>
+        </div>
+
+        <!-- ══════════════════════════════════════ 3. INSTALL ══ -->
+        <h2 id="installation">Installation and Setup</h2>
+        <p>Before installing Laravel 13, make sure your system meets the requirements. PHP 8.3 is the minimum — there is
+          no way around this for Laravel 13.</p>
+
+        <h3>System Requirements</h3>
+        <ul>
+          <li>PHP 8.3, 8.4, or 8.5</li>
+          <li>Composer 2.x</li>
+          <li>A database: MySQL 8+, PostgreSQL 13+, SQLite 3.26+, or SQL Server 2017+</li>
+          <li>Node.js 18+ and npm (for frontend assets with Vite)</li>
+        </ul>
+
+        <div class="step-block">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Install via Laravel Installer</h4>
+            <p>The Laravel installer is the fastest way to scaffold a new project.</p>
           </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="cm"># Install the Laravel installer globally</span>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">Terminal</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre"><span class="cm"># Install the Laravel installer globally</span>
 composer global require laravel/installer
 
 <span class="cm"># Create a new Laravel 13 project</span>
@@ -1054,25 +1957,27 @@ laravel new my-project
 
 <span class="cm"># Or use Composer directly</span>
 composer create-project laravel/laravel my-project "^13.0"</pre>
-      </div>
-
-      <div class="step-block">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>Configure Your Environment</h4>
-          <p>Copy <code>.env.example</code> to <code>.env</code> and fill in your database credentials.</p>
         </div>
-      </div>
 
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">.env</span>
+        <div class="step-block">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Configure Your Environment</h4>
+            <p>Copy <code>.env.example</code> to <code>.env</code> and fill in your database credentials.</p>
           </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre">APP_NAME=MyProject
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">.env</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre">APP_NAME=MyProject
 APP_ENV=local
 APP_KEY=  <span class="cm"># generated by php artisan key:generate</span>
 APP_DEBUG=true
@@ -1084,25 +1989,27 @@ DB_PORT=3306
 DB_DATABASE=my_project
 DB_USERNAME=root
 DB_PASSWORD=</pre>
-      </div>
-
-      <div class="step-block">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>Run Migrations and Start the Server</h4>
-          <p>Laravel ships with starter migrations for users and sessions. Run them, then start the dev server.</p>
         </div>
-      </div>
 
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">Terminal</span>
+        <div class="step-block">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Run Migrations and Start the Server</h4>
+            <p>Laravel ships with starter migrations for users and sessions. Run them, then start the dev server.</p>
           </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre">php artisan key:generate
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">Terminal</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre">php artisan key:generate
 php artisan migrate
 
 <span class="cm"># Start built-in dev server</span>
@@ -1110,21 +2017,25 @@ php artisan serve
 
 <span class="cm"># Or use Laravel Herd (macOS/Windows) for zero-config local dev</span>
 <span class="cm"># https://herd.laravel.com</span></pre>
-      </div>
-
-      <!-- ══════════════════════════════════════ 4. STRUCTURE ══ -->
-      <h2 id="structure">Project Structure</h2>
-      <p>A fresh Laravel 13 project follows a well-organised folder layout. Understanding this is fundamental before writing any code. Laravel uses the MVC pattern — Models handle data, Views handle presentation, Controllers handle the logic between them.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">Project Root Structure</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre">my-project/
+
+        <!-- ══════════════════════════════════════ 4. STRUCTURE ══ -->
+        <h2 id="structure">Project Structure</h2>
+        <p>A fresh Laravel 13 project follows a well-organised folder layout. Understanding this is fundamental before
+          writing any code. Laravel uses the MVC pattern — Models handle data, Views handle presentation, Controllers
+          handle the logic between them.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">Project Root Structure</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre">my-project/
 ├── app/
 │   ├── Http/
 │   │   ├── Controllers/    <span class="cm"># Handle requests, return responses</span>
@@ -1145,21 +2056,25 @@ php artisan serve
 ├── config/                 <span class="cm"># All framework configuration</span>
 ├── storage/                <span class="cm"># Logs, cache, uploaded files</span>
 └── tests/                  <span class="cm"># Unit and feature tests</span></pre>
-      </div>
-
-      <!-- ══════════════════════════════════════ 5. ROUTING ══ -->
-      <h2 id="routing">Routing</h2>
-      <p>In Laravel, all routes are defined in the <code>routes/</code> directory. Web routes go in <code>web.php</code>, API routes in <code>api.php</code>. Routes map a URL + HTTP method to a controller action or a closure.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">routes/web.php</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="ck">use</span> App\Http\Controllers\<span class="cf">JobController</span>;
+
+        <!-- ══════════════════════════════════════ 5. ROUTING ══ -->
+        <h2 id="routing">Routing</h2>
+        <p>In Laravel, all routes are defined in the <code>routes/</code> directory. Web routes go in
+          <code>web.php</code>, API routes in <code>api.php</code>. Routes map a URL + HTTP method to a controller
+          action or a closure.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">routes/web.php</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre"><span class="ck">use</span> App\Http\Controllers\<span class="cf">JobController</span>;
 <span class="ck">use</span> Illuminate\Support\Facades\<span class="cf">Route</span>;
 
 <span class="cm">// Basic route — closure</span>
@@ -1176,21 +2091,25 @@ php artisan serve
   <span class="cf">Route</span>::<span class="cf">get</span>(<span class="cs">'/dashboard'</span>, [DashboardController::<span class="ck">class</span>, <span class="cs">'index'</span>]);
   <span class="cf">Route</span>::<span class="cf">resource</span>(<span class="cs">'jobs'</span>, JobController::<span class="ck">class</span>);  <span class="cm">// full CRUD</span>
 });</pre>
-      </div>
-
-      <!-- ══════════════════════════════════════ 6. BLADE ══ -->
-      <h2 id="blade">Blade Templating Engine</h2>
-      <p>Blade is Laravel's built-in templating engine. Unlike some template systems, Blade does not restrict you from using plain PHP in your views — every Blade template is compiled to plain PHP and cached, so there is no performance penalty.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">resources/views/layouts/app.blade.php</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre">&lt;!DOCTYPE html&gt;
+
+        <!-- ══════════════════════════════════════ 6. BLADE ══ -->
+        <h2 id="blade">Blade Templating Engine</h2>
+        <p>Blade is Laravel's built-in templating engine. Unlike some template systems, Blade does not restrict you from
+          using plain PHP in your views — every Blade template is compiled to plain PHP and cached, so there is no
+          performance penalty.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">resources/views/layouts/app.blade.php</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
   &lt;title&gt;{{ <span class="ct">$title</span> ?? <span class="cs">'My App'</span> }}&lt;/title&gt;
@@ -1214,21 +2133,25 @@ php artisan serve
     &lt;div&gt;{{ <span class="ct">$job</span>->title }} — {{ <span class="ct">$job</span>->company }}&lt;/div&gt;
   @<span class="cf">endforeach</span>
 @<span class="cf">endsection</span></pre>
-      </div>
-
-      <!-- ══════════════════════════════════════ 7. ELOQUENT ══ -->
-      <h2 id="eloquent">Database and Eloquent ORM</h2>
-      <p>Eloquent is Laravel's ORM (Object-Relational Mapper). Each database table has a corresponding Model class, and you interact with the table through that model rather than writing raw SQL. Migrations act as version control for your database schema.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">database/migrations/create_jobs_table.php</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="ck">return new class extends</span> <span class="cf">Migration</span> {
+
+        <!-- ══════════════════════════════════════ 7. ELOQUENT ══ -->
+        <h2 id="eloquent">Database and Eloquent ORM</h2>
+        <p>Eloquent is Laravel's ORM (Object-Relational Mapper). Each database table has a corresponding Model class,
+          and you interact with the table through that model rather than writing raw SQL. Migrations act as version
+          control for your database schema.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">database/migrations/create_jobs_table.php</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre"><span class="ck">return new class extends</span> <span class="cf">Migration</span> {
   <span class="ck">public function</span> <span class="cf">up</span>(): <span class="ct">void</span> {
     <span class="cf">Schema</span>::<span class="cf">create</span>(<span class="cs">'jobs'</span>, <span class="ck">function</span> (<span class="cf">Blueprint</span> <span class="ct">$table</span>) {
       <span class="ct">$table</span>-><span class="cf">id</span>();
@@ -1241,17 +2164,19 @@ php artisan serve
     });
   }
 };</pre>
-      </div>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">app/Models/Job.php · Eloquent Model</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="ca">#[Fillable('title', 'company', 'description', 'salary')]</span>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">app/Models/Job.php · Eloquent Model</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre"><span class="ca">#[Fillable('title', 'company', 'description', 'salary')]</span>
 <span class="ck">class</span> <span class="cf">Job</span> <span class="ck">extends</span> Model {
   <span class="ck">public</span> <span class="ct">int</span>    <span class="ct">$id</span>;
   <span class="ck">public</span> <span class="ct">string</span> <span class="ct">$title</span>;
@@ -1273,37 +2198,46 @@ php artisan serve
 <span class="ct">$jobs</span> = <span class="cf">Job</span>::<span class="cf">published</span>()-><span class="cf">with</span>(<span class="cs">'user'</span>)-><span class="cf">latest</span>()-><span class="cf">paginate</span>(<span class="cn">20</span>);
 <span class="cf">Job</span>::<span class="cf">find</span>(<span class="cn">1</span>)-><span class="cf">update</span>([<span class="cs">'title'</span> => <span class="cs">'Senior Laravel Dev'</span>]);
 <span class="cf">Job</span>::<span class="cf">destroy</span>(<span class="cn">1</span>);</pre>
-      </div>
-
-      <!-- ══════════════════════════════════════ 8. AUTH ══ -->
-      <h2 id="auth">Authentication and Authorization</h2>
-      <p>Laravel 13 ships with multiple starter kits for authentication. <strong>Laravel Breeze</strong> is the minimal option — it scaffolds login, registration, password reset, and email verification using Blade views or Inertia.js. <strong>Jetstream</strong> adds two-factor authentication, API token management, and team support.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">Terminal — Install Breeze</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre">composer require laravel/breeze --dev
+
+        <!-- ══════════════════════════════════════ 8. AUTH ══ -->
+        <h2 id="auth">Authentication and Authorization</h2>
+        <p>Laravel 13 ships with multiple starter kits for authentication. <strong>Laravel Breeze</strong> is the
+          minimal option — it scaffolds login, registration, password reset, and email verification using Blade views or
+          Inertia.js. <strong>Jetstream</strong> adds two-factor authentication, API token management, and team support.
+        </p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">Terminal — Install Breeze</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre">composer require laravel/breeze --dev
 php artisan breeze:install   <span class="cm"># choose: blade / react / vue / api</span>
 npm install && npm run dev
 php artisan migrate</pre>
-      </div>
-
-      <p>For authorization (what a logged-in user is allowed to do), Laravel provides <strong>Policies</strong> and <strong>Gates</strong>:</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">app/Policies/JobPolicy.php</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="ck">class</span> <span class="cf">JobPolicy</span> {
+
+        <p>For authorization (what a logged-in user is allowed to do), Laravel provides <strong>Policies</strong> and
+          <strong>Gates</strong>:</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">app/Policies/JobPolicy.php</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre
+            class="code-pre"><span class="ck">class</span> <span class="cf">JobPolicy</span> {
   <span class="ck">public function</span> <span class="cf">update</span>(<span class="cf">User</span> <span class="ct">$user</span>, <span class="cf">Job</span> <span class="ct">$job</span>): <span class="ct">bool</span> {
     <span class="ck">return</span> <span class="ct">$user</span>->id === <span class="ct">$job</span>->user_id;
   }
@@ -1311,21 +2245,25 @@ php artisan migrate</pre>
 
 <span class="cm">// In a controller</span>
 <span class="ct">$this</span>-><span class="cf">authorize</span>(<span class="cs">'update'</span>, <span class="ct">$job</span>);  <span class="cm">// throws 403 if not authorized</span></pre>
-      </div>
-
-      <!-- ══════════════════════════════════════ 9. API ══ -->
-      <h2 id="api">API Development</h2>
-      <p>Laravel is an excellent choice for building RESTful APIs. API routes live in <code>routes/api.php</code>, are stateless by default (no session, no CSRF token), and are prefixed with <code>/api</code>. Use Resource Controllers for standard CRUD endpoints and API Resources to control exactly what JSON shape is returned.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">routes/api.php + JobController.php</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="cm">// routes/api.php</span>
+
+        <!-- ══════════════════════════════════════ 9. API ══ -->
+        <h2 id="api">API Development</h2>
+        <p>Laravel is an excellent choice for building RESTful APIs. API routes live in <code>routes/api.php</code>, are
+          stateless by default (no session, no CSRF token), and are prefixed with <code>/api</code>. Use Resource
+          Controllers for standard CRUD endpoints and API Resources to control exactly what JSON shape is returned.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">routes/api.php + JobController.php</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre"><span class="cm">// routes/api.php</span>
 <span class="cf">Route</span>::<span class="cf">middleware</span>(<span class="cs">'auth:sanctum'</span>)-><span class="cf">apiResource</span>(<span class="cs">'jobs'</span>, JobController::<span class="ck">class</span>);
 
 <span class="cm">// app/Http/Controllers/JobController.php</span>
@@ -1352,53 +2290,70 @@ php artisan migrate</pre>
     ];
   }
 }</pre>
-      </div>
-
-      <!-- ══════════════════════════════════════ 10. SECURITY ══ -->
-      <h2 id="security">Security Features</h2>
-      <p>Laravel has security built into its foundation. Most common web vulnerabilities are handled automatically, so you are protected by default without writing any security-specific code.</p>
-      <ul>
-        <li><strong>CSRF Protection</strong>: Every form submitted to a web route must include a CSRF token via <code>@csrf</code>. In Laravel 13, this is enhanced with origin-aware verification via <code>PreventRequestForgery</code>.</li>
-        <li><strong>Input Validation</strong>: Use Form Requests to validate all incoming data before it reaches your controller. The <code>validated()</code> method returns only the data that passed your rules — nothing else.</li>
-        <li><strong>Password Hashing</strong>: Passwords are hashed with bcrypt by default. Never store plain-text passwords. Use <code>Hash::make($password)</code> to hash and <code>Hash::check($input, $hash)</code> to verify.</li>
-        <li><strong>SQL Injection</strong>: Eloquent and the Query Builder use PDO parameter binding. As long as you use the ORM or <code>where()</code> methods, injection is prevented automatically.</li>
-        <li><strong>XSS Prevention</strong>: Blade's <code>{{ }}</code> syntax automatically escapes output. Use <code>{!! !!}</code> only when you intentionally render trusted HTML.</li>
-      </ul>
-
-      <!-- ══════════════════════════════════════ 11. PERFORMANCE ══ -->
-      <h2 id="performance">Performance Optimization</h2>
-      <p>A default Laravel install is not automatically optimized for production. These are the techniques that have the biggest real-world impact:</p>
-
-      <h3>Caching</h3>
-      <p>Cache your configuration, routes, views, and events for production. One command does all four:</p>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">Terminal — Production Optimization</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre">php artisan config:cache    <span class="cm"># merge all config files into one</span>
+
+        <!-- ══════════════════════════════════════ 10. SECURITY ══ -->
+        <h2 id="security">Security Features</h2>
+        <p>Laravel has security built into its foundation. Most common web vulnerabilities are handled automatically, so
+          you are protected by default without writing any security-specific code.</p>
+        <ul>
+          <li><strong>CSRF Protection</strong>: Every form submitted to a web route must include a CSRF token via
+            <code>@csrf</code>. In Laravel 13, this is enhanced with origin-aware verification via
+            <code>PreventRequestForgery</code>.</li>
+          <li><strong>Input Validation</strong>: Use Form Requests to validate all incoming data before it reaches your
+            controller. The <code>validated()</code> method returns only the data that passed your rules — nothing else.
+          </li>
+          <li><strong>Password Hashing</strong>: Passwords are hashed with bcrypt by default. Never store plain-text
+            passwords. Use <code>Hash::make($password)</code> to hash and <code>Hash::check($input, $hash)</code> to
+            verify.</li>
+          <li><strong>SQL Injection</strong>: Eloquent and the Query Builder use PDO parameter binding. As long as you
+            use the ORM or <code>where()</code> methods, injection is prevented automatically.</li>
+          <li><strong>XSS Prevention</strong>: Blade's <code>{{ }}</code> syntax automatically escapes output. Use
+            <code>{!! !!}</code> only when you intentionally render trusted HTML.</li>
+        </ul>
+
+        <!-- ══════════════════════════════════════ 11. PERFORMANCE ══ -->
+        <h2 id="performance">Performance Optimization</h2>
+        <p>A default Laravel install is not automatically optimized for production. These are the techniques that have
+          the biggest real-world impact:</p>
+
+        <h3>Caching</h3>
+        <p>Cache your configuration, routes, views, and events for production. One command does all four:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">Terminal — Production Optimization</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre">php artisan config:cache    <span class="cm"># merge all config files into one</span>
 php artisan route:cache     <span class="cm"># compile route definitions</span>
 php artisan view:cache      <span class="cm"># pre-compile all Blade templates</span>
 php artisan event:cache     <span class="cm"># cache event-listener discovery</span>
 
 <span class="cm"># Or run all at once</span>
 php artisan optimize</pre>
-      </div>
-
-      <h3>Eager Loading — Preventing the N+1 Problem</h3>
-      <p>The single most common performance bug in Laravel applications is the N+1 query problem. If you loop over 100 jobs and access <code>$job->user</code> inside the loop without eager loading, you trigger 101 separate SQL queries. Use <code>with()</code> to fix this:</p>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">N+1 Problem — Fix with Eager Loading</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="cm">// BAD — 1 query to get jobs + 1 query per job for user = N+1</span>
+
+        <h3>Eager Loading — Preventing the N+1 Problem</h3>
+        <p>The single most common performance bug in Laravel applications is the N+1 query problem. If you loop over 100
+          jobs and access <code>$job->user</code> inside the loop without eager loading, you trigger 101 separate SQL
+          queries. Use <code>with()</code> to fix this:</p>
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">N+1 Problem — Fix with Eager Loading</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre
+            class="code-pre"><span class="cm">// BAD — 1 query to get jobs + 1 query per job for user = N+1</span>
 <span class="ct">$jobs</span> = <span class="cf">Job</span>::<span class="cf">all</span>();
 <span class="ck">foreach</span> (<span class="ct">$jobs</span> <span class="ck">as</span> <span class="ct">$job</span>) {
   echo <span class="ct">$job</span>->user->name;  <span class="cm">// queries the DB on every iteration</span>
@@ -1406,21 +2361,26 @@ php artisan optimize</pre>
 
 <span class="cm">// GOOD — 2 queries total: one for jobs, one for all users</span>
 <span class="ct">$jobs</span> = <span class="cf">Job</span>::<span class="cf">with</span>(<span class="cs">'user'</span>)-><span class="cf">all</span>();</pre>
-      </div>
-
-      <!-- ══════════════════════════════════════ 12. TESTING ══ -->
-      <h2 id="testing">Testing</h2>
-      <p>Laravel ships with PHPUnit pre-configured and adds its own expressive testing helpers on top. Every new Laravel project contains a <code>tests/Unit</code> and <code>tests/Feature</code> directory. Feature tests are the most valuable in Laravel — they test real HTTP requests against your application's routes, middleware, and database.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">tests/Feature/JobApiTest.php</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="ck">use</span> Illuminate\Foundation\Testing\<span class="cf">RefreshDatabase</span>;
+
+        <!-- ══════════════════════════════════════ 12. TESTING ══ -->
+        <h2 id="testing">Testing</h2>
+        <p>Laravel ships with PHPUnit pre-configured and adds its own expressive testing helpers on top. Every new
+          Laravel project contains a <code>tests/Unit</code> and <code>tests/Feature</code> directory. Feature tests are
+          the most valuable in Laravel — they test real HTTP requests against your application's routes, middleware, and
+          database.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">tests/Feature/JobApiTest.php</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre"><span class="ck">use</span> Illuminate\Foundation\Testing\<span class="cf">RefreshDatabase</span>;
 
 <span class="ck">class</span> <span class="cf">JobApiTest</span> <span class="ck">extends</span> TestCase {
   <span class="ck">use</span> <span class="cf">RefreshDatabase</span>;  <span class="cm">// fresh DB for each test</span>
@@ -1449,21 +2409,24 @@ php artisan optimize</pre>
 <span class="cm"># Run tests</span>
 php artisan test
 php artisan test --parallel  <span class="cm"># faster — runs suites in parallel</span></pre>
-      </div>
-
-      <!-- ══════════════════════════════════════ 13. DEPLOY ══ -->
-      <h2 id="deployment">Deployment</h2>
-      <p>Laravel applications can be deployed on shared hosting, a VPS, or a cloud platform. For serious production workloads, a VPS with Nginx + PHP-FPM or a managed platform like Laravel Forge is the standard choice.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-header-left">
-            <div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div>
-            <span class="code-lang">Deployment Checklist</span>
-          </div>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
-        <pre class="code-pre"><span class="cm"># 1. Set production environment</span>
+
+        <!-- ══════════════════════════════════════ 13. DEPLOY ══ -->
+        <h2 id="deployment">Deployment</h2>
+        <p>Laravel applications can be deployed on shared hosting, a VPS, or a cloud platform. For serious production
+          workloads, a VPS with Nginx + PHP-FPM or a managed platform like Laravel Forge is the standard choice.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <div class="code-header-left">
+              <div class="cdot r"></div>
+              <div class="cdot y"></div>
+              <div class="cdot g"></div>
+              <span class="code-lang">Deployment Checklist</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre class="code-pre"><span class="cm"># 1. Set production environment</span>
 APP_ENV=production
 APP_DEBUG=false
 
@@ -1481,243 +2444,317 @@ npm ci && npm run build
 
 <span class="cm"># 6. Set correct file permissions</span>
 chmod -R 755 storage bootstrap/cache</pre>
+        </div>
+
+        <!-- ══════════════════════════════════════ 14. COMPARISON ══ -->
+        <h2 id="comparison">Laravel 12 vs Laravel 13</h2>
+        <div class="table-wrapper">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Laravel 12</th>
+                <th>Laravel 13</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="feature">Min PHP Version</td>
+                <td><span class="badge-ok">PHP 8.2</span></td>
+                <td><span class="badge-good">PHP 8.3</span></td>
+              </tr>
+              <tr>
+                <td class="feature">AI SDK</td>
+                <td><span class="badge-bad">Not included</span></td>
+                <td><span class="badge-good">First-party, stable</span></td>
+              </tr>
+              <tr>
+                <td class="feature">PHP Attributes for Models</td>
+                <td><span class="badge-bad">Not available</span></td>
+                <td><span class="badge-good">Full support</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Typed Eloquent Properties</td>
+                <td><span class="badge-bad">Not available</span></td>
+                <td><span class="badge-good">Supported</span></td>
+              </tr>
+              <tr>
+                <td class="feature">JSON:API Resources</td>
+                <td><span class="badge-bad">Third-party only</span></td>
+                <td><span class="badge-good">First-party</span></td>
+              </tr>
+              <tr>
+                <td class="feature">CSRF Middleware</td>
+                <td><span class="badge-ok">VerifyCsrfToken</span></td>
+                <td><span class="badge-good">PreventRequestForgery</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Cache::touch()</td>
+                <td><span class="badge-bad">Not available</span></td>
+                <td><span class="badge-good">Available</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Queue Routing by Class</td>
+                <td><span class="badge-bad">Not available</span></td>
+                <td><span class="badge-good">Queue::route()</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Vector Similarity Search</td>
+                <td><span class="badge-bad">Not available</span></td>
+                <td><span class="badge-good">Native support</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Breaking Changes</td>
+                <td>—</td>
+                <td><span class="badge-good">Minimal (~10 min upgrade)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ══════════════════════════════════════ 15. CONCLUSION ══ -->
+        <h2 id="conclusion">Conclusion</h2>
+        <p>Laravel 13 does not reinvent the wheel — and that is exactly the right call. The framework has matured to a
+          point where stability and developer experience improvements compound more value than disruptive new paradigms.
+          PHP Attributes clean up model code that every Laravel developer has written for years. Typed Eloquent
+          properties bring IDE and static-analysis support that should have existed a long time ago. The AI SDK
+          positions Laravel as the first PHP framework with a genuine, production-ready path for building AI-powered
+          features.</p>
+        <p>If you are starting a new project in 2026, Laravel 13 with PHP 8.3 is the clear choice. If you are on Laravel
+          12, the upgrade path is intentionally smooth — plan an afternoon, run your test suite, and you will be on 13
+          by end of day.</p>
+
+        <div class="verdict-box">
+          <div class="verdict-title">Final Verdict</div>
+          <p><strong>Use Laravel 13 for all new PHP projects.</strong> The AI SDK alone makes it worth adopting for any
+            team building modern web applications. The PHP Attributes syntax reduces model boilerplate significantly,
+            typed properties dramatically improve IDE experience, and the framework-wide security improvements in
+            <code>PreventRequestForgery</code> are meaningful for production applications.</p>
+          <p>For existing Laravel 12 applications: upgrade is low-risk and the main prerequisite is PHP 8.3. Audit your
+            third-party packages for compatibility, run your test suite in a staging environment, then deploy. Most
+            teams complete this in well under a day.</p>
+        </div>
+
+      </div><!-- /prose -->
+
+      <!-- Share -->
+      <div class="share-row">
+        <span class="share-label">SHARE:</span>
+        <a href="https://twitter.com/intent/tweet?text=Laravel+13+Complete+Guide+2026&url=https://codecraftsystems.github.io/blog/laravel-13-whats-new.html"
+          target="_blank" class="share-btn">X / Twitter</a>
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://codecraftsystems.github.io/blog/laravel-13-whats-new.html"
+          target="_blank" class="share-btn">LinkedIn</a>
+        <button class="share-btn" onclick="copyLink()">Copy Link</button>
       </div>
 
-      <!-- ══════════════════════════════════════ 14. COMPARISON ══ -->
-      <h2 id="comparison">Laravel 12 vs Laravel 13</h2>
-      <div class="table-wrapper">
-        <table class="compare-table">
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th>Laravel 12</th>
-              <th>Laravel 13</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td class="feature">Min PHP Version</td><td><span class="badge-ok">PHP 8.2</span></td><td><span class="badge-good">PHP 8.3</span></td></tr>
-            <tr><td class="feature">AI SDK</td><td><span class="badge-bad">Not included</span></td><td><span class="badge-good">First-party, stable</span></td></tr>
-            <tr><td class="feature">PHP Attributes for Models</td><td><span class="badge-bad">Not available</span></td><td><span class="badge-good">Full support</span></td></tr>
-            <tr><td class="feature">Typed Eloquent Properties</td><td><span class="badge-bad">Not available</span></td><td><span class="badge-good">Supported</span></td></tr>
-            <tr><td class="feature">JSON:API Resources</td><td><span class="badge-bad">Third-party only</span></td><td><span class="badge-good">First-party</span></td></tr>
-            <tr><td class="feature">CSRF Middleware</td><td><span class="badge-ok">VerifyCsrfToken</span></td><td><span class="badge-good">PreventRequestForgery</span></td></tr>
-            <tr><td class="feature">Cache::touch()</td><td><span class="badge-bad">Not available</span></td><td><span class="badge-good">Available</span></td></tr>
-            <tr><td class="feature">Queue Routing by Class</td><td><span class="badge-bad">Not available</span></td><td><span class="badge-good">Queue::route()</span></td></tr>
-            <tr><td class="feature">Vector Similarity Search</td><td><span class="badge-bad">Not available</span></td><td><span class="badge-good">Native support</span></td></tr>
-            <tr><td class="feature">Breaking Changes</td><td>—</td><td><span class="badge-good">Minimal (~10 min upgrade)</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- ══════════════════════════════════════ 15. CONCLUSION ══ -->
-      <h2 id="conclusion">Conclusion</h2>
-      <p>Laravel 13 does not reinvent the wheel — and that is exactly the right call. The framework has matured to a point where stability and developer experience improvements compound more value than disruptive new paradigms. PHP Attributes clean up model code that every Laravel developer has written for years. Typed Eloquent properties bring IDE and static-analysis support that should have existed a long time ago. The AI SDK positions Laravel as the first PHP framework with a genuine, production-ready path for building AI-powered features.</p>
-      <p>If you are starting a new project in 2026, Laravel 13 with PHP 8.3 is the clear choice. If you are on Laravel 12, the upgrade path is intentionally smooth — plan an afternoon, run your test suite, and you will be on 13 by end of day.</p>
-
-      <div class="verdict-box">
-        <div class="verdict-title">Final Verdict</div>
-        <p><strong>Use Laravel 13 for all new PHP projects.</strong> The AI SDK alone makes it worth adopting for any team building modern web applications. The PHP Attributes syntax reduces model boilerplate significantly, typed properties dramatically improve IDE experience, and the framework-wide security improvements in <code>PreventRequestForgery</code> are meaningful for production applications.</p>
-        <p>For existing Laravel 12 applications: upgrade is low-risk and the main prerequisite is PHP 8.3. Audit your third-party packages for compatibility, run your test suite in a staging environment, then deploy. Most teams complete this in well under a day.</p>
-      </div>
-
-    </div><!-- /prose -->
-
-    <!-- Share -->
-    <div class="share-row">
-      <span class="share-label">SHARE:</span>
-      <a href="https://twitter.com/intent/tweet?text=Laravel+13+Complete+Guide+2026&url=https://codecraftsystems.github.io/blog/laravel-13-whats-new.html" target="_blank" class="share-btn">X / Twitter</a>
-      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://codecraftsystems.github.io/blog/laravel-13-whats-new.html" target="_blank" class="share-btn">LinkedIn</a>
-      <button class="share-btn" onclick="copyLink()">Copy Link</button>
-    </div>
-
-    <!-- Author bio -->
-    <div class="author-bio-card">
-      <div class="author-bio-avatar">👨‍💻</div>
-      <div>
-        <div class="author-bio-name">Sonu Sahani</div>
-        <div class="author-bio-role">Full Stack Developer · CodeCraft Systems</div>
-        <p class="author-bio-text">6+ years building production Laravel APIs, Vue.js SPAs, and cloud SaaS products. Currently working with Lifelancer (UK). Writing about real-world patterns used in live projects every day.</p>
-        <div class="author-bio-links">
-          <a href="https://www.linkedin.com/in/sonu-vuejs-laravel-api" target="_blank" class="author-bio-link">LinkedIn</a>
-          <a href="https://github.com/sonusonusahani098" target="_blank" class="author-bio-link">GitHub</a>
-          <a href="https://codecraftsystems.github.io/#contact" class="author-bio-link">Hire Me</a>
+      <!-- Author bio -->
+      <div class="author-bio-card">
+        <div class="author-bio-avatar">👨‍💻</div>
+        <div>
+          <div class="author-bio-name">Sonu Sahani</div>
+          <div class="author-bio-role">Full Stack Developer · CodeCraft Systems</div>
+          <p class="author-bio-text">6+ years building production Laravel APIs, Vue.js SPAs, and cloud SaaS products.
+            Currently working with Lifelancer (UK). Writing about real-world patterns used in live projects every day.
+          </p>
+          <div class="author-bio-links">
+            <a href="https://www.linkedin.com/in/sonu-vuejs-laravel-api" target="_blank"
+              class="author-bio-link">LinkedIn</a>
+            <a href="https://github.com/sonusonusahani098" target="_blank" class="author-bio-link">GitHub</a>
+            <a href="https://codecraftsystems.github.io/#contact" class="author-bio-link">Hire Me</a>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Related Posts -->
-    <div class="related-section">
-      <div class="related-title">Related Articles</div>
-      <div class="related-grid">
-        <a href="laravel-api-best-practices.html" class="related-card">
-          <div class="related-cat">Laravel</div>
-          <div class="related-post-title">Laravel REST API Best Practices for Production SaaS</div>
-          <div class="related-meta">Jan 15, 2025 · 8 min read</div>
-        </a>
-        <a href="vuejs-state-management-pinia.html" class="related-card">
-          <div class="related-cat">Vue.js</div>
-          <div class="related-post-title">Pinia vs Vuex: State Management in Vue 3 Projects</div>
-          <div class="related-meta">Feb 3, 2025 · 6 min read</div>
-        </a>
-        <a href="laravel-websockets-realtime.html" class="related-card">
-          <div class="related-cat">Laravel</div>
-          <div class="related-post-title">Real-Time Chat with Laravel Reverb and Vue.js in 2025</div>
-          <div class="related-meta">Jan 10, 2025 · 9 min read</div>
-        </a>
-        <a href="nuxt-ssr-seo-guide.html" class="related-card">
-          <div class="related-cat">Nuxt.js</div>
-          <div class="related-post-title">Nuxt.js SSR for SEO: Complete Setup Guide 2025</div>
-          <div class="related-meta">Jan 28, 2025 · 10 min read</div>
-        </a>
-      </div>
-    </div>
-
-  </article>
-
-  <!-- ── SIDEBAR ── -->
-  <aside class="article-sidebar">
-
-    <!-- TOC -->
-    <div class="sidebar-widget">
-      <div class="widget-head">Contents</div>
-      <div class="widget-body">
-        <div class="toc-list">
-          <button class="toc-item active" onclick="scrollToSection('intro')"><span class="toc-num">01</span> Introduction</button>
-          <button class="toc-item" onclick="scrollToSection('whatsnew')"><span class="toc-num">02</span> What's New in Laravel 13</button>
-          <button class="toc-item" onclick="scrollToSection('installation')"><span class="toc-num">03</span> Installation and Setup</button>
-          <button class="toc-item" onclick="scrollToSection('structure')"><span class="toc-num">04</span> Project Structure</button>
-          <button class="toc-item" onclick="scrollToSection('routing')"><span class="toc-num">05</span> Routing</button>
-          <button class="toc-item" onclick="scrollToSection('blade')"><span class="toc-num">06</span> Blade Templating</button>
-          <button class="toc-item" onclick="scrollToSection('eloquent')"><span class="toc-num">07</span> Database & Eloquent</button>
-          <button class="toc-item" onclick="scrollToSection('auth')"><span class="toc-num">08</span> Authentication</button>
-          <button class="toc-item" onclick="scrollToSection('api')"><span class="toc-num">09</span> API Development</button>
-          <button class="toc-item" onclick="scrollToSection('security')"><span class="toc-num">10</span> Security</button>
-          <button class="toc-item" onclick="scrollToSection('performance')"><span class="toc-num">11</span> Performance</button>
-          <button class="toc-item" onclick="scrollToSection('testing')"><span class="toc-num">12</span> Testing</button>
-          <button class="toc-item" onclick="scrollToSection('deployment')"><span class="toc-num">13</span> Deployment</button>
-          <button class="toc-item" onclick="scrollToSection('comparison')"><span class="toc-num">14</span> L12 vs L13</button>
-          <button class="toc-item" onclick="scrollToSection('conclusion')"><span class="toc-num">15</span> Conclusion</button>
+      <!-- Related Posts -->
+      <div class="related-section">
+        <div class="related-title">Related Articles</div>
+        <div class="related-grid">
+          <a href="laravel-api-best-practices.html" class="related-card">
+            <div class="related-cat">Laravel</div>
+            <div class="related-post-title">Laravel REST API Best Practices for Production SaaS</div>
+            <div class="related-meta">Jan 15, 2025 · 8 min read</div>
+          </a>
+          <a href="vuejs-state-management-pinia.html" class="related-card">
+            <div class="related-cat">Vue.js</div>
+            <div class="related-post-title">Pinia vs Vuex: State Management in Vue 3 Projects</div>
+            <div class="related-meta">Feb 3, 2025 · 6 min read</div>
+          </a>
+          <a href="laravel-websockets-realtime.html" class="related-card">
+            <div class="related-cat">Laravel</div>
+            <div class="related-post-title">Real-Time Chat with Laravel Reverb and Vue.js in 2025</div>
+            <div class="related-meta">Jan 10, 2025 · 9 min read</div>
+          </a>
+          <a href="nuxt-ssr-seo-guide.html" class="related-card">
+            <div class="related-cat">Nuxt.js</div>
+            <div class="related-post-title">Nuxt.js SSR for SEO: Complete Setup Guide 2025</div>
+            <div class="related-meta">Jan 28, 2025 · 10 min read</div>
+          </a>
         </div>
       </div>
-    </div>
 
-    <!-- CTA -->
-    <div class="sidebar-widget cta-widget">
-      <div class="widget-head">Hire Us</div>
-      <div class="widget-body">
-        <div class="cta-title">NEED A LARAVEL EXPERT?</div>
-        <p class="cta-desc">We build production Laravel 13 + Vue.js apps for UK, USA, and global clients. Fast, scalable, secure.</p>
-        <a href="https://codecraftsystems.github.io/#contact" class="cta-btn">Get a Free Quote</a>
-      </div>
-    </div>
+    </article>
 
-    <!-- Tags -->
-    <div class="sidebar-widget">
-      <div class="widget-head">Tags</div>
-      <div class="widget-body">
-        <div class="tags-cloud">
-          <a href="#" class="tag-pill">Laravel 13</a>
-          <a href="#" class="tag-pill">PHP 8.3</a>
-          <a href="#" class="tag-pill">AI SDK</a>
-          <a href="#" class="tag-pill">Eloquent ORM</a>
-          <a href="#" class="tag-pill">JSON:API</a>
-          <a href="#" class="tag-pill">Blade</a>
-          <a href="#" class="tag-pill">REST API</a>
-          <a href="#" class="tag-pill">Authentication</a>
-          <a href="#" class="tag-pill">Deployment</a>
-          <a href="#" class="tag-pill">Laravel 2026</a>
+    <!-- ── SIDEBAR ── -->
+    <aside class="article-sidebar">
+
+      <!-- TOC -->
+      <div class="sidebar-widget">
+        <div class="widget-head">Contents</div>
+        <div class="widget-body">
+          <div class="toc-list">
+            <button class="toc-item active" onclick="scrollToSection('intro')"><span class="toc-num">01</span>
+              Introduction</button>
+            <button class="toc-item" onclick="scrollToSection('whatsnew')"><span class="toc-num">02</span> What's New in
+              Laravel 13</button>
+            <button class="toc-item" onclick="scrollToSection('installation')"><span class="toc-num">03</span>
+              Installation and Setup</button>
+            <button class="toc-item" onclick="scrollToSection('structure')"><span class="toc-num">04</span> Project
+              Structure</button>
+            <button class="toc-item" onclick="scrollToSection('routing')"><span class="toc-num">05</span>
+              Routing</button>
+            <button class="toc-item" onclick="scrollToSection('blade')"><span class="toc-num">06</span> Blade
+              Templating</button>
+            <button class="toc-item" onclick="scrollToSection('eloquent')"><span class="toc-num">07</span> Database &
+              Eloquent</button>
+            <button class="toc-item" onclick="scrollToSection('auth')"><span class="toc-num">08</span>
+              Authentication</button>
+            <button class="toc-item" onclick="scrollToSection('api')"><span class="toc-num">09</span> API
+              Development</button>
+            <button class="toc-item" onclick="scrollToSection('security')"><span class="toc-num">10</span>
+              Security</button>
+            <button class="toc-item" onclick="scrollToSection('performance')"><span class="toc-num">11</span>
+              Performance</button>
+            <button class="toc-item" onclick="scrollToSection('testing')"><span class="toc-num">12</span>
+              Testing</button>
+            <button class="toc-item" onclick="scrollToSection('deployment')"><span class="toc-num">13</span>
+              Deployment</button>
+            <button class="toc-item" onclick="scrollToSection('comparison')"><span class="toc-num">14</span> L12 vs
+              L13</button>
+            <button class="toc-item" onclick="scrollToSection('conclusion')"><span class="toc-num">15</span>
+              Conclusion</button>
+          </div>
         </div>
       </div>
+
+      <!-- CTA -->
+      <div class="sidebar-widget cta-widget">
+        <div class="widget-head">Hire Us</div>
+        <div class="widget-body">
+          <div class="cta-title">NEED A LARAVEL EXPERT?</div>
+          <p class="cta-desc">We build production Laravel 13 + Vue.js apps for UK, USA, and global clients. Fast,
+            scalable, secure.</p>
+          <a href="https://codecraftsystems.github.io/#contact" class="cta-btn">Get a Free Quote</a>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="sidebar-widget">
+        <div class="widget-head">Tags</div>
+        <div class="widget-body">
+          <div class="tags-cloud">
+            <a href="#" class="tag-pill">Laravel 13</a>
+            <a href="#" class="tag-pill">PHP 8.3</a>
+            <a href="#" class="tag-pill">AI SDK</a>
+            <a href="#" class="tag-pill">Eloquent ORM</a>
+            <a href="#" class="tag-pill">JSON:API</a>
+            <a href="#" class="tag-pill">Blade</a>
+            <a href="#" class="tag-pill">REST API</a>
+            <a href="#" class="tag-pill">Authentication</a>
+            <a href="#" class="tag-pill">Deployment</a>
+            <a href="#" class="tag-pill">Laravel 2026</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back to blog -->
+      <a href="https://codecraftsystems.github.io/blog" class="back-link">Back to Blog</a>
+
+    </aside>
+
+  </div><!-- /page-layout -->
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">Code<span>Craft</span></div>
+      <p class="footer-copy">© <span id="year"></span> CodeCraft Systems · Sonu Sahani · All rights reserved.</p>
+      <ul class="footer-links">
+        <li><a href="../">Home</a></li>
+        <li><a href="../#services">Services</a></li>
+        <li><a href="../blog/">Blog</a></li>
+        <li><a href="../developers/">Developers</a></li>
+        <li><a href="../developers-open-to-work/">Open to Work</a></li>
+        <li><a href="../submit-profile/">Add Profile</a></li>
+        <li><a href="../jobs/">Job Board</a></li>
+        <li><a href="../find-jobs-with-ai/">Find Jobs with AI</a></li>
+        <li><a href="../tech-news-feed/">Tech News</a></li>
+        <li><a href="../#contact">Hire Us</a></li>
+      </ul>
     </div>
+  </footer>
 
-    <!-- Back to blog -->
-    <a href="https://codecraftsystems.github.io/blog" class="back-link">Back to Blog</a>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-  </aside>
+    // Navbar scroll
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+      updateProgress();
+      updateTOC();
+    }, { passive: true });
 
-</div><!-- /page-layout -->
+    // Mobile menu
+    function openMobile() { document.getElementById('mobileMenu').classList.add('open'); }
+    function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-logo">Code<span>Craft</span></div>
-    <p class="footer-copy">© <span id="year"></span> CodeCraft Systems · Sonu Sahani · All rights reserved.</p>
-    <ul class="footer-links">
-      <li><a href="../">Home</a></li>
-      <li><a href="../#services">Services</a></li>
-      <li><a href="../blog/">Blog</a></li>
-      <li><a href="../developers/">Developers</a></li>
-      <li><a href="../developers-open-to-work/">Open to Work</a></li>
-      <li><a href="../submit-profile/">Add Profile</a></li>
-      <li><a href="../jobs/">Job Board</a></li>
-      <li><a href="../find-jobs-with-ai/">Find Jobs with AI</a></li>
-      <li><a href="../tech-news-feed/">Tech News</a></li>
-      <li><a href="../#contact">Hire Us</a></li>
-    </ul>
-  </div>
-</footer>
+    // Reading progress bar
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      document.getElementById('progressBar').style.width = pct + '%';
+    }
 
-<script>
-  document.getElementById('year').textContent = new Date().getFullYear();
-
-  // Navbar scroll
-  window.addEventListener('scroll', () => {
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-    updateProgress();
-    updateTOC();
-  }, { passive: true });
-
-  // Mobile menu
-  function openMobile()  { document.getElementById('mobileMenu').classList.add('open'); }
-  function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
-
-  // Reading progress bar
-  function updateProgress() {
-    const scrollTop  = window.scrollY;
-    const docHeight  = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-    document.getElementById('progressBar').style.width = pct + '%';
-  }
-
-  // TOC scroll
-  function scrollToSection(id) {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  const sections = ['intro','whatsnew','installation','structure','routing','blade','eloquent','auth','api','security','performance','testing','deployment','comparison','conclusion'];
-
-  function updateTOC() {
-    const tocItems = document.querySelectorAll('.toc-item');
-    let current = 'intro';
-    sections.forEach(id => {
+    // TOC scroll
+    function scrollToSection(id) {
       const el = document.getElementById(id);
-      if (el && window.scrollY >= el.offsetTop - 120) current = id;
-    });
-    tocItems.forEach((item, i) => {
-      item.classList.toggle('active', sections[i] === current);
-    });
-  }
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
 
-  // Copy link
-  function copyLink() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      const btn = document.querySelector('[onclick="copyLink()"]');
-      const orig = btn.textContent;
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = orig, 2000);
-    });
-  }
+    const sections = ['intro', 'whatsnew', 'installation', 'structure', 'routing', 'blade', 'eloquent', 'auth', 'api', 'security', 'performance', 'testing', 'deployment', 'comparison', 'conclusion'];
 
-  // Copy code blocks
-  function copyCode(btn) {
-    const pre = btn.closest('.code-block').querySelector('.code-pre');
-    navigator.clipboard.writeText(pre.innerText).then(() => {
-      btn.textContent = 'Copied';
-      setTimeout(() => btn.textContent = 'Copy', 2000);
-    });
-  }
-</script>
+    function updateTOC() {
+      const tocItems = document.querySelectorAll('.toc-item');
+      let current = 'intro';
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 120) current = id;
+      });
+      tocItems.forEach((item, i) => {
+        item.classList.toggle('active', sections[i] === current);
+      });
+    }
+
+    // Copy link
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const btn = document.querySelector('[onclick="copyLink()"]');
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = orig, 2000);
+      });
+    }
+
+    // Copy code blocks
+    function copyCode(btn) {
+      const pre = btn.closest('.code-block').querySelector('.code-pre');
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = 'Copied';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+  </script>
 
 </body>
+
 </html>
