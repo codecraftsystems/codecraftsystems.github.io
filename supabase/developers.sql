@@ -41,3 +41,117 @@ on public.developers for update
 to authenticated
 using (auth.uid() = user_id)
 with check (auth.uid() = user_id);
+
+
+
+
+=============================job alert=======
+
+create table job_alerts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  email text not null,
+  status smallint default 1,
+  mode text not null check (mode in ('week','15_days','1_month')),
+  last_run_at timestamptz,
+  next_run_at timestamptz,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+
+
+create table job_alert_keywords (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  keyword text not null,
+  used boolean default false,
+  created_at timestamptz default now()
+);
+
+
+
+create table job_alert_history (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  job_url text not null,
+  job_title text,
+  sent_at timestamptz default now()
+);
+
+
+create table job_alert_runs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null,
+  keyword text,
+  jobs_found integer default 0,
+  jobs_sent integer default 0,
+  run_at timestamptz default now()
+);
+
+
+create index idx_job_alert_user
+on job_alerts(user_id);
+
+create index idx_job_alert_status
+on job_alerts(status);
+
+create index idx_job_alert_keywords_user
+on job_alert_keywords(user_id);
+
+create index idx_job_alert_history_user
+on job_alert_history(user_id);
+
+
+alter table job_alerts
+add constraint fk_job_alert_user
+foreign key (user_id)
+references developers(user_id)
+on delete cascade;
+
+alter table job_alert_keywords
+add constraint fk_job_alert_keywords_user
+foreign key (user_id)
+references developers(user_id)
+on delete cascade;
+
+alter table job_alert_history
+add constraint fk_job_alert_history_user
+foreign key (user_id)
+references developers(user_id)
+on delete cascade;
+
+
+insert into job_alerts
+(user_id,email,mode,next_run_at)
+values
+(
+'USER_UUID',
+'dev@email.com',
+'week',
+now() + interval '7 days'
+);
+
+
+
+select *
+from job_alerts
+where status = 1
+and next_run_at <= now()
+
+
+
+-- week
+update job_alerts
+set next_run_at = now() + interval '7 days'
+where id = 'ALERT_ID';
+
+-- 15 days
+update job_alerts
+set next_run_at = now() + interval '15 days'
+where id = 'ALERT_ID';
+
+-- 1 month
+update job_alerts
+set next_run_at = now() + interval '1 month'
+where id = 'ALERT_ID';
