@@ -4,14 +4,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Job Alert Engine</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
 window.SUPABASE_URL='https://xpqsntlvukcwihhoyxqo.supabase.co';
 window.SUPABASE_ANON_KEY='sb_publishable_VT_3gtH3o331GhQ27KR76w_k5o7ZtZq';
 </script>
-
 </head>
 
 <body>
@@ -21,237 +18,464 @@ window.SUPABASE_ANON_KEY='sb_publishable_VT_3gtH3o331GhQ27KR76w_k5o7ZtZq';
 
 <script>
 
-/* BREVO CONFIG */
-
-const p1="xkey";
-const p2="sib-8";
-const p3="42efc";
-const p4="116ba";
-const p5="6264c";
-const p6="2f29b";
+/* ─── BREVO CONFIG ─────────────────────────────────────── */
+const p1="xkey";const p2="sib-8";const p3="42efc";const p4="116ba";
+const p5="6264c";const p6="2f29b";
 const p7="31603f1d1cba9c0d0505f862b4718950e5e148d4397";
 const p8="-5dKK6QxwJkA9LI0L";
-
 const BREVO_KEY=p1+p2+p3+p4+p5+p6+p7+p8;
 
 const SENDER_EMAIL="servicebuldel@gmail.com";
 const SENDER_NAME="CodeCraft Systems";
 
-/* API */
-
+/* ─── API ──────────────────────────────────────────────── */
 const AI_URL="https://ai.buldel.com/cloud-ai";
 const JOB_SEARCH="https://ai.buldel.com/job-search";
 
-/* SUPABASE */
+/* ─── SUPABASE ─────────────────────────────────────────── */
+const sb=supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY);
 
-const sb=supabase.createClient(
-window.SUPABASE_URL,
-window.SUPABASE_ANON_KEY
-);
+/* ─── EMAIL TEMPLATE ───────────────────────────────────── */
+function buildEmailHTML(jobs, profile, keyword) {
 
-/* MAIN ENGINE */
+  /* Job cards */
+  const jobCards = jobs.map((j, i) => {
+    const company  = j.company || j.company_name || "Company";
+    const location = j.location || j.region || "Remote";
+    const salary   = j.salary   || j.salary_range || "";
+    const type     = j.job_type || j.employment_type || "Full-time";
+    const logo     = j.company_logo || "";
+    const tags     = [type, location].filter(Boolean);
 
+    const tagCells = tags.map(t => `
+      <td style="padding:0 6px 0 0;">
+        <span style="
+          display:inline-block;
+          background:#1a1a1a;
+          border:1px solid #2a2a2a;
+          color:#aaa;
+          font-family:'DM Sans',Arial,sans-serif;
+          font-size:11px;
+          padding:3px 10px;
+          border-radius:20px;
+          letter-spacing:.3px;
+        ">${t}</span>
+      </td>`
+    ).join("");
+
+    return `
+    <!-- JOB CARD ${i+1} -->
+    <tr>
+      <td style="padding:0 0 14px 0;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
+          background:#111;
+          border:1px solid #222;
+          border-radius:12px;
+          overflow:hidden;
+        ">
+          <tr>
+            <!-- left accent bar -->
+            <td width="4" style="background:#ff4d00;border-radius:12px 0 0 12px;">&nbsp;</td>
+            <td style="padding:20px 22px;">
+
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    <!-- company & title -->
+                    <p style="
+                      margin:0 0 4px 0;
+                      font-family:'DM Sans',Arial,sans-serif;
+                      font-size:11px;
+                      color:#ff4d00;
+                      letter-spacing:1.5px;
+                      text-transform:uppercase;
+                    ">${company}</p>
+                    <p style="
+                      margin:0 0 12px 0;
+                      font-family:Georgia,'Times New Roman',serif;
+                      font-size:17px;
+                      font-weight:700;
+                      color:#fff;
+                      line-height:1.3;
+                    ">${j.title}</p>
+
+                    <!-- tags row -->
+                    <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:${salary ? '10' : '16'}px;">
+                      <tr>${tagCells}</tr>
+                    </table>
+
+                    ${salary ? `<p style="
+                      margin:0 0 16px 0;
+                      font-family:'DM Sans',Arial,sans-serif;
+                      font-size:12px;
+                      color:#66cc66;
+                    ">💰 ${salary}</p>` : ''}
+                  </td>
+                  ${logo ? `
+                  <td width="52" valign="top">
+                    <img src="${logo}" width="44" height="44" alt="${company}" style="
+                      border-radius:8px;
+                      border:1px solid #2a2a2a;
+                      object-fit:cover;
+                      display:block;
+                    ">
+                  </td>` : ''}
+                </tr>
+              </table>
+
+              <!-- CTA button -->
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="
+                    background:#ff4d00;
+                    border-radius:6px;
+                  ">
+                    <a href="${j.url}" target="_blank" style="
+                      display:inline-block;
+                      padding:10px 22px;
+                      font-family:'DM Sans',Arial,sans-serif;
+                      font-size:13px;
+                      font-weight:700;
+                      color:#fff;
+                      text-decoration:none;
+                      letter-spacing:.5px;
+                    ">Apply Now →</a>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>`;
+  }).join("");
+
+  /* Full email */
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>New Jobs Found – CodeCraft Systems</title>
+</head>
+<body style="margin:0;padding:0;background:#0a0a0a;">
+
+<!-- WRAPPER -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0a0a0a;min-height:100vh;">
+<tr><td align="center" style="padding:40px 16px;">
+
+  <!-- CARD -->
+  <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+
+    <!-- ── HEADER ── -->
+    <tr>
+      <td style="
+        background:#111;
+        border:1px solid #1e1e1e;
+        border-radius:16px 16px 0 0;
+        padding:36px 40px 32px;
+        border-bottom:none;
+      ">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td>
+              <!-- Logo wordmark -->
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="
+                    background:#ff4d00;
+                    width:6px;
+                    height:32px;
+                    border-radius:3px;
+                    vertical-align:top;
+                  ">&nbsp;</td>
+                  <td style="padding-left:10px;vertical-align:middle;">
+                    <span style="
+                      font-family:Georgia,'Times New Roman',serif;
+                      font-size:18px;
+                      font-weight:900;
+                      color:#fff;
+                      letter-spacing:1px;
+                    ">CODECRAFT</span>
+                    <span style="
+                      font-family:'DM Sans',Arial,sans-serif;
+                      font-size:11px;
+                      color:#555;
+                      display:block;
+                      letter-spacing:2px;
+                      text-transform:uppercase;
+                      margin-top:1px;
+                    ">Systems</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td align="right" valign="middle">
+              <span style="
+                background:#ff4d00;
+                color:#fff;
+                font-family:'DM Sans',Arial,sans-serif;
+                font-size:11px;
+                font-weight:700;
+                letter-spacing:1.5px;
+                text-transform:uppercase;
+                padding:5px 14px;
+                border-radius:20px;
+              ">Job Alert</span>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Divider -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
+          <tr><td style="height:1px;background:linear-gradient(90deg,#ff4d00 0%,#2a2a2a 60%,transparent 100%);"></td></tr>
+        </table>
+
+        <!-- Headline -->
+        <p style="
+          margin:24px 0 6px;
+          font-family:Georgia,'Times New Roman',serif;
+          font-size:28px;
+          font-weight:900;
+          color:#fff;
+          line-height:1.2;
+          letter-spacing:-.3px;
+        ">
+          ${jobs.length} New Job${jobs.length>1?'s':''} Found<br>
+          <span style="color:#ff4d00;">Just For You</span>
+        </p>
+        <p style="
+          margin:0;
+          font-family:'DM Sans',Arial,sans-serif;
+          font-size:13px;
+          color:#666;
+          line-height:1.6;
+        ">
+          Matched on keyword <strong style="color:#aaa;">"${keyword}"</strong>
+          for <strong style="color:#aaa;">${profile.title || 'your profile'}</strong>
+        </p>
+      </td>
+    </tr>
+
+    <!-- ── JOB CARDS ── -->
+    <tr>
+      <td style="
+        background:#0d0d0d;
+        border:1px solid #1e1e1e;
+        border-top:none;
+        border-bottom:none;
+        padding:28px 40px 14px;
+      ">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          ${jobCards}
+        </table>
+      </td>
+    </tr>
+
+    <!-- ── FOOTER ── -->
+    <tr>
+      <td style="
+        background:#111;
+        border:1px solid #1e1e1e;
+        border-top:none;
+        border-radius:0 0 16px 16px;
+        padding:28px 40px;
+      ">
+        <!-- View all CTA -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+          <tr>
+            <td align="center">
+              <a href="https://codecraftsystems.github.io/developers" target="_blank" style="
+                display:inline-block;
+                padding:13px 32px;
+                background:transparent;
+                border:1.5px solid #ff4d00;
+                border-radius:8px;
+                font-family:'DM Sans',Arial,sans-serif;
+                font-size:13px;
+                font-weight:700;
+                color:#ff4d00;
+                text-decoration:none;
+                letter-spacing:.5px;
+              ">View Developer Profile →</a>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Divider -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+          <tr><td style="height:1px;background:#1e1e1e;"></td></tr>
+        </table>
+
+        <!-- Footer text -->
+        <p style="
+          margin:0 0 6px;
+          font-family:'DM Sans',Arial,sans-serif;
+          font-size:11px;
+          color:#444;
+          text-align:center;
+          letter-spacing:.3px;
+        ">
+          You're receiving this because you set up a Job Alert on CodeCraft Systems.
+        </p>
+        <p style="
+          margin:0;
+          font-family:'DM Sans',Arial,sans-serif;
+          font-size:11px;
+          color:#333;
+          text-align:center;
+        ">
+          © ${new Date().getFullYear()} CodeCraft Systems · Surat, India
+        </p>
+      </td>
+    </tr>
+
+  </table>
+</td></tr>
+</table>
+
+</body>
+</html>`;
+}
+
+/* ─── MAIN ENGINE ──────────────────────────────────────── */
 async function runJobAlerts(){
 
-console.log("Checking alerts...");
+  console.log("Checking alerts...");
 
-const {data:alerts,error}=await sb
-.from("job_alerts")
-.select("*")
-.eq("status",1)
-.lte("next_run_at",new Date().toISOString());
+  const {data:alerts,error}=await sb
+    .from("job_alerts")
+    .select("*")
+    .eq("status",1)
+    .lte("next_run_at",new Date().toISOString());
 
-if(error){
-console.error(error);
-return;
-}
+  if(error){ console.error(error); return; }
+  if(!alerts||alerts.length===0){ console.log("No alerts due"); return; }
 
-if(!alerts || alerts.length===0){
-console.log("No alerts");
-return;
-}
+  for(const alert of alerts){
 
-for(const alert of alerts){
+    console.log("Processing:",alert.email);
 
-console.log("Processing:",alert.email);
+    /* GET PROFILE */
+    const {data:profile}=await sb
+      .from("developers")
+      .select("*")
+      .eq("user_id",alert.user_id)
+      .single();
 
-/* GET PROFILE */
+    if(!profile){ console.log("No profile"); continue; }
 
-const {data:profile}=await sb
-.from("developers")
-.select("*")
-.eq("user_id",alert.user_id)
-.single();
-
-if(!profile){
-console.log("No profile");
-continue;
-}
-
-/* AI KEYWORD */
-
-const prompt=`
+    /* AI KEYWORD */
+    const prompt=`
 Generate one job search keyword.
-
 Title: ${profile.title}
 Skills: ${profile.skills}
 Experience: ${profile.experience_years}
 Location: ${profile.location}
-
-Return only keyword.
+Return only the keyword, nothing else.
 `;
 
-const aiRes=await fetch(AI_URL,{
-method:"POST",
-headers:{ "Content-Type":"application/json" },
-body:JSON.stringify({prompt})
-});
+    const aiRes=await fetch(AI_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({prompt})
+    });
 
-const aiData=await aiRes.json();
+    const aiData=await aiRes.json();
+    const keyword=
+      aiData?.choices?.[0]?.message?.content?.trim()||
+      aiData?.response||
+      aiData?.text||"";
 
-const keyword=
-aiData?.choices?.[0]?.message?.content?.trim() ||
-aiData?.response ||
-aiData?.text ||
-"";
+    console.log("AI keyword:",keyword);
+    if(!keyword){ console.log("No keyword"); continue; }
 
-console.log("AI keyword:",keyword);
+    /* SAVE KEYWORD */
+    await sb.from("job_alert_keywords").insert({user_id:alert.user_id,keyword});
 
-if(!keyword){
-console.log("No keyword generated");
-continue;
+    /* SEARCH JOBS */
+    const jobRes=await fetch(
+      `${JOB_SEARCH}?q=${encodeURIComponent(keyword)}&pages=3&categories=jobs,general`
+    );
+    const jobData=await jobRes.json();
+    const jobs=jobData.results||[];
+
+    if(!jobs||jobs.length===0){ console.log("No jobs found"); continue; }
+
+    /* DUPLICATE FILTER */
+    let emailJobs=[];
+
+    for(const job of jobs.slice(0,5)){
+      const {data:exist}=await sb
+        .from("job_alert_history")
+        .select("id")
+        .eq("user_id",alert.user_id)
+        .eq("job_url",job.url)
+        .maybeSingle();
+
+      if(exist) continue;
+
+      emailJobs.push(job);
+
+      await sb.from("job_alert_history").insert({
+        user_id:alert.user_id,
+        job_url:job.url,
+        job_title:job.title
+      });
+    }
+
+    if(emailJobs.length===0){ console.log("No new jobs"); continue; }
+
+    /* BUILD & SEND EMAIL */
+    const html=buildEmailHTML(emailJobs, profile, keyword);
+    await sendMail(alert.email, html);
+    await updateNextRun(alert);
+  }
 }
 
-/* SAVE KEYWORD */
-
-await sb.from("job_alert_keywords").insert({
-user_id:alert.user_id,
-keyword:keyword
-});
-
-/* SEARCH JOBS */
-
-const jobRes=await fetch(
-`${JOB_SEARCH}?q=${encodeURIComponent(keyword)}&pages=1&categories=jobs,general`
-);
-
-const jobData=await jobRes.json();
-const jobs=jobData.results || [];
-
-if(!jobs || jobs.length===0){
-console.log("No jobs found");
-continue;
-}
-
-let emailJobs=[];
-
-/* DUPLICATE FILTER */
-
-for(const job of jobs.slice(0,5)){
-
-const {data:exist}=await sb
-.from("job_alert_history")
-.select("id")
-.eq("user_id",alert.user_id)
-.eq("job_url",job.url)
-.maybeSingle();
-
-if(exist) continue;
-
-emailJobs.push(job);
-
-await sb.from("job_alert_history").insert({
-user_id:alert.user_id,
-job_url:job.url,
-job_title:job.title
-});
-
-}
-
-if(emailJobs.length===0){
-console.log("No new jobs");
-continue;
-}
-
-/* BUILD EMAIL */
-
-let html="<h2>New Jobs Found</h2><ul>";
-
-for(const j of emailJobs){
-
-html+=`
-<li>
-<b>${j.title}</b><br>
-<a href="${j.url}" target="_blank">Apply Now</a>
-</li>
-`;
-
-}
-
-html+="</ul>";
-
-await sendMail(alert.email,html);
-
-await updateNextRun(alert);
-
-}
-
-}
-
-/* SEND EMAIL */
-
+/* ─── SEND EMAIL ───────────────────────────────────────── */
 async function sendMail(toEmail,htmlContent){
 
-const payload={
-sender:{
-name:SENDER_NAME,
-email:SENDER_EMAIL
-},
-to:[{email:toEmail}],
-subject:"New Developer Jobs Found 🚀",
-htmlContent:htmlContent
-};
+  const payload={
+    sender:{name:SENDER_NAME,email:SENDER_EMAIL},
+    to:[{email:toEmail}],
+    subject:`🚀 ${toEmail.split('@')[0]}, New Dev Jobs Matched For You`,
+    htmlContent
+  };
 
-const res=await fetch("https://api.brevo.com/v3/smtp/email",{
-method:"POST",
-headers:{
-"accept":"application/json",
-"api-key":BREVO_KEY,
-"content-type":"application/json"
-},
-body:JSON.stringify(payload)
-});
+  const res=await fetch("https://api.brevo.com/v3/smtp/email",{
+    method:"POST",
+    headers:{
+      "accept":"application/json",
+      "api-key":BREVO_KEY,
+      "content-type":"application/json"
+    },
+    body:JSON.stringify(payload)
+  });
 
-const data=await res.json();
-
-console.log("Email API response:",data);
-
+  const data=await res.json();
+  console.log("Email sent:",data);
 }
 
-/* UPDATE NEXT RUN */
-
+/* ─── UPDATE NEXT RUN ──────────────────────────────────── */
 async function updateNextRun(alert){
+  let days=7;
+  if(alert.mode==="15_days") days=15;
+  if(alert.mode==="1_month") days=30;
 
-let days=7;
-
-if(alert.mode==="15_days") days=15;
-if(alert.mode==="1_month") days=30;
-
-await sb
-.from("job_alerts")
-.update({
-last_run_at:new Date().toISOString(),
-next_run_at:new Date(Date.now()+days*86400000).toISOString()
-})
-.eq("id",alert.id);
-
+  await sb
+    .from("job_alerts")
+    .update({
+      last_run_at:new Date().toISOString(),
+      next_run_at:new Date(Date.now()+days*86400000).toISOString()
+    })
+    .eq("id",alert.id);
 }
 
-/* RUN */
-
+/* ─── RUN ──────────────────────────────────────────────── */
 runJobAlerts();
 
 </script>
-
 </body>
 </html>
