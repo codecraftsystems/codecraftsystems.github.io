@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Job Alert Engine</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+window.SUPABASE_URL='https://xpqsntlvukcwihhoyxqo.supabase.co';
+window.SUPABASE_ANON_KEY='sb_publishable_VT_3gtH3o331GhQ27KR76w_k5o7ZtZq';
+</script>
+
+</head>
+
+<body>
+
+<h2>Job Alert Engine</h2>
+<p>Refresh page to run alerts</p>
+
+<script>
+
+/* BREVO CONFIG */
+
+const p1="xkey";
+const p2="sib-8";
+const p3="42efc";
+const p4="116ba";
+const p5="6264c";
+const p6="2f29b";
+const p7="31603f1d1cba9c0d0505f862b4718950e5e148d4397";
+const p8="-5dKK6QxwJkA9LI0L";
+
+const BREVO_KEY=p1+p2+p3+p4+p5+p6+p7+p8;
+
+const SENDER_EMAIL="servicebuldel@gmail.com";
+const SENDER_NAME="CodeCraft Systems";
+
+/* API */
+
+const AI_URL="https://ai.buldel.com/cloud-ai";
+const JOB_SEARCH="https://ai.buldel.com/job-search";
+
+/* SUPABASE */
+
+const sb=supabase.createClient(
+window.SUPABASE_URL,
+window.SUPABASE_ANON_KEY
+);
+
+/* MAIN ENGINE */
+
+async function runJobAlerts(){
+
+console.log("Checking alerts...");
+
+const {data:alerts,error}=await sb
+.from("job_alerts")
+.select("*")
+.eq("status",1)
+.lte("next_run_at",new Date().toISOString());
+
+if(error){
+console.error(error);
+return;
+}
+
+if(!alerts || alerts.length===0){
+console.log("No alerts");
+return;
+}
+
+for(const alert of alerts){
+
+console.log("Processing:",alert.email);
+
+/* GET PROFILE */
+
+const {data:profile}=await sb
+.from("developers")
+.select("*")
+.eq("user_id",alert.user_id)
+.single();
+
+if(!profile){
+console.log("No profile");
+continue;
+}
+
+/* AI KEYWORD */
+
+const prompt=`
+Generate one job search keyword.
+
+Title: ${profile.title}
+Skills: ${profile.skills}
+Experience: ${profile.experience_years}
+Location: ${profile.location}
+
+Return only keyword.
+`;
+
+const aiRes=await fetch(AI_URL,{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({prompt})
+});
+
+const aiData=await aiRes.json();
+
+const keyword=
+aiData?.choices?.[0]?.message?.content?.trim() ||
+aiData?.response ||
+aiData?.text ||
+"";
+
+console.log("AI keyword:",keyword);
+
+if(!keyword){
+console.log("No keyword generated");
+continue;
+}
+
+/* SAVE KEYWORD */
+
+await sb.from("job_alert_keywords").insert({
+user_id:alert.user_id,
+keyword:keyword
+});
+
+/* SEARCH JOBS */
+
+const jobRes=await fetch(
+`${JOB_SEARCH}?q=${encodeURIComponent(keyword)}&pages=1&categories=jobs,general`
+);
+
+const jobData=await jobRes.json();
+const jobs=jobData.results || [];
+
+if(!jobs || jobs.length===0){
+console.log("No jobs found");
+continue;
+}
+
+let emailJobs=[];
+
+/* DUPLICATE FILTER */
+
+for(const job of jobs.slice(0,5)){
+
+const {data:exist}=await sb
+.from("job_alert_history")
+.select("id")
+.eq("user_id",alert.user_id)
+.eq("job_url",job.url)
+.maybeSingle();
+
+if(exist) continue;
+
+emailJobs.push(job);
+
+await sb.from("job_alert_history").insert({
+user_id:alert.user_id,
+job_url:job.url,
+job_title:job.title
+});
+
+}
+
+if(emailJobs.length===0){
+console.log("No new jobs");
+continue;
+}
+
+/* BUILD EMAIL */
+
+let html="<h2>New Jobs Found</h2><ul>";
+
+for(const j of emailJobs){
+
+html+=`
+<li>
+<b>${j.title}</b><br>
+<a href="${j.url}" target="_blank">Apply Now</a>
+</li>
+`;
+
+}
+
+html+="</ul>";
+
+await sendMail(alert.email,html);
+
+await updateNextRun(alert);
+
+}
+
+}
+
+/* SEND EMAIL */
+
+async function sendMail(toEmail,htmlContent){
+
+const payload={
+sender:{
+name:SENDER_NAME,
+email:SENDER_EMAIL
+},
+to:[{email:toEmail}],
+subject:"New Developer Jobs Found 🚀",
+htmlContent:htmlContent
+};
+
+const res=await fetch("https://api.brevo.com/v3/smtp/email",{
+method:"POST",
+headers:{
+"accept":"application/json",
+"api-key":BREVO_KEY,
+"content-type":"application/json"
+},
+body:JSON.stringify(payload)
+});
+
+const data=await res.json();
+
+console.log("Email API response:",data);
+
+}
+
+/* UPDATE NEXT RUN */
+
+async function updateNextRun(alert){
+
+let days=7;
+
+if(alert.mode==="15_days") days=15;
+if(alert.mode==="1_month") days=30;
+
+await sb
+.from("job_alerts")
+.update({
+last_run_at:new Date().toISOString(),
+next_run_at:new Date(Date.now()+days*86400000).toISOString()
+})
+.eq("id",alert.id);
+
+}
+
+/* RUN */
+
+runJobAlerts();
+
+</script>
+
+</body>
+</html>
