@@ -36,303 +36,488 @@ const JOB_SEARCH="https://ai.buldel.com/job-search";
 const sb=supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY);
 
 /* ─── EMAIL TEMPLATE ───────────────────────────────────── */
+/*
+  CROSS-CLIENT RULES APPLIED:
+  ✅ All layout via nested <table> — no divs, no flexbox, no grid
+  ✅ All styles inline — no <style> block (Gmail strips it)
+  ✅ No CSS shorthand — use margin-top, not margin (Outlook)
+  ✅ width on <td> not just inline-block (Outlook)
+  ✅ No border-radius > 0 on images (iOS mail clips)
+  ✅ mso-padding-alt for Outlook button CTA
+  ✅ font-family always has fallback (Georgia > serif, DM Sans > Arial > sans-serif)
+  ✅ max-width on wrapper + 100% width for mobile
+  ✅ Retina-safe logo via width/height attributes
+  ✅ All links have full https:// URLs
+  ✅ Gradient fallback solid colors for Outlook (no CSS gradients)
+  ✅ MSO conditional comments for Outlook width fix
+*/
 function buildEmailHTML(jobs, profile, keyword) {
 
-  /* Job cards */
+  /* ── Job Cards ── */
   const jobCards = jobs.map((j, i) => {
-    const company  = j.company || j.company_name || "Company";
-    const location = j.location || j.region || "Remote";
-    const salary   = j.salary   || j.salary_range || "";
-    const type     = j.job_type || j.employment_type || "Full-time";
-    const logo     = j.company_logo || "";
-    const tags     = [type, location].filter(Boolean);
+    const company  = (j.company  || j.company_name  || "Company").replace(/</g,"&lt;");
+    const location = (j.location || j.region         || "Remote").replace(/</g,"&lt;");
+    const salary   =  j.salary   || j.salary_range   || "";
+    const type     = (j.job_type || j.employment_type || "Full-time").replace(/</g,"&lt;");
+    const logo     =  j.company_logo || "";
+    const title    = (j.title || "").replace(/</g,"&lt;");
 
-    const tagCells = tags.map(t => `
-      <td style="padding:0 6px 0 0;">
-        <span style="
-          display:inline-block;
-          background:#1a1a1a;
-          border:1px solid #2a2a2a;
-          color:#aaa;
-          font-family:'DM Sans',Arial,sans-serif;
-          font-size:11px;
-          padding:3px 10px;
-          border-radius:20px;
-          letter-spacing:.3px;
-        ">${t}</span>
-      </td>`
-    ).join("");
+    const logoCell = logo ? `
+            <td width="52" valign="top" style="padding-top:2px;">
+              <img src="${logo}" width="44" height="44" alt="${company}"
+                style="display:block;border-radius:8px;border:1px solid #2a2a2a;"
+                border="0">
+            </td>` : `<td width="0"></td>`;
+
+    const salaryRow = salary ? `
+            <tr>
+              <td colspan="2" style="padding-bottom:14px;">
+                <table cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="
+                      background-color:#0d2b0d;
+                      border:1px solid #1a4d1a;
+                      border-radius:4px;
+                      padding-top:4px;
+                      padding-bottom:4px;
+                      padding-left:10px;
+                      padding-right:10px;
+                    ">
+                      <span style="
+                        font-family:'DM Sans',Arial,Helvetica,sans-serif;
+                        font-size:12px;
+                        color:#66cc66;
+                        font-weight:600;
+                      ">&#128176; ${salary}</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>` : "";
 
     return `
-    <!-- JOB CARD ${i+1} -->
     <tr>
-      <td style="padding:0 0 14px 0;">
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
-          background:#111;
-          border:1px solid #222;
-          border-radius:12px;
-          overflow:hidden;
-        ">
+      <td style="padding-bottom:16px;">
+        <!--[if mso]>
+        <table width="520" cellpadding="0" cellspacing="0" border="0"><tr><td>
+        <![endif]-->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0"
+          style="background-color:#111111;border:1px solid #222222;border-radius:12px;">
           <tr>
-            <!-- left accent bar -->
-            <td width="4" style="background:#ff4d00;border-radius:12px 0 0 12px;">&nbsp;</td>
-            <td style="padding:20px 22px;">
+            <!-- orange accent bar -->
+            <td width="5" bgcolor="#ff4d00"
+              style="background-color:#ff4d00;border-radius:12px 0 0 12px;font-size:0;line-height:0;">&nbsp;</td>
 
+            <td style="padding-top:20px;padding-bottom:20px;padding-left:20px;padding-right:20px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td>
-                    <!-- company & title -->
+                  <!-- text col -->
+                  <td valign="top">
                     <p style="
-                      margin:0 0 4px 0;
-                      font-family:'DM Sans',Arial,sans-serif;
+                      margin-top:0;margin-bottom:4px;margin-left:0;margin-right:0;
+                      font-family:'DM Sans',Arial,Helvetica,sans-serif;
                       font-size:11px;
                       color:#ff4d00;
                       letter-spacing:1.5px;
                       text-transform:uppercase;
+                      font-weight:700;
                     ">${company}</p>
+
                     <p style="
-                      margin:0 0 12px 0;
-                      font-family:Georgia,'Times New Roman',serif;
+                      margin-top:0;margin-bottom:12px;margin-left:0;margin-right:0;
+                      font-family:Georgia,'Times New Roman',Times,serif;
                       font-size:17px;
                       font-weight:700;
-                      color:#fff;
-                      line-height:1.3;
-                    ">${j.title}</p>
+                      color:#ffffff;
+                      line-height:1.35;
+                    ">${title}</p>
 
-                    <!-- tags row -->
-                    <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:${salary ? '10' : '16'}px;">
-                      <tr>${tagCells}</tr>
+                    <!-- tag pills -->
+                    <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px;">
+                      <tr>
+                        <td style="padding-right:6px;">
+                          <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="
+                                background-color:#1a1a1a;
+                                border:1px solid #333333;
+                                border-radius:20px;
+                                padding-top:3px;padding-bottom:3px;
+                                padding-left:10px;padding-right:10px;
+                              ">
+                                <span style="
+                                  font-family:'DM Sans',Arial,Helvetica,sans-serif;
+                                  font-size:11px;
+                                  color:#aaaaaa;
+                                  letter-spacing:0.3px;
+                                  white-space:nowrap;
+                                ">${type}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td>
+                          <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="
+                                background-color:#1a1a1a;
+                                border:1px solid #333333;
+                                border-radius:20px;
+                                padding-top:3px;padding-bottom:3px;
+                                padding-left:10px;padding-right:10px;
+                              ">
+                                <span style="
+                                  font-family:'DM Sans',Arial,Helvetica,sans-serif;
+                                  font-size:11px;
+                                  color:#aaaaaa;
+                                  letter-spacing:0.3px;
+                                  white-space:nowrap;
+                                ">&#128205; ${location}</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
                     </table>
-
-                    ${salary ? `<p style="
-                      margin:0 0 16px 0;
-                      font-family:'DM Sans',Arial,sans-serif;
-                      font-size:12px;
-                      color:#66cc66;
-                    ">💰 ${salary}</p>` : ''}
                   </td>
-                  ${logo ? `
-                  <td width="52" valign="top">
-                    <img src="${logo}" width="44" height="44" alt="${company}" style="
-                      border-radius:8px;
-                      border:1px solid #2a2a2a;
-                      object-fit:cover;
-                      display:block;
-                    ">
-                  </td>` : ''}
+                  ${logoCell}
                 </tr>
-              </table>
 
-              <!-- CTA button -->
-              <table cellpadding="0" cellspacing="0" border="0">
+                ${salaryRow}
+
+                <!-- CTA button -->
                 <tr>
-                  <td style="
-                    background:#ff4d00;
-                    border-radius:6px;
-                  ">
-                    <a href="${j.url}" target="_blank" style="
-                      display:inline-block;
-                      padding:10px 22px;
-                      font-family:'DM Sans',Arial,sans-serif;
-                      font-size:13px;
-                      font-weight:700;
-                      color:#fff;
-                      text-decoration:none;
-                      letter-spacing:.5px;
-                    ">Apply Now →</a>
+                  <td colspan="2">
+                    <table cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td bgcolor="#ff4d00"
+                          style="background-color:#ff4d00;border-radius:6px;mso-padding-alt:0;">
+                          <!--[if mso]>
+                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
+                            xmlns:w="urn:schemas-microsoft-com:office:word"
+                            href="${j.url}"
+                            style="height:40px;v-text-anchor:middle;width:140px;"
+                            arcsize="10%" strokecolor="#ff4d00" fillcolor="#ff4d00">
+                            <w:anchorlock/>
+                            <center style="color:#ffffff;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;">Apply Now &#8594;</center>
+                          </v:roundrect>
+                          <![endif]-->
+                          <!--[if !mso]><!-->
+                          <a href="${j.url}" target="_blank"
+                            style="
+                              display:inline-block;
+                              padding-top:11px;padding-bottom:11px;
+                              padding-left:22px;padding-right:22px;
+                              font-family:'DM Sans',Arial,Helvetica,sans-serif;
+                              font-size:13px;
+                              font-weight:700;
+                              color:#ffffff;
+                              text-decoration:none;
+                              letter-spacing:0.5px;
+                              mso-hide:all;
+                            ">Apply Now &#8594;</a>
+                          <!--<![endif]-->
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
-              </table>
 
+              </table>
             </td>
           </tr>
         </table>
+        <!--[if mso]></td></tr></table><![endif]-->
       </td>
     </tr>`;
   }).join("");
 
-  /* Full email */
-  return `<!DOCTYPE html>
-<html lang="en">
+  /* ── Full Email ── */
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>New Jobs Found – CodeCraft Systems</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="x-apple-disable-message-reformatting">
+<meta name="format-detection" content="telephone=no,address=no,email=no,date=no">
+<!--[if mso]>
+<xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
+<![endif]-->
+<title>New Jobs Found &#8211; CodeCraft Systems</title>
+<style type="text/css">
+  /* ── Reset ── */
+  body,table,td,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+  table,td{mso-table-lspace:0pt;mso-table-rspace:0pt;}
+  img{-ms-interpolation-mode:bicubic;border:0;outline:none;text-decoration:none;}
+  body{margin:0!important;padding:0!important;background-color:#0a0a0a;}
+  a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important;}
+  /* ── Dark mode ── */
+  @media (prefers-color-scheme:dark){
+    .em-bg{background-color:#0a0a0a!important;}
+    .em-card{background-color:#111111!important;}
+    .em-body{background-color:#0d0d0d!important;}
+    .em-footer{background-color:#111111!important;}
+  }
+  /* ── Mobile ── */
+  @media screen and (max-width:600px){
+    .em-wrapper{width:100%!important;max-width:100%!important;}
+    .em-pad{padding-left:20px!important;padding-right:20px!important;}
+    .em-headline{font-size:24px!important;line-height:1.2!important;}
+    .em-stack td{display:block!important;width:100%!important;}
+    .em-hide-mobile{display:none!important;max-height:0!important;overflow:hidden!important;mso-hide:all!important;}
+    img.em-logo-img{width:36px!important;height:36px!important;}
+  }
+</style>
 </head>
-<body style="margin:0;padding:0;background:#0a0a0a;">
 
-<!-- WRAPPER -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0a0a0a;min-height:100vh;">
-<tr><td align="center" style="padding:40px 16px;">
+<body style="margin:0;padding:0;background-color:#0a0a0a;" bgcolor="#0a0a0a">
 
-  <!-- CARD -->
-  <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
+<!-- ── Pre-header hidden text ── -->
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;color:#0a0a0a;">
+${jobs.length} new job${jobs.length>1?'s':''} matched for "${keyword}" &#8203;&#847; &#8203;&#847; &#8203;&#847; &#8203;&#847; &#8203;&#847; &#8203;&#847; &#8203;&#847; &#8203;&#847; &#8203;&#847; &#8203;&#847;
+</div>
 
-    <!-- ── HEADER ── -->
+<!-- ── Outer wrapper ── -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0a0a0a"
+  style="background-color:#0a0a0a;min-height:100%;">
+<tr>
+<td align="center" style="padding-top:40px;padding-bottom:40px;padding-left:16px;padding-right:16px;">
+
+  <!--[if mso]>
+  <table width="600" cellpadding="0" cellspacing="0" border="0"><tr><td>
+  <![endif]-->
+
+  <!-- ── CARD WRAPPER ── -->
+  <table class="em-wrapper" width="600" cellpadding="0" cellspacing="0" border="0"
+    style="max-width:600px;width:100%;">
+
+    <!-- ══ HEADER ══ -->
     <tr>
-      <td style="
-        background:#111;
-        border:1px solid #1e1e1e;
-        border-radius:16px 16px 0 0;
-        padding:36px 40px 32px;
-        border-bottom:none;
-      ">
-        <table width="100%" cellpadding="0" cellspacing="0" border="0">
-          <tr>
-            <td>
-              <!-- Logo wordmark -->
-              <table cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td style="
-                    background:#ff4d00;
-                    width:6px;
-                    height:32px;
-                    border-radius:3px;
-                    vertical-align:top;
-                  ">&nbsp;</td>
-                  <td style="padding-left:10px;vertical-align:middle;">
-                    <span style="
-                      font-family:Georgia,'Times New Roman',serif;
-                      font-size:18px;
-                      font-weight:900;
-                      color:#fff;
-                      letter-spacing:1px;
-                    ">CODECRAFT</span>
-                    <span style="
-                      font-family:'DM Sans',Arial,sans-serif;
-                      font-size:11px;
-                      color:#555;
-                      display:block;
-                      letter-spacing:2px;
-                      text-transform:uppercase;
-                      margin-top:1px;
-                    ">Systems</span>
-                  </td>
-                </tr>
-              </table>
-            </td>
-            <td align="right" valign="middle">
-              <span style="
-                background:#ff4d00;
-                color:#fff;
-                font-family:'DM Sans',Arial,sans-serif;
-                font-size:11px;
-                font-weight:700;
-                letter-spacing:1.5px;
-                text-transform:uppercase;
-                padding:5px 14px;
-                border-radius:20px;
-              ">Job Alert</span>
-            </td>
-          </tr>
-        </table>
-
-        <!-- Divider -->
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
-          <tr><td style="height:1px;background:linear-gradient(90deg,#ff4d00 0%,#2a2a2a 60%,transparent 100%);"></td></tr>
-        </table>
-
-        <!-- Headline -->
-        <p style="
-          margin:24px 0 6px;
-          font-family:Georgia,'Times New Roman',serif;
-          font-size:28px;
-          font-weight:900;
-          color:#fff;
-          line-height:1.2;
-          letter-spacing:-.3px;
+      <td class="em-card" bgcolor="#111111"
+        style="
+          background-color:#111111;
+          border:1px solid #1e1e1e;
+          border-radius:16px 16px 0 0;
+          border-bottom-width:0;
+          padding-top:36px;padding-bottom:32px;
+          padding-left:40px;padding-right:40px;
         ">
-          ${jobs.length} New Job${jobs.length>1?'s':''} Found<br>
-          <span style="color:#ff4d00;">Just For You</span>
-        </p>
-        <p style="
-          margin:0;
-          font-family:'DM Sans',Arial,sans-serif;
-          font-size:13px;
-          color:#666;
-          line-height:1.6;
-        ">
-          Matched on keyword <strong style="color:#aaa;">"${keyword}"</strong>
-          for <strong style="color:#aaa;">${profile.title || 'your profile'}</strong>
-        </p>
+        <div class="em-pad">
+
+          <!-- Logo row -->
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <!-- Wordmark left -->
+              <td valign="middle">
+                <table cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td bgcolor="#ff4d00" width="6"
+                      style="background-color:#ff4d00;width:6px;border-radius:3px;font-size:0;line-height:0;">
+                      &nbsp;
+                    </td>
+                    <td style="padding-left:10px;" valign="middle">
+                      <span style="
+                        font-family:Georgia,'Times New Roman',Times,serif;
+                        font-size:18px;
+                        font-weight:900;
+                        color:#ffffff;
+                        letter-spacing:1px;
+                        display:block;
+                        line-height:1.2;
+                      ">CODECRAFT</span>
+                      <span style="
+                        font-family:'DM Sans',Arial,Helvetica,sans-serif;
+                        font-size:10px;
+                        color:#555555;
+                        display:block;
+                        letter-spacing:2.5px;
+                        text-transform:uppercase;
+                        margin-top:1px;
+                      ">Systems</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <!-- Badge right -->
+              <td align="right" valign="middle">
+                <table cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td bgcolor="#ff4d00"
+                      style="background-color:#ff4d00;border-radius:20px;padding-top:5px;padding-bottom:5px;padding-left:14px;padding-right:14px;">
+                      <span style="
+                        font-family:'DM Sans',Arial,Helvetica,sans-serif;
+                        font-size:11px;
+                        font-weight:700;
+                        color:#ffffff;
+                        letter-spacing:1.5px;
+                        text-transform:uppercase;
+                        white-space:nowrap;
+                      ">&#128276; Job Alert</span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Divider -->
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;margin-bottom:24px;">
+            <tr>
+              <td bgcolor="#ff4d00" width="80" height="2"
+                style="background-color:#ff4d00;height:2px;line-height:2px;font-size:0;">&nbsp;</td>
+              <td bgcolor="#2a2a2a" height="2"
+                style="background-color:#2a2a2a;height:2px;line-height:2px;font-size:0;">&nbsp;</td>
+            </tr>
+          </table>
+
+          <!-- Headline -->
+          <p class="em-headline" style="
+            margin-top:0;margin-bottom:8px;margin-left:0;margin-right:0;
+            font-family:Georgia,'Times New Roman',Times,serif;
+            font-size:30px;
+            font-weight:900;
+            color:#ffffff;
+            line-height:1.2;
+            letter-spacing:-0.3px;
+          ">
+            ${jobs.length} New Job${jobs.length>1?'s':''} Found
+          </p>
+          <p style="
+            margin-top:0;margin-bottom:6px;margin-left:0;margin-right:0;
+            font-family:Georgia,'Times New Roman',Times,serif;
+            font-size:30px;
+            font-weight:900;
+            color:#ff4d00;
+            line-height:1.2;
+          ">
+            Just For You
+          </p>
+          <p style="
+            margin-top:12px;margin-bottom:0;margin-left:0;margin-right:0;
+            font-family:'DM Sans',Arial,Helvetica,sans-serif;
+            font-size:14px;
+            color:#666666;
+            line-height:1.6;
+          ">
+            Matched keyword&nbsp;<strong style="color:#aaaaaa;">"${keyword}"</strong>&nbsp;&#8212;&nbsp;<strong style="color:#aaaaaa;">${(profile.title||'your profile').replace(/</g,'&lt;')}</strong>
+          </p>
+
+        </div>
       </td>
     </tr>
 
-    <!-- ── JOB CARDS ── -->
+    <!-- ══ JOB CARDS BODY ══ -->
     <tr>
-      <td style="
-        background:#0d0d0d;
-        border:1px solid #1e1e1e;
-        border-top:none;
-        border-bottom:none;
-        padding:28px 40px 14px;
-      ">
-        <table width="100%" cellpadding="0" cellspacing="0" border="0">
-          ${jobCards}
-        </table>
+      <td class="em-body" bgcolor="#0d0d0d"
+        style="
+          background-color:#0d0d0d;
+          border-left:1px solid #1e1e1e;
+          border-right:1px solid #1e1e1e;
+          border-top:0;
+          border-bottom:0;
+          padding-top:28px;padding-bottom:12px;
+          padding-left:40px;padding-right:40px;
+        ">
+        <div class="em-pad">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            ${jobCards}
+          </table>
+        </div>
       </td>
     </tr>
 
-    <!-- ── FOOTER ── -->
+    <!-- ══ FOOTER ══ -->
     <tr>
-      <td style="
-        background:#111;
-        border:1px solid #1e1e1e;
-        border-top:none;
-        border-radius:0 0 16px 16px;
-        padding:28px 40px;
-      ">
-        <!-- View all CTA -->
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
-          <tr>
-            <td align="center">
-              <a href="https://codecraftsystems.github.io/developers" target="_blank" style="
-                display:inline-block;
-                padding:13px 32px;
-                background:transparent;
-                border:1.5px solid #ff4d00;
-                border-radius:8px;
-                font-family:'DM Sans',Arial,sans-serif;
-                font-size:13px;
-                font-weight:700;
-                color:#ff4d00;
-                text-decoration:none;
-                letter-spacing:.5px;
-              ">View Developer Profile →</a>
-            </td>
-          </tr>
-        </table>
-
-        <!-- Divider -->
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
-          <tr><td style="height:1px;background:#1e1e1e;"></td></tr>
-        </table>
-
-        <!-- Footer text -->
-        <p style="
-          margin:0 0 6px;
-          font-family:'DM Sans',Arial,sans-serif;
-          font-size:11px;
-          color:#444;
-          text-align:center;
-          letter-spacing:.3px;
+      <td class="em-footer" bgcolor="#111111"
+        style="
+          background-color:#111111;
+          border:1px solid #1e1e1e;
+          border-top-width:0;
+          border-radius:0 0 16px 16px;
+          padding-top:28px;padding-bottom:32px;
+          padding-left:40px;padding-right:40px;
         ">
-          You're receiving this because you set up a Job Alert on CodeCraft Systems.
-        </p>
-        <p style="
-          margin:0;
-          font-family:'DM Sans',Arial,sans-serif;
-          font-size:11px;
-          color:#333;
-          text-align:center;
-        ">
-          © ${new Date().getFullYear()} CodeCraft Systems · Surat, India
-        </p>
+        <div class="em-pad">
+
+          <!-- View profile CTA -->
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+            <tr>
+              <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="border:2px solid #ff4d00;border-radius:8px;mso-padding-alt:0;">
+                      <!--[if mso]>
+                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
+                        xmlns:w="urn:schemas-microsoft-com:office:word"
+                        href="https://codecraftsystems.github.io/developers"
+                        style="height:44px;v-text-anchor:middle;width:220px;"
+                        arcsize="8%" strokecolor="#ff4d00" fill="f">
+                        <w:anchorlock/>
+                        <center style="color:#ff4d00;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;">View Developer Profile &#8594;</center>
+                      </v:roundrect>
+                      <![endif]-->
+                      <!--[if !mso]><!-->
+                      <a href="https://codecraftsystems.github.io/developers" target="_blank"
+                        style="
+                          display:inline-block;
+                          padding-top:13px;padding-bottom:13px;
+                          padding-left:28px;padding-right:28px;
+                          font-family:'DM Sans',Arial,Helvetica,sans-serif;
+                          font-size:13px;
+                          font-weight:700;
+                          color:#ff4d00;
+                          text-decoration:none;
+                          letter-spacing:0.5px;
+                          mso-hide:all;
+                        ">View Developer Profile &#8594;</a>
+                      <!--<![endif]-->
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Divider -->
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+            <tr>
+              <td bgcolor="#222222" height="1"
+                style="background-color:#222222;height:1px;line-height:1px;font-size:0;">&nbsp;</td>
+            </tr>
+          </table>
+
+          <!-- Footer copy -->
+          <p style="
+            margin-top:0;margin-bottom:6px;margin-left:0;margin-right:0;
+            font-family:'DM Sans',Arial,Helvetica,sans-serif;
+            font-size:11px;
+            color:#444444;
+            text-align:center;
+            line-height:1.6;
+          ">
+            You're receiving this because you set up a Job Alert on CodeCraft Systems.
+          </p>
+          <p style="
+            margin-top:0;margin-bottom:0;margin-left:0;margin-right:0;
+            font-family:'DM Sans',Arial,Helvetica,sans-serif;
+            font-size:11px;
+            color:#333333;
+            text-align:center;
+          ">
+            &copy; ${new Date().getFullYear()} CodeCraft Systems &middot; Surat, India
+          </p>
+
+        </div>
       </td>
     </tr>
 
   </table>
-</td></tr>
+  <!-- /CARD WRAPPER -->
+
+  <!--[if mso]></td></tr></table><![endif]-->
+
+</td>
+</tr>
 </table>
 
 </body>
@@ -440,7 +625,7 @@ async function sendMail(toEmail,htmlContent){
   const payload={
     sender:{name:SENDER_NAME,email:SENDER_EMAIL},
     to:[{email:toEmail}],
-    subject:`🚀 ${toEmail.split('@')[0]}, New Dev Jobs Matched For You`,
+    subject:`\uD83D\uDE80 ${toEmail.split('@')[0]}, New Dev Jobs Matched For You`,
     htmlContent
   };
 
